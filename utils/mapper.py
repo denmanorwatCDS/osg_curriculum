@@ -105,7 +105,15 @@ class Mapper:
                 max_depth=5.0,              # m
             )
 
-        self.mapper = torch.nn.DataParallel(self._mapper, device_ids = [0,2,3])
+        self._mapper = self._mapper.to(self.device)
+
+        if torch.cuda.device_count() > 1:
+            self.mapper = torch.nn.DataParallel(
+                self._mapper,
+                device_ids=list(range(torch.cuda.device_count()))
+            )
+        else:
+            self.mapper = self._mapper
         self.last_pose = np.zeros(3)
         self.init = False
         self.T_env_flipped_to_global = None
@@ -224,15 +232,27 @@ class Mapper:
 
     def update(self, obs):
         # Preprocess the observations from the simulator
-        (
-            seq_obs,
-            pose_delta,
-            camera_pose
-        ) = self._preprocess(obs)
+        seq_obs, pose_delta, camera_pose = self._preprocess(obs)
 
-        # Update the map
-        dones = torch.tensor([not self.init])
-        update_globals = torch.tensor([True])
+        # HomeRobot map state is initialized on self.device, but some inputs
+        # produced here are CPU tensors by default. Keep every tensor passed to
+        # the mapper on exactly the same device.
+        seq_obs = seq_obs.to(self.device)
+        pose_delta = pose_delta.to(self.device).float()
+
+        dones = torch.tensor([not self.init], dtype=torch.bool, device=self.device)
+        update_globals = torch.tensor([True], dtype=torch.bool, device=self.device)
+
+        if camera_pose is not None and torch.is_tensor(camera_pose):
+            camera_pose = camera_pose.to(self.device)
+
+        # Be defensive: ensure all map-state tensors are on the mapper device.
+        self.map_state.local_map = self.map_state.local_map.to(self.device)
+        self.map_state.global_map = self.map_state.global_map.to(self.device)
+        self.map_state.local_pose = self.map_state.local_pose.to(self.device)
+        self.map_state.global_pose = self.map_state.global_pose.to(self.device)
+        self.map_state.lmb = self.map_state.lmb.to(self.device)
+        self.map_state.origins = self.map_state.origins.to(self.device)
 
         (
             seq_map_feats,
@@ -253,13 +273,13 @@ class Mapper:
             self.map_state.local_pose,
             self.map_state.global_pose,
             self.map_state.lmb,
-            self.map_state.origins
+            self.map_state.origins,
         )
 
-        self.map_state.local_pose = seq_local_pose[:, -1]
-        self.map_state.global_pose = seq_global_pose[:, -1]
-        self.map_state.lmb = seq_lmb[:, -1]
-        self.map_state.origins = seq_origins[:, -1]
+        self.map_state.local_pose = seq_local_pose[:, -1].to(self.device)
+        self.map_state.global_pose = seq_global_pose[:, -1].to(self.device)
+        self.map_state.lmb = seq_lmb[:, -1].to(self.device)
+        self.map_state.origins = seq_origins[:, -1].to(self.device)
 
         if not self.init:
             self._set_pose_offset(obs)
@@ -387,8 +407,10 @@ class Mapper:
         )
         vis_image[50:530, 1325:1805] = geometric_map_vis
 
-        # Draw RGB
-        vis_image[50:530, 15:655] = cv2.resize(rgb_frame, (640, 480))
+        # Draw RGB (convert Habitat RGB -> BGR so cv2.imshow renders true colors)
+        vis_image[50:530, 15:655] = cv2.resize(
+            cv2.cvtColor(rgb_frame, cv2.COLOR_RGB2BGR), (640, 480)
+        )
 
         # Draw depth frame
         vis_image[50:530, 670:1310] = cv2.resize(depth_frame, (640, 480))

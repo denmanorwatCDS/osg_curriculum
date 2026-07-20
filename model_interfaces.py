@@ -249,7 +249,13 @@ class GPTInterface(LLMInterface):
         with open(config_path, 'r') as f:
             self.config = yaml.safe_load(f)
 
-        self.client = openai
+        openai.api_key = self.openai_api_key
+        try:
+            from utils.timing import timed_openai
+            self.client = timed_openai(openai)
+        except Exception as exc:
+            print("[PROFILER] llm_api timing disabled:", repr(exc))
+            self.client = openai
         self.client.api_key = self.openai_api_key
         self.chat = [
             {"role": "system", "content": self.config["setup_message"]},
@@ -481,14 +487,16 @@ class VLM_BLIP(VQAPerception):
         )
 
     def query(self, image, question_prompt):
-        image = image.convert("RGB")
-        samples = {
-            "image": self.image_preprocessors["eval"](image).unsqueeze(0).to(self.device),
-            "text_input": self.text_preprocessors["eval"](question_prompt)
-        }
+        from utils.timing import PROFILER
+        with PROFILER.section("vqa"):
+            image = image.convert("RGB")
+            samples = {
+                "image": self.image_preprocessors["eval"](image).unsqueeze(0).to(self.device),
+                "text_input": self.text_preprocessors["eval"](question_prompt)
+            }
 
-        ans = self.model.predict_answers(samples=samples, inference_method="generate")
-        return ans[0]
+            ans = self.model.predict_answers(samples=samples, inference_method="generate")
+            return ans[0]
     
 class VLM_LLAVA(VQAPerception):
     def __init__(self):
@@ -548,9 +556,17 @@ class VLM_GroundingDino(ObjectPerception):
 
         super().__init__()
 
+        # sm_120 GPUs on the CUDA 11.8 stack crash when RAM/GroundingDINO trigger
+        # runtime NVRTC kernel compilation (nvrtc: invalid --gpu-architecture).
+        # OSG_GDINO_DEVICE=cpu runs these two models on CPU (slow, but avoids
+        # NVRTC entirely); BLIP and the mapper stay on GPU.
+        gdino_device = os.environ.get("OSG_GDINO_DEVICE")
+        if gdino_device:
+            self.device = torch.device(gdino_device)
+
         args = SLConfig.fromfile(groundingdino_config_path)
         args.device = self.device
-        gdino_ckpt = torch.load(groundingdino_ckpt_path, map_location="cuda")
+        gdino_ckpt = torch.load(groundingdino_ckpt_path, map_location=self.device)
         self.box_threshold = 0.25
         self.text_threshold = 0.2
         self.iou_threshold = 0.5
@@ -672,12 +688,16 @@ class VLM_GroundingDino(ObjectPerception):
         return boxes_filt, selected_labels, cropeed_obj_lst
 
     def detect_all_objects(self, image):
-        return self._detect_objects(image)
-    
+        from utils.timing import PROFILER
+        with PROFILER.section("detect"):
+            return self._detect_objects(image)
+
     def detect_specific_objects(self, image, object_list):
+        from utils.timing import PROFILER
         assert len(object_list) > 0, "If not detecting specific objects, use detect_all_objects"
         additional_tags = functools.reduce(lambda a, b: a + ", " + b, object_list)
-        return self._detect_objects(image, additional_tags)
+        with PROFILER.section("detect"):
+            return self._detect_objects(image, additional_tags)
 
 
 if __name__ == "__main__":

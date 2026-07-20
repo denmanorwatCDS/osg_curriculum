@@ -17,6 +17,7 @@ import pdb
 import math
 from utils.mapper import Mapper
 from utils.habitat_utils import ObjNavEnv, setup_env_config
+from utils.timing import PROFILER
 
 import habitat
 from fmm_controller import *
@@ -25,6 +26,26 @@ import random
 import time
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+if os.environ.get("OSG_DISABLE_FUSER", "0") != "0":
+    # sm_120 GPUs on the CUDA 11.8 stack cannot JIT-compile CUDA kernels via
+    # NVRTC ("nvrtc: invalid value for --gpu-architecture"). Disable the
+    # TorchScript fusers so ops fall back to precompiled/eager kernels that
+    # run on sm_120. Needed to run RAM/GroundingDINO on GPU here.
+    for _fn, _args in [
+        ("_jit_set_texpr_fuser_enabled", (False,)),
+        ("_jit_set_nvfuser_enabled", (False,)),
+        ("_jit_override_can_fuse_on_gpu", (False,)),
+        ("_jit_override_can_fuse_on_cpu", (False,)),
+        ("_jit_set_profiling_executor", (False,)),
+        ("_jit_set_profiling_mode", (False,)),
+    ]:
+        _f = getattr(torch._C, _fn, None)
+        if _f is not None:
+            try:
+                _f(*_args)
+            except Exception:
+                pass
 
 
 class NavigatorHomeRobot(Navigator):
@@ -42,7 +63,13 @@ class NavigatorHomeRobot(Navigator):
             visualise=True
         )
 
-        self.GT = True
+        # Ground-truth semantics by default; set OSG_GT_SEM=0 to perceive with
+        # GroundingDINO (open-vocab detection) instead.
+        self.GT = os.environ.get("OSG_GT_SEM", "1") != "0"
+
+        # OpenCV "View" window is shown by default; set OSG_NO_CV2_VIS=1 to
+        # disable it (run headless, no DISPLAY needed, skips building the image).
+        self.show_cv2_vis = os.environ.get("OSG_NO_CV2_VIS", "0") == "0"
 
         # Setup home robot sim environment
         config = setup_env_config(params_path = data_path, default_config_path= task_config_path)
@@ -215,23 +242,48 @@ class NavigatorHomeRobot(Navigator):
         self.action_logging.write(f'[Ground Truth Sem]: {self.GT}\n')
         self.action_logging.close()
 
-        cv2.namedWindow("View")
+        if self.show_cv2_vis:
+            cv2.namedWindow("View")
+
+        PROFILER.start_episode(
+            self.env.env.current_episode.episode_id,
+            scene=self.env.env.current_episode.scene_id,
+            goal=self.goal,
+        )
 
         while (self.action_step < self.max_episode_step) and (self.llm_loop_iter <= 40):
             self.action_logging = open(self.action_log_path, 'a')
-            obs = self._observe()
-            self.controller.update(obs)
-            images = self.controller.visualise(obs)
+            with PROFILER.section("observe"):
+                obs = self._observe()
+            # Information is now in the observation. Time from HERE until the
+            # action signal is emitted (excludes observation gathering).
+            obs_ready_t = time.perf_counter()
+            reasoned_this_iter = False
+            with PROFILER.section("mapper_update"):
+                self.controller.update(obs)
+            # Time visualise into a local so we can report a viz-free decision
+            # latency (visualise is debug UI, not part of the navigation method).
+            # Skipped entirely when the OpenCV window is disabled.
+            if self.show_cv2_vis:
+                _viz_t0 = time.perf_counter()
+                images = self.controller.visualise(obs)
+                viz_dur = time.perf_counter() - _viz_t0
+                PROFILER.record("visualise", viz_dur)
+            else:
+                viz_dur = 0.0
             self.env.update_path_distance()
-            cv2.imshow("View", images)
-            cv2.waitKey(10)
+            if self.show_cv2_vis:
+                cv2.imshow("View", images)
+                cv2.waitKey(10)
 
             # High-level perception-reasoning. Run when we have 
             # paused and are awaiting next instructions.
             subgoal_position = None
             if not self.controller_active:
                 preprocessed_obs = {'forward': obs['forward_rgb'], 'right': obs['right_rgb'], 'left': obs['left_rgb'], 'rear': obs['rear_rgb'], 'info':{'forward_depth':obs['forward_depth'], 'left_depth':obs['left_depth'], 'right_depth':obs['right_depth'], 'rear_depth':obs['rear_depth'],'forward_semantic':obs['forward_semantic'], 'left_semantic':obs['left_semantic'], 'right_semantic':obs['right_semantic'], 'rear_semantic':obs['rear_semantic'] } } 
-                subgoal_position, cam_uuid = self.loop(preprocessed_obs)
+                reasoned_this_iter = True
+                with PROFILER.section("high_level_loop"):
+                    subgoal_position, cam_uuid = self.loop(preprocessed_obs)
                 if self.check_goal(self.last_subgoal) and self.success_flag:
                     self.action_logging.write(f"[END]: SUCCESS Checked! \n")
                     break
@@ -243,12 +295,13 @@ class NavigatorHomeRobot(Navigator):
                         subgoal_position[1] += 150
                         subgoal_position[3] += 150
                     try:
-                        self.controller.set_subgoal_image(
-                            subgoal_position,
-                            cam_uuid + '_depth',
-                            obs,
-                            get_camera_matrix(640, 480, 90)
-                        )
+                        with PROFILER.section("set_subgoal"):
+                            self.controller.set_subgoal_image(
+                                subgoal_position,
+                                cam_uuid + '_depth',
+                                obs,
+                                get_camera_matrix(640, 480, 90)
+                            )
                         self.controller_active = True
                     except:
                         self.action_logging.write(f'ERROR: Cannot set subgoal to controller {subgoal_position}\n')
@@ -261,7 +314,8 @@ class NavigatorHomeRobot(Navigator):
             # to navigate with the controller
 
             if self.controller_active:
-                action, success = self.controller.step()
+                with PROFILER.section("controller_step"):
+                    action, success = self.controller.step()
                 print('Control', action, success)
                 if action is None:
                     self.controller_active = False
@@ -271,6 +325,13 @@ class NavigatorHomeRobot(Navigator):
                 else:
                     print("(Auto) Action:", action)
                     self.env.act(action)
+                    _o2a = time.perf_counter() - obs_ready_t
+                    PROFILER.record("obs_to_action_all", _o2a)
+                    PROFILER.record("obs_to_action_no_viz", _o2a - viz_dur)
+                    if reasoned_this_iter:
+                        PROFILER.record("obs_to_action_reasoning", _o2a)
+                    else:
+                        PROFILER.record("obs_to_action_control", _o2a)
                     self.action_step += 1
 
                     self.action_logging.write(f"[Action]: {action}\n")
@@ -301,25 +362,65 @@ class NavigatorHomeRobot(Navigator):
         self.action_logging.write(f"[Goal Synonyms]: {self.goal_synonyms}\n")
         self.action_logging.write(f"[Metrics]: {self.env.get_episode_metrics()}\n")
         self.action_logging.close()
-        cv2.destroyAllWindows()
+        PROFILER.end_episode()
+        if self.show_cv2_vis:
+            cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    nav = NavigatorHomeRobot(task_config_path = 'configs/objectnav_hm3d_v2_with_semantic.yaml', data_path = "configs/homerobot_hm3d_objectnav.yaml")
-    test_episode = 10
-    test_history = []
-    # str(i) for i in range(test_episode)
-    while True:
-        scnen_path = nav.env.env.current_episode.scene_id
-        scene_name = scnen_path[scnen_path.rfind('/')+1:scnen_path.rfind('.basis')]
-        # episode = rerun_case[scene_name]
-        while str(nav.env.env.current_episode.episode_id) not in ['1'] or ((nav.env.env.current_episode.scene_id + str(nav.env.env.current_episode.episode_id) ) in test_history):
-            try:
-                print('RESET', nav.env.env.current_episode.episode_id,nav.env.env.current_episode.scene_id )
-                nav.reset()
-            except:
-                sys.exit(0)
-        test_history.append(nav.env.env.current_episode.scene_id + str(nav.env.env.current_episode.episode_id) )
-        # try:
-        nav.run()
-        # except:
-        #     print('error')
+    import os
+    import traceback
+
+    nav = NavigatorHomeRobot(
+        task_config_path="configs/objectnav_hm3d_v2_with_semantic.yaml",
+        data_path="configs/homerobot_hm3d_objectnav.yaml",
+    )
+
+    skip_episodes = int(os.environ.get("OSG_SKIP_EPISODES", "0"))
+    test_episode = int(os.environ.get("OSG_TEST_EPISODES", "10"))
+
+    print("Skipping already completed episodes:", skip_episodes)
+    for i in range(skip_episodes):
+        try:
+            ep = nav.env.env.current_episode
+            print("SKIP", i + 1, "/", skip_episodes, ep.episode_id, ep.scene_id)
+            nav.reset()
+        except Exception as e:
+            print("Skip/reset failed:", repr(e))
+            break
+
+    ran = 0
+
+    while ran < test_episode:
+        ep = nav.env.env.current_episode
+
+        print("=" * 100)
+        print("RUN", ran + 1, "/", test_episode)
+        print("EPISODE", ep.episode_id)
+        print("SCENE", ep.scene_id)
+        print("GOAL", getattr(ep, "object_category", None))
+        print("=" * 100)
+
+        import time
+        t0 = time.time()
+        try:
+            nav.run()
+        except Exception as e:
+            print("[EPISODE ERROR]", repr(e))
+            traceback.print_exc()
+        elapsed = time.time() - t0
+        print(f"[EPISODE_TIME_SEC] {elapsed:.3f}")
+        print(f"[EPISODE_TIME_MIN] {elapsed / 60.0:.3f}")
+
+        ran += 1
+
+        if ran >= test_episode:
+            break
+
+        try:
+            nav.reset()
+        except Exception as e:
+            print("No more episodes or reset failed:", repr(e))
+            break
+
+    print("Finished episodes:", ran)
+

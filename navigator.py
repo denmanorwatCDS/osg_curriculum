@@ -12,6 +12,7 @@ import torch
 from scene_graph import SceneGraph, default_scene_graph_specs
 from model_interfaces import GPTInterface, VLM_BLIP, VLM_GroundingDino
 from utils.vis_utils import Visualiser
+from utils.timing import PROFILER
 import json, random
 
 import time
@@ -645,7 +646,11 @@ class Navigator:
 
         if est_state != None:
             for update_pair in Updated_Nodes:
-                self.scene_graph.combine_node(update_pair[0], O_det_mapping[update_pair[1]])
+                _det_key = update_pair[1]
+                if _det_key not in O_det_mapping:
+                    print(f"[WARN] OSGUpdater: skip unmapped detector label: {_det_key!r}")
+                else:
+                    self.scene_graph.combine_node(update_pair[0], O_det_mapping[_det_key])
 
         return est_state
 
@@ -939,7 +944,8 @@ class Navigator:
         # Observe
         self.action_logging.write(f'--------- Loop {self.llm_loop_iter} -----------\n')
         print('------------  Receive Lang Obs   -------------')
-        img_lang_obs = self.perceive(obs)
+        with PROFILER.section("perceive"):
+            img_lang_obs = self.perceive(obs)
 
         find_goal_flag, potential_next_pos, potential_cam_uuid = self.check_current_obs(obs, img_lang_obs)
         if find_goal_flag:
@@ -955,7 +961,8 @@ class Navigator:
             return potential_next_pos, potential_cam_uuid
 
         # Update
-        self.OSGUpdater(img_lang_obs)
+        with PROFILER.section("scene_graph_update"):
+            self.OSGUpdater(img_lang_obs)
         print('------------  Update Scene Graph   -------------')
         scene_graph_str = self.scene_graph.print_scene_graph(pretty=False,skip_object=False)
         self.action_logging.write(f'Scene Graph: {scene_graph_str}\n')
@@ -963,7 +970,8 @@ class Navigator:
 
         # Plan
         print('-------------  Plan Path --------------')
-        path = self.Planner()
+        with PROFILER.section("planner"):
+            path = self.Planner()
         self.is_navigating = True
         next_goal, next_position, cam_uuid = self.ground_plan_to_bbox()
         self.action_logging.write(f'Path: {path}, Next Goal: {next_goal}\n')
