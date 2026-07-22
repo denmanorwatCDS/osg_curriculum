@@ -1,0 +1,6 @@
+{
+    "python.defaultInterpreterPath": "/mnt/ssd/miniconda3/envs/nav/bin/python",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/home-robot/src/third_party/habitat-lab/habitat-lab"
+    ]
+}

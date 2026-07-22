@@ -1,0 +1,44 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "navigate_homerobot (GT sem)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/navigate_homerobot.py",
+            "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
+            "args": [],
+            "env": {
+                "OSG_GT_SEM": "1",
+                "OSG_NO_CV2_VIS": "1",
+                "OSG_TEST_EPISODES": "100",
+                "OSG_LATENCY_LOG": "logs/latency_gt.jsonl",
+                "MAGNUM_LOG": "quiet",
+                "GLOG_minloglevel": "2"
+            },
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "make-logs-dir"
+        },
+        {
+            "name": "homerobot_env (GT sem)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/homerobot_env.py",
+            "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
+            "justMyCode": false,
+            "args": [],
+            "env": {
+                "OSG_GT_SEM": "1",
+                "OSG_NO_CV2_VIS": "1",
+                "OSG_TEST_EPISODES": "100",
+                "OSG_LATENCY_LOG": "logs/latency_gt.jsonl",
+                "MAGNUM_LOG": "quiet",
+                "GLOG_minloglevel": "2"
+            },
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "make-logs-dir"
+        }
+    ]
+}
