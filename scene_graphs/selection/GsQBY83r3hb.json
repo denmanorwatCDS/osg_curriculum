@@ -1,0 +1,162 @@
+{
+  "scene": "GsQBY83r3hb",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    21,
+    224,
+    127,
+    158,
+    104,
+    200,
+    227,
+    129,
+    46,
+    166,
+    83,
+    61,
+    191,
+    130,
+    31,
+    167,
+    76,
+    194,
+    103,
+    22,
+    176,
+    72
+  ],
+  "nodes": [
+    {
+      "instance_id": 21,
+      "category": "chair",
+      "region_id": "0",
+      "bbox_diag": 1.2
+    },
+    {
+      "instance_id": 224,
+      "category": "flowerpot",
+      "region_id": "6",
+      "bbox_diag": 0.599
+    },
+    {
+      "instance_id": 127,
+      "category": "couch",
+      "region_id": "3",
+      "bbox_diag": 2.399
+    },
+    {
+      "instance_id": 158,
+      "category": "toilet",
+      "region_id": "5",
+      "bbox_diag": 0.792
+    },
+    {
+      "instance_id": 104,
+      "category": "bed",
+      "region_id": "3",
+      "bbox_diag": 3.029
+    },
+    {
+      "instance_id": 200,
+      "category": "tv",
+      "region_id": "6",
+      "bbox_diag": 0.986
+    },
+    {
+      "instance_id": 227,
+      "category": "curtain",
+      "region_id": "6",
+      "bbox_diag": 3.578
+    },
+    {
+      "instance_id": 129,
+      "category": "curtain",
+      "region_id": "3",
+      "bbox_diag": 3.737
+    },
+    {
+      "instance_id": 46,
+      "category": "elevator",
+      "region_id": "0",
+      "bbox_diag": 2.763
+    },
+    {
+      "instance_id": 166,
+      "category": "curtain",
+      "region_id": "5",
+      "bbox_diag": 2.883
+    },
+    {
+      "instance_id": 83,
+      "category": "ceiling lamp",
+      "region_id": "2",
+      "bbox_diag": 2.003
+    },
+    {
+      "instance_id": 61,
+      "category": "ceiling lamp",
+      "region_id": "1",
+      "bbox_diag": 0.877
+    },
+    {
+      "instance_id": 191,
+      "category": "curtain",
+      "region_id": "6",
+      "bbox_diag": 3.512
+    },
+    {
+      "instance_id": 130,
+      "category": "curtain",
+      "region_id": "3",
+      "bbox_diag": 3.637
+    },
+    {
+      "instance_id": 31,
+      "category": "sofa",
+      "region_id": "0",
+      "bbox_diag": 2.177
+    },
+    {
+      "instance_id": 167,
+      "category": "bathtub",
+      "region_id": "5",
+      "bbox_diag": 1.884
+    },
+    {
+      "instance_id": 76,
+      "category": "bathtub",
+      "region_id": "2",
+      "bbox_diag": 1.834
+    },
+    {
+      "instance_id": 194,
+      "category": "curtain",
+      "region_id": "6",
+      "bbox_diag": 3.346
+    },
+    {
+      "instance_id": 103,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 2.823
+    },
+    {
+      "instance_id": 22,
+      "category": "chair",
+      "region_id": "0",
+      "bbox_diag": 1.191
+    },
+    {
+      "instance_id": 176,
+      "category": "shower cabin",
+      "region_id": "5",
+      "bbox_diag": 1.459
+    },
+    {
+      "instance_id": 72,
+      "category": "mirror",
+      "region_id": "2",
+      "bbox_diag": 1.498
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "scene": "DNWbUAJYsPy",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    28,
+    34,
+    36,
+    141,
+    184,
+    90,
+    291,
+    214,
+    147,
+    107,
+    266,
+    174,
+    143,
+    124,
+    274,
+    222,
+    140,
+    133,
+    297,
+    221,
+    150,
+    312
+  ],
+  "nodes": [
+    {
+      "instance_id": 28,
+      "category": "armchair",
+      "region_id": "1",
+      "bbox_diag": 1.914
+    },
+    {
+      "instance_id": 34,
+      "category": "tv",
+      "region_id": "1",
+      "bbox_diag": 1.293
+    },
+    {
+      "instance_id": 36,
+      "category": "couch",
+      "region_id": "1",
+      "bbox_diag": 2.893
+    },
+    {
+      "instance_id": 141,
+      "category": "toilet",
+      "region_id": "2",
+      "bbox_diag": 1.06
+    },
+    {
+      "instance_id": 184,
+      "category": "bed",
+      "region_id": "3",
+      "bbox_diag": 3.487
+    },
+    {
+      "instance_id": 90,
+      "category": "curtain",
+      "region_id": "1",
+      "bbox_diag": 3.058
+    },
+    {
+      "instance_id": 291,
+      "category": "bathtub",
+      "region_id": "4",
+      "bbox_diag": 3.217
+    },
+    {
+      "instance_id": 214,
+      "category": "curtain",
+      "region_id": "3",
+      "bbox_diag": 2.848
+    },
+    {
+      "instance_id": 147,
+      "category": "mirror",
+      "region_id": "2",
+      "bbox_diag": 2.109
+    },
+    {
+      "instance_id": 107,
+      "category": "curtain",
+      "region_id": "1",
+      "bbox_diag": 2.721
+    },
+    {
+      "instance_id": 266,
+      "category": "shower floor",
+      "region_id": "4",
+      "bbox_diag": 3.038
+    },
+    {
+      "instance_id": 174,
+      "category": "armchair",
+      "region_id": "3",
+      "bbox_diag": 1.884
+    },
+    {
+      "instance_id": 143,
+      "category": "sink cabinet",
+      "region_id": "2",
+      "bbox_diag": 1.476
+    },
+    {
+      "instance_id": 124,
+      "category": "curtain",
+      "region_id": "1",
+      "bbox_diag": 2.686
+    },
+    {
+      "instance_id": 274,
+      "category": "sink cabinet",
+      "region_id": "4",
+      "bbox_diag": 2.208
+    },
+    {
+      "instance_id": 222,
+      "category": "mirror",
+      "region_id": "3",
+      "bbox_diag": 1.78
+    },
+    {
+      "instance_id": 140,
+      "category": "wall toilet paper",
+      "region_id": "2",
+      "bbox_diag": 0.571
+    },
+    {
+      "instance_id": 133,
+      "category": "table",
+      "region_id": "1",
+      "bbox_diag": 2.353
+    },
+    {
+      "instance_id": 297,
+      "category": "shower door",
+      "region_id": "4",
+      "bbox_diag": 2.185
+    },
+    {
+      "instance_id": 221,
+      "category": "wardrobe",
+      "region_id": "3",
+      "bbox_diag": 1.762
+    },
+    {
+      "instance_id": 150,
+      "category": "lamp",
+      "region_id": "2",
+      "bbox_diag": 0.399
+    },
+    {
+      "instance_id": 312,
+      "category": "table",
+      "region_id": "1",
+      "bbox_diag": 2.167
+    }
+  ]
+}

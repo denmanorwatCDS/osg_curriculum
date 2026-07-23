@@ -1,0 +1,162 @@
+{
+  "scene": "QVAA6zecMHu",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    132,
+    20,
+    49,
+    67,
+    98,
+    226,
+    252,
+    166,
+    105,
+    127,
+    192,
+    243,
+    1,
+    18,
+    216,
+    72,
+    160,
+    96,
+    138,
+    193,
+    236,
+    2
+  ],
+  "nodes": [
+    {
+      "instance_id": 132,
+      "category": "rocking chair",
+      "region_id": "4",
+      "bbox_diag": 1.581
+    },
+    {
+      "instance_id": 20,
+      "category": "plant",
+      "region_id": "1",
+      "bbox_diag": 0.924
+    },
+    {
+      "instance_id": 49,
+      "category": "couch",
+      "region_id": "2",
+      "bbox_diag": 2.83
+    },
+    {
+      "instance_id": 67,
+      "category": "tv",
+      "region_id": "2",
+      "bbox_diag": 1.178
+    },
+    {
+      "instance_id": 98,
+      "category": "bed",
+      "region_id": "3",
+      "bbox_diag": 3.602
+    },
+    {
+      "instance_id": 226,
+      "category": "toilet",
+      "region_id": "8",
+      "bbox_diag": 1.17
+    },
+    {
+      "instance_id": 252,
+      "category": "frame",
+      "region_id": "2",
+      "bbox_diag": 3.428
+    },
+    {
+      "instance_id": 166,
+      "category": "kitchen counter",
+      "region_id": "5",
+      "bbox_diag": 2.746
+    },
+    {
+      "instance_id": 105,
+      "category": "frame",
+      "region_id": "3",
+      "bbox_diag": 2.781
+    },
+    {
+      "instance_id": 127,
+      "category": "bed",
+      "region_id": "4",
+      "bbox_diag": 2.843
+    },
+    {
+      "instance_id": 192,
+      "category": "table",
+      "region_id": "6",
+      "bbox_diag": 1.736
+    },
+    {
+      "instance_id": 243,
+      "category": "soap",
+      "region_id": "8",
+      "bbox_diag": 2.911
+    },
+    {
+      "instance_id": 1,
+      "category": "washer-dryer",
+      "region_id": "0",
+      "bbox_diag": 1.508
+    },
+    {
+      "instance_id": 18,
+      "category": "chair",
+      "region_id": "1",
+      "bbox_diag": 1.342
+    },
+    {
+      "instance_id": 216,
+      "category": "mirror",
+      "region_id": "7",
+      "bbox_diag": 1.084
+    },
+    {
+      "instance_id": 72,
+      "category": "rug",
+      "region_id": "2",
+      "bbox_diag": 2.417
+    },
+    {
+      "instance_id": 160,
+      "category": "refrigerator",
+      "region_id": "5",
+      "bbox_diag": 2.198
+    },
+    {
+      "instance_id": 96,
+      "category": "curtain",
+      "region_id": "3",
+      "bbox_diag": 2.343
+    },
+    {
+      "instance_id": 138,
+      "category": "frame",
+      "region_id": "4",
+      "bbox_diag": 2.725
+    },
+    {
+      "instance_id": 193,
+      "category": "chair",
+      "region_id": "6",
+      "bbox_diag": 1.525
+    },
+    {
+      "instance_id": 236,
+      "category": "shower curtain",
+      "region_id": "8",
+      "bbox_diag": 1.936
+    },
+    {
+      "instance_id": 2,
+      "category": "washer-dryer",
+      "region_id": "0",
+      "bbox_diag": 1.457
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "scene": "DoSbsoo4EAg",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    76,
+    45,
+    197,
+    199,
+    213,
+    232,
+    121,
+    40,
+    71,
+    7,
+    157,
+    225,
+    94,
+    39,
+    70,
+    24,
+    148,
+    229,
+    108,
+    36,
+    67,
+    2
+  ],
+  "nodes": [
+    {
+      "instance_id": 76,
+      "category": "toilet",
+      "region_id": "2",
+      "bbox_diag": 1.219
+    },
+    {
+      "instance_id": 45,
+      "category": "bed",
+      "region_id": "1",
+      "bbox_diag": 3.353
+    },
+    {
+      "instance_id": 197,
+      "category": "tv",
+      "region_id": "5",
+      "bbox_diag": 1.399
+    },
+    {
+      "instance_id": 199,
+      "category": "armchair",
+      "region_id": "5",
+      "bbox_diag": 1.563
+    },
+    {
+      "instance_id": 213,
+      "category": "couch",
+      "region_id": "5",
+      "bbox_diag": 2.579
+    },
+    {
+      "instance_id": 232,
+      "category": "worktop",
+      "region_id": "5",
+      "bbox_diag": 2.688
+    },
+    {
+      "instance_id": 121,
+      "category": "bed",
+      "region_id": "3",
+      "bbox_diag": 3.34
+    },
+    {
+      "instance_id": 40,
+      "category": "wardrobe",
+      "region_id": "1",
+      "bbox_diag": 2.464
+    },
+    {
+      "instance_id": 71,
+      "category": "shower door frame",
+      "region_id": "2",
+      "bbox_diag": 2.648
+    },
+    {
+      "instance_id": 7,
+      "category": "shower glass",
+      "region_id": "0",
+      "bbox_diag": 2.442
+    },
+    {
+      "instance_id": 157,
+      "category": "wardrobe",
+      "region_id": "4",
+      "bbox_diag": 2.642
+    },
+    {
+      "instance_id": 225,
+      "category": "refrigerator",
+      "region_id": "5",
+      "bbox_diag": 2.083
+    },
+    {
+      "instance_id": 94,
+      "category": "wardrobe",
+      "region_id": "3",
+      "bbox_diag": 2.612
+    },
+    {
+      "instance_id": 39,
+      "category": "wardrobe",
+      "region_id": "1",
+      "bbox_diag": 2.326
+    },
+    {
+      "instance_id": 70,
+      "category": "shower tub",
+      "region_id": "2",
+      "bbox_diag": 2.035
+    },
+    {
+      "instance_id": 24,
+      "category": "shower floor",
+      "region_id": "0",
+      "bbox_diag": 1.701
+    },
+    {
+      "instance_id": 148,
+      "category": "wardrobe",
+      "region_id": "4",
+      "bbox_diag": 2.438
+    },
+    {
+      "instance_id": 229,
+      "category": "kitchen cabinet",
+      "region_id": "5",
+      "bbox_diag": 1.964
+    },
+    {
+      "instance_id": 108,
+      "category": "blinds",
+      "region_id": "3",
+      "bbox_diag": 2.198
+    },
+    {
+      "instance_id": 36,
+      "category": "dresser",
+      "region_id": "1",
+      "bbox_diag": 2.307
+    },
+    {
+      "instance_id": 67,
+      "category": "shower tap",
+      "region_id": "2",
+      "bbox_diag": 1.88
+    },
+    {
+      "instance_id": 2,
+      "category": "sink",
+      "region_id": "0",
+      "bbox_diag": 1.49
+    }
+  ]
+}

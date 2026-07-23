@@ -1,0 +1,5754 @@
+{
+  "scene": "741Fdj7NLF9",
+  "scene_glb": "hm3d_v0.2/train/00245-741Fdj7NLF9/741Fdj7NLF9.basis.glb",
+  "up_axis": "y",
+  "frame_note": "world = (asset_x, asset_z, -asset_y); Habitat Y-up world frame",
+  "num_objects": 229,
+  "regions": {
+    "0": {
+      "num_objects": 13
+    },
+    "1": {
+      "num_objects": 100
+    },
+    "2": {
+      "num_objects": 42
+    },
+    "3": {
+      "num_objects": 22
+    },
+    "4": {
+      "num_objects": 37
+    },
+    "5": {
+      "num_objects": 15
+    }
+  },
+  "objects": [
+    {
+      "instance_id": 1,
+      "category": "wall",
+      "region_id": "0",
+      "hex_color": "FF096C",
+      "position": [
+        8.9262,
+        1.3222,
+        15.0477
+      ],
+      "aabb": {
+        "center": [
+          10.1377,
+          1.3633,
+          15.1005
+        ],
+        "sizes": [
+          2.72,
+          2.835,
+          6.8023
+        ]
+      },
+      "num_vertices": 38616,
+      "bbox_diag": 7.855
+    },
+    {
+      "instance_id": 2,
+      "category": "wall",
+      "region_id": "0",
+      "hex_color": "9EBABA",
+      "position": [
+        10.3842,
+        1.6759,
+        11.7314
+      ],
+      "aabb": {
+        "center": [
+          10.334,
+          1.3727,
+          11.6616
+        ],
+        "sizes": [
+          2.7604,
+          2.7672,
+          0.28
+        ]
+      },
+      "num_vertices": 18654,
+      "bbox_diag": 3.919
+    },
+    {
+      "instance_id": 3,
+      "category": "ceiling",
+      "region_id": "0",
+      "hex_color": "2D55B0",
+      "position": [
+        10.4706,
+        2.7554,
+        14.647
+      ],
+      "aabb": {
+        "center": [
+          10.6122,
+          2.6415,
+          14.7199
+        ],
+        "sizes": [
+          3.3711,
+          0.3047,
+          5.9634
+        ]
+      },
+      "num_vertices": 28527,
+      "bbox_diag": 6.857
+    },
+    {
+      "instance_id": 4,
+      "category": "window",
+      "region_id": "0",
+      "hex_color": "157848",
+      "position": [
+        8.8718,
+        1.8611,
+        13.4125
+      ],
+      "aabb": {
+        "center": [
+          8.8787,
+          1.8979,
+          13.3875
+        ],
+        "sizes": [
+          0.3015,
+          1.2359,
+          0.9483
+        ]
+      },
+      "num_vertices": 7281,
+      "bbox_diag": 1.587
+    },
+    {
+      "instance_id": 5,
+      "category": "chair",
+      "region_id": "0",
+      "hex_color": "34B11F",
+      "position": [
+        9.6575,
+        0.46,
+        16.4372
+      ],
+      "aabb": {
+        "center": [
+          9.713,
+          0.4593,
+          16.5116
+        ],
+        "sizes": [
+          1.1696,
+          1.0155,
+          1.06
+        ]
+      },
+      "num_vertices": 21725,
+      "bbox_diag": 1.877
+    },
+    {
+      "instance_id": 6,
+      "category": "chair",
+      "region_id": "0",
+      "hex_color": "7B9D07",
+      "position": [
+        9.6869,
+        0.3119,
+        18.2282
+      ],
+      "aabb": {
+        "center": [
+          9.5811,
+          0.3967,
+          18.343
+        ],
+        "sizes": [
+          1.3934,
+          1.1217,
+          1.3172
+        ]
+      },
+      "num_vertices": 3829,
+      "bbox_diag": 2.221
+    },
+    {
+      "instance_id": 7,
+      "category": "lamp",
+      "region_id": "0",
+      "hex_color": "778C3C",
+      "position": [
+        8.9869,
+        2.1296,
+        16.2741
+      ],
+      "aabb": {
+        "center": [
+          9.0012,
+          2.1291,
+          16.3004
+        ],
+        "sizes": [
+          0.1963,
+          0.16,
+          0.2025
+        ]
+      },
+      "num_vertices": 516,
+      "bbox_diag": 0.324
+    },
+    {
+      "instance_id": 8,
+      "category": "wall",
+      "region_id": "0",
+      "hex_color": "8F3BD9",
+      "position": [
+        11.7027,
+        1.5262,
+        11.6461
+      ],
+      "aabb": {
+        "center": [
+          11.6937,
+          1.4444,
+          11.5828
+        ],
+        "sizes": [
+          0.0719,
+          2.6306,
+          0.3224
+        ]
+      },
+      "num_vertices": 940,
+      "bbox_diag": 2.651
+    },
+    {
+      "instance_id": 9,
+      "category": "ceiling fan",
+      "region_id": "0",
+      "hex_color": "C9A118",
+      "position": [
+        10.9283,
+        2.4993,
+        15.0278
+      ],
+      "aabb": {
+        "center": [
+          11.0037,
+          2.5968,
+          15.2169
+        ],
+        "sizes": [
+          0.9481,
+          0.3356,
+          1.1695
+        ]
+      },
+      "num_vertices": 3013,
+      "bbox_diag": 1.542
+    },
+    {
+      "instance_id": 10,
+      "category": "unknown",
+      "region_id": "0",
+      "hex_color": "AA4447",
+      "position": [
+        12.7642,
+        1.1681,
+        12.1521
+      ],
+      "aabb": {
+        "center": [
+          12.7619,
+          1.1623,
+          12.0173
+        ],
+        "sizes": [
+          0.0583,
+          2.0537,
+          0.9913
+        ]
+      },
+      "num_vertices": 831,
+      "bbox_diag": 2.281
+    },
+    {
+      "instance_id": 11,
+      "category": "barrel",
+      "region_id": "0",
+      "hex_color": "3A5A43",
+      "position": [
+        9.3508,
+        0.5152,
+        17.5486
+      ],
+      "aabb": {
+        "center": [
+          9.3144,
+          0.4052,
+          17.5371
+        ],
+        "sizes": [
+          0.8672,
+          0.8721,
+          0.7078
+        ]
+      },
+      "num_vertices": 8236,
+      "bbox_diag": 1.419
+    },
+    {
+      "instance_id": 12,
+      "category": "rack",
+      "region_id": "0",
+      "hex_color": "9FA3D6",
+      "position": [
+        9.4177,
+        0.8586,
+        12.2534
+      ],
+      "aabb": {
+        "center": [
+          9.4092,
+          0.9924,
+          12.2873
+        ],
+        "sizes": [
+          1.1429,
+          2.1975,
+          1.0525
+        ]
+      },
+      "num_vertices": 31274,
+      "bbox_diag": 2.691
+    },
+    {
+      "instance_id": 13,
+      "category": "floor",
+      "region_id": "0",
+      "hex_color": "30E064",
+      "position": [
+        10.338,
+        -0.0557,
+        15.1967
+      ],
+      "aabb": {
+        "center": [
+          10.7177,
+          -0.0515,
+          15.2865
+        ],
+        "sizes": [
+          3.92,
+          0.2012,
+          7.0897
+        ]
+      },
+      "num_vertices": 13553,
+      "bbox_diag": 8.104
+    },
+    {
+      "instance_id": 14,
+      "category": "wall",
+      "region_id": "1",
+      "hex_color": "353E11",
+      "position": [
+        8.5159,
+        1.2649,
+        14.8448
+      ],
+      "aabb": {
+        "center": [
+          7.4778,
+          1.3687,
+          15.2558
+        ],
+        "sizes": [
+          4.68,
+          2.8031,
+          7.1315
+        ]
+      },
+      "num_vertices": 20418,
+      "bbox_diag": 8.979
+    },
+    {
+      "instance_id": 15,
+      "category": "wall",
+      "region_id": "1",
+      "hex_color": "CD40C9",
+      "position": [
+        3.7926,
+        1.6036,
+        15.9642
+      ],
+      "aabb": {
+        "center": [
+          3.9396,
+          1.3789,
+          16.0916
+        ],
+        "sizes": [
+          0.4438,
+          2.781,
+          5.86
+        ]
+      },
+      "num_vertices": 9951,
+      "bbox_diag": 6.502
+    },
+    {
+      "instance_id": 16,
+      "category": "wall",
+      "region_id": "1",
+      "hex_color": "652D5B",
+      "position": [
+        4.3248,
+        1.0178,
+        12.4126
+      ],
+      "aabb": {
+        "center": [
+          4.276,
+          1.3794,
+          12.4003
+        ],
+        "sizes": [
+          1.0345,
+          2.7394,
+          0.0773
+        ]
+      },
+      "num_vertices": 334,
+      "bbox_diag": 2.929
+    },
+    {
+      "instance_id": 17,
+      "category": "wall",
+      "region_id": "1",
+      "hex_color": "F2A0BA",
+      "position": [
+        7.1847,
+        1.4334,
+        18.9953
+      ],
+      "aabb": {
+        "center": [
+          6.4152,
+          1.3872,
+          18.9383
+        ],
+        "sizes": [
+          4.5412,
+          2.7666,
+          0.3533
+        ]
+      },
+      "num_vertices": 11159,
+      "bbox_diag": 5.329
+    },
+    {
+      "instance_id": 18,
+      "category": "wall",
+      "region_id": "1",
+      "hex_color": "13C9BB",
+      "position": [
+        7.1038,
+        1.5384,
+        11.7209
+      ],
+      "aabb": {
+        "center": [
+          6.7878,
+          1.5183,
+          11.8591
+        ],
+        "sizes": [
+          3.7,
+          2.4927,
+          0.4132
+        ]
+      },
+      "num_vertices": 4402,
+      "bbox_diag": 4.48
+    },
+    {
+      "instance_id": 19,
+      "category": "wall",
+      "region_id": "1",
+      "hex_color": "A88C88",
+      "position": [
+        4.789,
+        2.2272,
+        12.2426
+      ],
+      "aabb": {
+        "center": [
+          4.7977,
+          2.2768,
+          12.0543
+        ],
+        "sizes": [
+          0.0401,
+          0.9754,
+          0.715
+        ]
+      },
+      "num_vertices": 519,
+      "bbox_diag": 1.21
+    },
+    {
+      "instance_id": 20,
+      "category": "decoration",
+      "region_id": "1",
+      "hex_color": "F30BE0",
+      "position": [
+        8.6421,
+        1.654,
+        16.2081
+      ],
+      "aabb": {
+        "center": [
+          8.6484,
+          1.7191,
+          16.2016
+        ],
+        "sizes": [
+          0.0209,
+          0.74,
+          0.24
+        ]
+      },
+      "num_vertices": 152,
+      "bbox_diag": 0.778
+    },
+    {
+      "instance_id": 21,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "E7A1D0",
+      "position": [
+        8.3646,
+        2.0278,
+        14.3646
+      ],
+      "aabb": {
+        "center": [
+          8.4619,
+          1.9305,
+          14.3636
+        ],
+        "sizes": [
+          0.3883,
+          1.1572,
+          0.9239
+        ]
+      },
+      "num_vertices": 6338,
+      "bbox_diag": 1.531
+    },
+    {
+      "instance_id": 22,
+      "category": "door",
+      "region_id": "1",
+      "hex_color": "0C197B",
+      "position": [
+        4.2287,
+        0.83,
+        12.4093
+      ],
+      "aabb": {
+        "center": [
+          4.2079,
+          1.1291,
+          12.4259
+        ],
+        "sizes": [
+          0.6202,
+          2.2,
+          0.1008
+        ]
+      },
+      "num_vertices": 1009,
+      "bbox_diag": 2.288
+    },
+    {
+      "instance_id": 23,
+      "category": "door frame",
+      "region_id": "1",
+      "hex_color": "E9FD3F",
+      "position": [
+        3.9384,
+        1.2118,
+        12.4087
+      ],
+      "aabb": {
+        "center": [
+          4.1997,
+          1.2791,
+          12.4002
+        ],
+        "sizes": [
+          0.7964,
+          2.5401,
+          0.0627
+        ]
+      },
+      "num_vertices": 421,
+      "bbox_diag": 2.663
+    },
+    {
+      "instance_id": 24,
+      "category": "couch",
+      "region_id": "1",
+      "hex_color": "B3AB72",
+      "position": [
+        6.363,
+        0.451,
+        16.0688
+      ],
+      "aabb": {
+        "center": [
+          6.1662,
+          0.4638,
+          16.1477
+        ],
+        "sizes": [
+          2.311,
+          0.9102,
+          1.0249
+        ]
+      },
+      "num_vertices": 18225,
+      "bbox_diag": 2.687
+    },
+    {
+      "instance_id": 25,
+      "category": "table",
+      "region_id": "1",
+      "hex_color": "CDDADD",
+      "position": [
+        6.38,
+        0.3663,
+        17.5768
+      ],
+      "aabb": {
+        "center": [
+          6.3764,
+          0.3569,
+          17.6053
+        ],
+        "sizes": [
+          0.8557,
+          0.2155,
+          0.7307
+        ]
+      },
+      "num_vertices": 4553,
+      "bbox_diag": 1.146
+    },
+    {
+      "instance_id": 26,
+      "category": "picture",
+      "region_id": "1",
+      "hex_color": "F2DEB2",
+      "position": [
+        3.7973,
+        1.7921,
+        16.3462
+      ],
+      "aabb": {
+        "center": [
+          3.7898,
+          1.7325,
+          16.314
+        ],
+        "sizes": [
+          0.0386,
+          0.5269,
+          0.4554
+        ]
+      },
+      "num_vertices": 246,
+      "bbox_diag": 0.697
+    },
+    {
+      "instance_id": 27,
+      "category": "picture",
+      "region_id": "1",
+      "hex_color": "655E78",
+      "position": [
+        3.8132,
+        1.7244,
+        18.4536
+      ],
+      "aabb": {
+        "center": [
+          3.8099,
+          1.6891,
+          18.4116
+        ],
+        "sizes": [
+          0.0346,
+          0.48,
+          0.3
+        ]
+      },
+      "num_vertices": 160,
+      "bbox_diag": 0.567
+    },
+    {
+      "instance_id": 28,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "E40C8B",
+      "position": [
+        8.4448,
+        2.0159,
+        12.4589
+      ],
+      "aabb": {
+        "center": [
+          8.4816,
+          1.9091,
+          12.2709
+        ],
+        "sizes": [
+          0.4381,
+          1.16,
+          1.1117
+        ]
+      },
+      "num_vertices": 5454,
+      "bbox_diag": 1.665
+    },
+    {
+      "instance_id": 29,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "11B9A1",
+      "position": [
+        8.0302,
+        0.5475,
+        12.5827
+      ],
+      "aabb": {
+        "center": [
+          8.0318,
+          0.5591,
+          12.6116
+        ],
+        "sizes": [
+          0.0349,
+          0.26,
+          0.58
+        ]
+      },
+      "num_vertices": 206,
+      "bbox_diag": 0.637
+    },
+    {
+      "instance_id": 30,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "FA692A",
+      "position": [
+        8.0265,
+        0.837,
+        12.4771
+      ],
+      "aabb": {
+        "center": [
+          8.0291,
+          0.8191,
+          12.5712
+        ],
+        "sizes": [
+          0.0396,
+          0.14,
+          0.5143
+        ]
+      },
+      "num_vertices": 127,
+      "bbox_diag": 0.534
+    },
+    {
+      "instance_id": 31,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "0E3AA8",
+      "position": [
+        8.0499,
+        0.1688,
+        12.553
+      ],
+      "aabb": {
+        "center": [
+          8.0611,
+          0.1891,
+          12.5716
+        ],
+        "sizes": [
+          0.0733,
+          0.36,
+          0.54
+        ]
+      },
+      "num_vertices": 651,
+      "bbox_diag": 0.653
+    },
+    {
+      "instance_id": 32,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "1ECA71",
+      "position": [
+        8.0201,
+        0.4145,
+        13.4731
+      ],
+      "aabb": {
+        "center": [
+          8.0302,
+          0.4552,
+          13.3916
+        ],
+        "sizes": [
+          0.1138,
+          0.8678,
+          0.86
+        ]
+      },
+      "num_vertices": 2445,
+      "bbox_diag": 1.227
+    },
+    {
+      "instance_id": 33,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "6CAB18",
+      "position": [
+        6.0891,
+        0.1578,
+        12.2998
+      ],
+      "aabb": {
+        "center": [
+          6.1108,
+          0.3291,
+          12.2827
+        ],
+        "sizes": [
+          0.746,
+          0.64,
+          0.1011
+        ]
+      },
+      "num_vertices": 1193,
+      "bbox_diag": 0.988
+    },
+    {
+      "instance_id": 34,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "551BB8",
+      "position": [
+        7.5741,
+        0.2226,
+        12.3198
+      ],
+      "aabb": {
+        "center": [
+          7.6477,
+          0.3575,
+          12.3203
+        ],
+        "sizes": [
+          0.82,
+          0.6631,
+          0.1405
+        ]
+      },
+      "num_vertices": 1522,
+      "bbox_diag": 1.064
+    },
+    {
+      "instance_id": 35,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "B9E76D",
+      "position": [
+        7.6745,
+        0.8238,
+        12.3277
+      ],
+      "aabb": {
+        "center": [
+          7.6469,
+          0.8151,
+          12.3303
+        ],
+        "sizes": [
+          0.7818,
+          0.148,
+          0.0349
+        ]
+      },
+      "num_vertices": 317,
+      "bbox_diag": 0.796
+    },
+    {
+      "instance_id": 36,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "78D2B9",
+      "position": [
+        6.2218,
+        0.8138,
+        12.3221
+      ],
+      "aabb": {
+        "center": [
+          6.1078,
+          0.8191,
+          12.3278
+        ],
+        "sizes": [
+          0.7,
+          0.14,
+          0.0276
+        ]
+      },
+      "num_vertices": 124,
+      "bbox_diag": 0.714
+    },
+    {
+      "instance_id": 37,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "F3D990",
+      "position": [
+        8.2131,
+        2.1123,
+        11.8994
+      ],
+      "aabb": {
+        "center": [
+          8.2977,
+          1.9191,
+          11.8916
+        ],
+        "sizes": [
+          0.72,
+          1.14,
+          0.38
+        ]
+      },
+      "num_vertices": 2833,
+      "bbox_diag": 1.401
+    },
+    {
+      "instance_id": 38,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "DD4879",
+      "position": [
+        7.5275,
+        1.9961,
+        11.9007
+      ],
+      "aabb": {
+        "center": [
+          7.489,
+          1.9108,
+          11.9183
+        ],
+        "sizes": [
+          0.8625,
+          1.1234,
+          0.38
+        ]
+      },
+      "num_vertices": 3518,
+      "bbox_diag": 1.466
+    },
+    {
+      "instance_id": 39,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "24CC27",
+      "position": [
+        6.9156,
+        2.3848,
+        11.9114
+      ],
+      "aabb": {
+        "center": [
+          6.8793,
+          2.1747,
+          11.8936
+        ],
+        "sizes": [
+          0.7632,
+          0.6204,
+          0.3618
+        ]
+      },
+      "num_vertices": 2188,
+      "bbox_diag": 1.048
+    },
+    {
+      "instance_id": 40,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "074D53",
+      "position": [
+        6.152,
+        2.0022,
+        11.8755
+      ],
+      "aabb": {
+        "center": [
+          6.1278,
+          1.9157,
+          11.8784
+        ],
+        "sizes": [
+          0.86,
+          1.1467,
+          0.3746
+        ]
+      },
+      "num_vertices": 4294,
+      "bbox_diag": 1.481
+    },
+    {
+      "instance_id": 41,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "C82F31",
+      "position": [
+        5.2967,
+        2.2632,
+        11.8763
+      ],
+      "aabb": {
+        "center": [
+          5.2715,
+          2.1456,
+          11.9176
+        ],
+        "sizes": [
+          0.9725,
+          0.687,
+          0.488
+        ]
+      },
+      "num_vertices": 5063,
+      "bbox_diag": 1.287
+    },
+    {
+      "instance_id": 42,
+      "category": "refrigerator",
+      "region_id": "1",
+      "hex_color": "CAB6D2",
+      "position": [
+        5.2138,
+        0.8564,
+        12.4208
+      ],
+      "aabb": {
+        "center": [
+          5.2977,
+          0.8991,
+          12.1176
+        ],
+        "sizes": [
+          1.0401,
+          1.759,
+          0.8453
+        ]
+      },
+      "num_vertices": 6739,
+      "bbox_diag": 2.211
+    },
+    {
+      "instance_id": 43,
+      "category": "unknown",
+      "region_id": "1",
+      "hex_color": "513D82",
+      "position": [
+        4.9572,
+        1.8723,
+        12.1112
+      ],
+      "aabb": {
+        "center": [
+          4.9255,
+          1.8666,
+          12.0949
+        ],
+        "sizes": [
+          0.2703,
+          0.1949,
+          0.267
+        ]
+      },
+      "num_vertices": 822,
+      "bbox_diag": 0.427
+    },
+    {
+      "instance_id": 44,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "77A0FF",
+      "position": [
+        8.1706,
+        0.282,
+        14.7352
+      ],
+      "aabb": {
+        "center": [
+          8.2879,
+          0.3591,
+          14.6016
+        ],
+        "sizes": [
+          0.5543,
+          0.7,
+          0.44
+        ]
+      },
+      "num_vertices": 3028,
+      "bbox_diag": 0.995
+    },
+    {
+      "instance_id": 45,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "93BCAC",
+      "position": [
+        8.1457,
+        0.8167,
+        14.719
+      ],
+      "aabb": {
+        "center": [
+          8.2554,
+          0.8191,
+          14.6263
+        ],
+        "sizes": [
+          0.5291,
+          0.18,
+          0.4493
+        ]
+      },
+      "num_vertices": 536,
+      "bbox_diag": 0.717
+    },
+    {
+      "instance_id": 46,
+      "category": "dishwasher",
+      "region_id": "1",
+      "hex_color": "BDD7D4",
+      "position": [
+        8.0205,
+        0.4122,
+        14.0647
+      ],
+      "aabb": {
+        "center": [
+          8.0404,
+          0.4299,
+          14.1007
+        ],
+        "sizes": [
+          0.1817,
+          0.8436,
+          0.5617
+        ]
+      },
+      "num_vertices": 3176,
+      "bbox_diag": 1.03
+    },
+    {
+      "instance_id": 47,
+      "category": "kitchen counter",
+      "region_id": "1",
+      "hex_color": "83360F",
+      "position": [
+        8.1064,
+        0.9164,
+        13.2975
+      ],
+      "aabb": {
+        "center": [
+          7.239,
+          0.8291,
+          13.2719
+        ],
+        "sizes": [
+          2.8025,
+          0.36,
+          3.1523
+        ]
+      },
+      "num_vertices": 2311,
+      "bbox_diag": 4.233
+    },
+    {
+      "instance_id": 48,
+      "category": "microwave",
+      "region_id": "1",
+      "hex_color": "AE910F",
+      "position": [
+        6.8937,
+        1.5621,
+        11.9344
+      ],
+      "aabb": {
+        "center": [
+          6.886,
+          1.6217,
+          11.9316
+        ],
+        "sizes": [
+          0.7435,
+          0.4504,
+          0.46
+        ]
+      },
+      "num_vertices": 5581,
+      "bbox_diag": 0.984
+    },
+    {
+      "instance_id": 49,
+      "category": "picture",
+      "region_id": "1",
+      "hex_color": "6E019F",
+      "position": [
+        7.5987,
+        1.1162,
+        11.7671
+      ],
+      "aabb": {
+        "center": [
+          7.5451,
+          1.0684,
+          11.7678
+        ],
+        "sizes": [
+          0.3747,
+          0.2814,
+          0.1208
+        ]
+      },
+      "num_vertices": 247,
+      "bbox_diag": 0.484
+    },
+    {
+      "instance_id": 50,
+      "category": "sink",
+      "region_id": "1",
+      "hex_color": "E18237",
+      "position": [
+        8.2157,
+        0.7767,
+        13.2411
+      ],
+      "aabb": {
+        "center": [
+          8.2354,
+          0.7453,
+          13.3274
+        ],
+        "sizes": [
+          0.5317,
+          0.2877,
+          0.7716
+        ]
+      },
+      "num_vertices": 1954,
+      "bbox_diag": 0.98
+    },
+    {
+      "instance_id": 51,
+      "category": "faucet",
+      "region_id": "1",
+      "hex_color": "33FFDC",
+      "position": [
+        8.58,
+        0.9827,
+        13.386
+      ],
+      "aabb": {
+        "center": [
+          8.5905,
+          1.0276,
+          13.3932
+        ],
+        "sizes": [
+          0.1198,
+          0.2031,
+          0.121
+        ]
+      },
+      "num_vertices": 389,
+      "bbox_diag": 0.265
+    },
+    {
+      "instance_id": 52,
+      "category": "towel",
+      "region_id": "1",
+      "hex_color": "D0BFA6",
+      "position": [
+        8.5308,
+        0.9614,
+        13.7751
+      ],
+      "aabb": {
+        "center": [
+          8.5308,
+          0.9581,
+          13.7854
+        ],
+        "sizes": [
+          0.1862,
+          0.0745,
+          0.1302
+        ]
+      },
+      "num_vertices": 260,
+      "bbox_diag": 0.239
+    },
+    {
+      "instance_id": 53,
+      "category": "bottle",
+      "region_id": "1",
+      "hex_color": "960070",
+      "position": [
+        8.5876,
+        0.9742,
+        13.6194
+      ],
+      "aabb": {
+        "center": [
+          8.5859,
+          0.9757,
+          13.6234
+        ],
+        "sizes": [
+          0.0776,
+          0.1069,
+          0.0435
+        ]
+      },
+      "num_vertices": 110,
+      "bbox_diag": 0.139
+    },
+    {
+      "instance_id": 54,
+      "category": "stove",
+      "region_id": "1",
+      "hex_color": "8523E1",
+      "position": [
+        6.8591,
+        0.5913,
+        12.1502
+      ],
+      "aabb": {
+        "center": [
+          6.8484,
+          0.4789,
+          12.0498
+        ],
+        "sizes": [
+          1.0186,
+          0.9476,
+          0.7919
+        ]
+      },
+      "num_vertices": 18871,
+      "bbox_diag": 1.601
+    },
+    {
+      "instance_id": 55,
+      "category": "box",
+      "region_id": "1",
+      "hex_color": "521AAA",
+      "position": [
+        5.8114,
+        1.1116,
+        11.7802
+      ],
+      "aabb": {
+        "center": [
+          5.7956,
+          1.0591,
+          11.7702
+        ],
+        "sizes": [
+          0.1834,
+          0.26,
+          0.1627
+        ]
+      },
+      "num_vertices": 306,
+      "bbox_diag": 0.357
+    },
+    {
+      "instance_id": 56,
+      "category": "coffee machine",
+      "region_id": "1",
+      "hex_color": "630E3F",
+      "position": [
+        8.341,
+        1.0451,
+        12.1119
+      ],
+      "aabb": {
+        "center": [
+          8.3773,
+          1.0925,
+          12.0591
+        ],
+        "sizes": [
+          0.566,
+          0.4828,
+          0.5951
+        ]
+      },
+      "num_vertices": 4027,
+      "bbox_diag": 0.953
+    },
+    {
+      "instance_id": 57,
+      "category": "paper towel",
+      "region_id": "1",
+      "hex_color": "6EB727",
+      "position": [
+        8.5098,
+        1.0813,
+        12.7431
+      ],
+      "aabb": {
+        "center": [
+          8.517,
+          1.072,
+          12.7522
+        ],
+        "sizes": [
+          0.2385,
+          0.3658,
+          0.1985
+        ]
+      },
+      "num_vertices": 930,
+      "bbox_diag": 0.48
+    },
+    {
+      "instance_id": 58,
+      "category": "unknown",
+      "region_id": "1",
+      "hex_color": "A1486E",
+      "position": [
+        8.5484,
+        0.9858,
+        14.5446
+      ],
+      "aabb": {
+        "center": [
+          8.5555,
+          0.9978,
+          14.5765
+        ],
+        "sizes": [
+          0.1511,
+          0.1426,
+          0.1703
+        ]
+      },
+      "num_vertices": 308,
+      "bbox_diag": 0.269
+    },
+    {
+      "instance_id": 59,
+      "category": "blinds",
+      "region_id": "1",
+      "hex_color": "0204A4",
+      "position": [
+        8.6928,
+        2.1324,
+        13.2457
+      ],
+      "aabb": {
+        "center": [
+          8.7178,
+          2.1771,
+          13.3542
+        ],
+        "sizes": [
+          0.1598,
+          0.584,
+          0.8652
+        ]
+      },
+      "num_vertices": 1316,
+      "bbox_diag": 1.056
+    },
+    {
+      "instance_id": 60,
+      "category": "kitchen countertop item",
+      "region_id": "1",
+      "hex_color": "43B98F",
+      "position": [
+        6.1335,
+        1.1053,
+        11.7955
+      ],
+      "aabb": {
+        "center": [
+          6.1423,
+          1.0798,
+          11.7806
+        ],
+        "sizes": [
+          0.129,
+          0.3014,
+          0.1791
+        ]
+      },
+      "num_vertices": 734,
+      "bbox_diag": 0.374
+    },
+    {
+      "instance_id": 61,
+      "category": "kitchen countertop items",
+      "region_id": "1",
+      "hex_color": "1E5AD8",
+      "position": [
+        6.3528,
+        0.9661,
+        11.7563
+      ],
+      "aabb": {
+        "center": [
+          6.3577,
+          0.9749,
+          11.7623
+        ],
+        "sizes": [
+          0.08,
+          0.1084,
+          0.1185
+        ]
+      },
+      "num_vertices": 217,
+      "bbox_diag": 0.179
+    },
+    {
+      "instance_id": 62,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "DAC1AD",
+      "position": [
+        6.0546,
+        0.6392,
+        16.1789
+      ],
+      "aabb": {
+        "center": [
+          6.1278,
+          0.6169,
+          16.2361
+        ],
+        "sizes": [
+          0.62,
+          0.3394,
+          0.3711
+        ]
+      },
+      "num_vertices": 1686,
+      "bbox_diag": 0.798
+    },
+    {
+      "instance_id": 63,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "FDE780",
+      "position": [
+        7.0465,
+        0.6976,
+        16.1978
+      ],
+      "aabb": {
+        "center": [
+          7.0129,
+          0.6816,
+          16.2116
+        ],
+        "sizes": [
+          0.4302,
+          0.4091,
+          0.46
+        ]
+      },
+      "num_vertices": 1984,
+      "bbox_diag": 0.751
+    },
+    {
+      "instance_id": 64,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "6BE436",
+      "position": [
+        6.703,
+        0.7334,
+        16.2027
+      ],
+      "aabb": {
+        "center": [
+          6.7173,
+          0.6938,
+          16.2056
+        ],
+        "sizes": [
+          0.4196,
+          0.4095,
+          0.448
+        ]
+      },
+      "num_vertices": 1506,
+      "bbox_diag": 0.738
+    },
+    {
+      "instance_id": 65,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "741B4D",
+      "position": [
+        5.2632,
+        0.7018,
+        16.2048
+      ],
+      "aabb": {
+        "center": [
+          5.2961,
+          0.6805,
+          16.1975
+        ],
+        "sizes": [
+          0.4486,
+          0.4628,
+          0.4318
+        ]
+      },
+      "num_vertices": 1961,
+      "bbox_diag": 0.776
+    },
+    {
+      "instance_id": 66,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "3F57A2",
+      "position": [
+        5.5383,
+        0.7124,
+        16.2432
+      ],
+      "aabb": {
+        "center": [
+          5.5784,
+          0.681,
+          16.2256
+        ],
+        "sizes": [
+          0.4203,
+          0.3838,
+          0.4777
+        ]
+      },
+      "num_vertices": 1903,
+      "bbox_diag": 0.743
+    },
+    {
+      "instance_id": 67,
+      "category": "tv",
+      "region_id": "1",
+      "hex_color": "6603FE",
+      "position": [
+        6.8482,
+        2.2681,
+        18.895
+      ],
+      "aabb": {
+        "center": [
+          6.8638,
+          2.2251,
+          18.9098
+        ],
+        "sizes": [
+          1.108,
+          0.7279,
+          0.2428
+        ]
+      },
+      "num_vertices": 6218,
+      "bbox_diag": 1.348
+    },
+    {
+      "instance_id": 68,
+      "category": "door frame",
+      "region_id": "1",
+      "hex_color": "EFE2AB",
+      "position": [
+        3.692,
+        1.4352,
+        15.2309
+      ],
+      "aabb": {
+        "center": [
+          3.7063,
+          1.2976,
+          15.352
+        ],
+        "sizes": [
+          0.1969,
+          2.543,
+          1.1007
+        ]
+      },
+      "num_vertices": 4164,
+      "bbox_diag": 2.778
+    },
+    {
+      "instance_id": 69,
+      "category": "door frame",
+      "region_id": "1",
+      "hex_color": "648E82",
+      "position": [
+        3.6953,
+        1.4774,
+        17.2143
+      ],
+      "aabb": {
+        "center": [
+          3.7084,
+          1.3091,
+          17.2558
+        ],
+        "sizes": [
+          0.2212,
+          2.56,
+          1.0916
+        ]
+      },
+      "num_vertices": 4912,
+      "bbox_diag": 2.792
+    },
+    {
+      "instance_id": 70,
+      "category": "door",
+      "region_id": "1",
+      "hex_color": "0DB07A",
+      "position": [
+        4.2555,
+        1.4242,
+        18.1274
+      ],
+      "aabb": {
+        "center": [
+          4.1917,
+          1.2984,
+          18.0014
+        ],
+        "sizes": [
+          0.788,
+          2.5014,
+          0.6347
+        ]
+      },
+      "num_vertices": 9988,
+      "bbox_diag": 2.698
+    },
+    {
+      "instance_id": 71,
+      "category": "door frame",
+      "region_id": "1",
+      "hex_color": "037006",
+      "position": [
+        8.7025,
+        1.087,
+        15.2512
+      ],
+      "aabb": {
+        "center": [
+          8.6219,
+          1.2849,
+          15.4216
+        ],
+        "sizes": [
+          0.6083,
+          2.5686,
+          1.16
+        ]
+      },
+      "num_vertices": 7751,
+      "bbox_diag": 2.883
+    },
+    {
+      "instance_id": 72,
+      "category": "door",
+      "region_id": "1",
+      "hex_color": "5ADFA4",
+      "position": [
+        8.138,
+        1.0957,
+        15.0031
+      ],
+      "aabb": {
+        "center": [
+          8.189,
+          1.224,
+          15.0107
+        ],
+        "sizes": [
+          0.9984,
+          2.4901,
+          0.1982
+        ]
+      },
+      "num_vertices": 16611,
+      "bbox_diag": 2.69
+    },
+    {
+      "instance_id": 73,
+      "category": "basket",
+      "region_id": "1",
+      "hex_color": "08617E",
+      "position": [
+        8.4319,
+        0.2826,
+        18.771
+      ],
+      "aabb": {
+        "center": [
+          8.4386,
+          0.2218,
+          18.7638
+        ],
+        "sizes": [
+          0.4417,
+          0.4281,
+          0.4644
+        ]
+      },
+      "num_vertices": 4235,
+      "bbox_diag": 0.771
+    },
+    {
+      "instance_id": 74,
+      "category": "armchair",
+      "region_id": "1",
+      "hex_color": "C1C7AE",
+      "position": [
+        8.1154,
+        0.5571,
+        17.5431
+      ],
+      "aabb": {
+        "center": [
+          8.0917,
+          0.4801,
+          17.7283
+        ],
+        "sizes": [
+          1.132,
+          1.0113,
+          1.3665
+        ]
+      },
+      "num_vertices": 10521,
+      "bbox_diag": 2.042
+    },
+    {
+      "instance_id": 75,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "52644B",
+      "position": [
+        8.138,
+        0.7357,
+        17.6838
+      ],
+      "aabb": {
+        "center": [
+          8.1278,
+          0.674,
+          17.7366
+        ],
+        "sizes": [
+          0.2601,
+          0.4098,
+          0.52
+        ]
+      },
+      "num_vertices": 734,
+      "bbox_diag": 0.711
+    },
+    {
+      "instance_id": 76,
+      "category": "pillow",
+      "region_id": "1",
+      "hex_color": "F26C8A",
+      "position": [
+        8.0288,
+        0.6983,
+        17.6598
+      ],
+      "aabb": {
+        "center": [
+          8.0356,
+          0.6758,
+          17.7008
+        ],
+        "sizes": [
+          0.2842,
+          0.4133,
+          0.5346
+        ]
+      },
+      "num_vertices": 944,
+      "bbox_diag": 0.733
+    },
+    {
+      "instance_id": 77,
+      "category": "table",
+      "region_id": "1",
+      "hex_color": "3A88F2",
+      "position": [
+        8.1173,
+        0.3134,
+        16.8795
+      ],
+      "aabb": {
+        "center": [
+          8.1692,
+          0.3114,
+          16.918
+        ],
+        "sizes": [
+          0.6772,
+          0.638,
+          0.5272
+        ]
+      },
+      "num_vertices": 10067,
+      "bbox_diag": 1.069
+    },
+    {
+      "instance_id": 78,
+      "category": "magazine",
+      "region_id": "1",
+      "hex_color": "770F98",
+      "position": [
+        8.4842,
+        0.5221,
+        16.9176
+      ],
+      "aabb": {
+        "center": [
+          8.4077,
+          0.5166,
+          16.8716
+        ],
+        "sizes": [
+          0.38,
+          0.2005,
+          0.3
+        ]
+      },
+      "num_vertices": 235,
+      "bbox_diag": 0.524
+    },
+    {
+      "instance_id": 79,
+      "category": "unknown",
+      "region_id": "1",
+      "hex_color": "BE85F4",
+      "position": [
+        7.9286,
+        0.637,
+        16.8694
+      ],
+      "aabb": {
+        "center": [
+          7.9401,
+          0.6307,
+          16.873
+        ],
+        "sizes": [
+          0.1181,
+          0.0469,
+          0.1028
+        ]
+      },
+      "num_vertices": 112,
+      "bbox_diag": 0.163
+    },
+    {
+      "instance_id": 80,
+      "category": "window",
+      "region_id": "1",
+      "hex_color": "48806D",
+      "position": [
+        8.8442,
+        1.8021,
+        17.8339
+      ],
+      "aabb": {
+        "center": [
+          8.7999,
+          1.6363,
+          17.7836
+        ],
+        "sizes": [
+          0.4444,
+          1.2144,
+          1.3241
+        ]
+      },
+      "num_vertices": 551,
+      "bbox_diag": 1.851
+    },
+    {
+      "instance_id": 81,
+      "category": "blinds",
+      "region_id": "1",
+      "hex_color": "A46557",
+      "position": [
+        8.7211,
+        2.162,
+        17.8014
+      ],
+      "aabb": {
+        "center": [
+          8.6728,
+          2.1691,
+          17.7416
+        ],
+        "sizes": [
+          0.2702,
+          0.6,
+          1.12
+        ]
+      },
+      "num_vertices": 6425,
+      "bbox_diag": 1.299
+    },
+    {
+      "instance_id": 82,
+      "category": "curtain",
+      "region_id": "1",
+      "hex_color": "0E4E7F",
+      "position": [
+        8.6001,
+        1.8359,
+        18.3242
+      ],
+      "aabb": {
+        "center": [
+          8.5866,
+          1.7091,
+          18.3424
+        ],
+        "sizes": [
+          0.2177,
+          1.96,
+          0.4174
+        ]
+      },
+      "num_vertices": 8405,
+      "bbox_diag": 2.016
+    },
+    {
+      "instance_id": 83,
+      "category": "curtain",
+      "region_id": "1",
+      "hex_color": "2E4DCE",
+      "position": [
+        8.573,
+        1.4927,
+        16.8082
+      ],
+      "aabb": {
+        "center": [
+          8.5833,
+          1.3991,
+          16.8516
+        ],
+        "sizes": [
+          0.3312,
+          2.54,
+          0.66
+        ]
+      },
+      "num_vertices": 10844,
+      "bbox_diag": 2.645
+    },
+    {
+      "instance_id": 84,
+      "category": "curtain rod",
+      "region_id": "1",
+      "hex_color": "2CEF77",
+      "position": [
+        8.6629,
+        2.6431,
+        17.4455
+      ],
+      "aabb": {
+        "center": [
+          8.6578,
+          2.6391,
+          17.5324
+        ],
+        "sizes": [
+          0.04,
+          0.1,
+          2.0615
+        ]
+      },
+      "num_vertices": 116,
+      "bbox_diag": 2.064
+    },
+    {
+      "instance_id": 85,
+      "category": "stool",
+      "region_id": "1",
+      "hex_color": "037B91",
+      "position": [
+        5.3296,
+        0.2049,
+        18.7755
+      ],
+      "aabb": {
+        "center": [
+          5.3049,
+          0.1804,
+          18.7615
+        ],
+        "sizes": [
+          0.4466,
+          0.3485,
+          0.4553
+        ]
+      },
+      "num_vertices": 2277,
+      "bbox_diag": 0.727
+    },
+    {
+      "instance_id": 86,
+      "category": "dresser",
+      "region_id": "1",
+      "hex_color": "409154",
+      "position": [
+        4.2908,
+        0.5509,
+        18.7356
+      ],
+      "aabb": {
+        "center": [
+          4.4028,
+          0.4326,
+          18.9013
+        ],
+        "sizes": [
+          1.2901,
+          0.913,
+          0.7291
+        ]
+      },
+      "num_vertices": 5827,
+      "bbox_diag": 1.741
+    },
+    {
+      "instance_id": 87,
+      "category": "unknown",
+      "region_id": "1",
+      "hex_color": "CA25E5",
+      "position": [
+        4.513,
+        0.882,
+        18.8259
+      ],
+      "aabb": {
+        "center": [
+          4.503,
+          0.8942,
+          18.8416
+        ],
+        "sizes": [
+          0.2104,
+          0.1097,
+          0.24
+        ]
+      },
+      "num_vertices": 399,
+      "bbox_diag": 0.338
+    },
+    {
+      "instance_id": 88,
+      "category": "unknown",
+      "region_id": "1",
+      "hex_color": "68EA3B",
+      "position": [
+        4.8259,
+        1.1551,
+        18.801
+      ],
+      "aabb": {
+        "center": [
+          4.833,
+          1.0733,
+          18.796
+        ],
+        "sizes": [
+          0.2168,
+          0.4486,
+          0.1487
+        ]
+      },
+      "num_vertices": 1190,
+      "bbox_diag": 0.52
+    },
+    {
+      "instance_id": 89,
+      "category": "unknown",
+      "region_id": "1",
+      "hex_color": "FE8679",
+      "position": [
+        4.1868,
+        0.9809,
+        18.8733
+      ],
+      "aabb": {
+        "center": [
+          4.1625,
+          1.0091,
+          18.863
+        ],
+        "sizes": [
+          0.4495,
+          0.44,
+          0.3572
+        ]
+      },
+      "num_vertices": 3170,
+      "bbox_diag": 0.723
+    },
+    {
+      "instance_id": 90,
+      "category": "window",
+      "region_id": "1",
+      "hex_color": "B9445A",
+      "position": [
+        4.6147,
+        1.3889,
+        19.1031
+      ],
+      "aabb": {
+        "center": [
+          4.5734,
+          1.3688,
+          19.0992
+        ],
+        "sizes": [
+          0.8486,
+          0.6924,
+          0.2141
+        ]
+      },
+      "num_vertices": 546,
+      "bbox_diag": 1.116
+    },
+    {
+      "instance_id": 91,
+      "category": "blinds",
+      "region_id": "1",
+      "hex_color": "87A014",
+      "position": [
+        4.5496,
+        1.9745,
+        19.0644
+      ],
+      "aabb": {
+        "center": [
+          4.5606,
+          2.0858,
+          19.0777
+        ],
+        "sizes": [
+          0.8744,
+          0.7266,
+          0.1477
+        ]
+      },
+      "num_vertices": 1644,
+      "bbox_diag": 1.146
+    },
+    {
+      "instance_id": 92,
+      "category": "dresser",
+      "region_id": "1",
+      "hex_color": "36563A",
+      "position": [
+        4.0181,
+        0.5478,
+        13.4886
+      ],
+      "aabb": {
+        "center": [
+          3.9832,
+          0.4846,
+          13.6604
+        ],
+        "sizes": [
+          0.4364,
+          0.9689,
+          0.9781
+        ]
+      },
+      "num_vertices": 7965,
+      "bbox_diag": 1.444
+    },
+    {
+      "instance_id": 93,
+      "category": "vase",
+      "region_id": "1",
+      "hex_color": "2C197A",
+      "position": [
+        3.9533,
+        1.1544,
+        13.2882
+      ],
+      "aabb": {
+        "center": [
+          3.9259,
+          1.1991,
+          13.293
+        ],
+        "sizes": [
+          0.3037,
+          0.54,
+          0.2428
+        ]
+      },
+      "num_vertices": 1934,
+      "bbox_diag": 0.665
+    },
+    {
+      "instance_id": 94,
+      "category": "mirror",
+      "region_id": "1",
+      "hex_color": "F24B85",
+      "position": [
+        3.8499,
+        1.6833,
+        14.0466
+      ],
+      "aabb": {
+        "center": [
+          3.8375,
+          1.5947,
+          13.8516
+        ],
+        "sizes": [
+          0.1355,
+          0.8512,
+          0.7
+        ]
+      },
+      "num_vertices": 809,
+      "bbox_diag": 1.11
+    },
+    {
+      "instance_id": 95,
+      "category": "vase",
+      "region_id": "1",
+      "hex_color": "485491",
+      "position": [
+        3.9663,
+        1.0813,
+        14.0248
+      ],
+      "aabb": {
+        "center": [
+          3.9626,
+          1.0891,
+          14.0248
+        ],
+        "sizes": [
+          0.1904,
+          0.28,
+          0.1665
+        ]
+      },
+      "num_vertices": 1393,
+      "bbox_diag": 0.377
+    },
+    {
+      "instance_id": 96,
+      "category": "plant",
+      "region_id": "1",
+      "hex_color": "6180F8",
+      "position": [
+        3.9174,
+        1.3694,
+        14.0785
+      ],
+      "aabb": {
+        "center": [
+          3.9048,
+          1.4302,
+          14.0934
+        ],
+        "sizes": [
+          0.2141,
+          0.4422,
+          0.1036
+        ]
+      },
+      "num_vertices": 594,
+      "bbox_diag": 0.502
+    },
+    {
+      "instance_id": 97,
+      "category": "kitchen island",
+      "region_id": "1",
+      "hex_color": "FC47A3",
+      "position": [
+        6.2781,
+        0.5779,
+        14.213
+      ],
+      "aabb": {
+        "center": [
+          6.2127,
+          0.4995,
+          14.2102
+        ],
+        "sizes": [
+          1.9426,
+          0.9998,
+          1.1828
+        ]
+      },
+      "num_vertices": 13350,
+      "bbox_diag": 2.484
+    },
+    {
+      "instance_id": 98,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "FD6754",
+      "position": [
+        5.7632,
+        0.875,
+        13.6366
+      ],
+      "aabb": {
+        "center": [
+          5.8077,
+          0.8491,
+          13.6365
+        ],
+        "sizes": [
+          0.34,
+          0.08,
+          0.0175
+        ]
+      },
+      "num_vertices": 85,
+      "bbox_diag": 0.35
+    },
+    {
+      "instance_id": 99,
+      "category": "drawer",
+      "region_id": "1",
+      "hex_color": "EE38C9",
+      "position": [
+        6.3854,
+        0.8727,
+        14.4605
+      ],
+      "aabb": {
+        "center": [
+          6.4578,
+          0.8251,
+          14.1586
+        ],
+        "sizes": [
+          0.76,
+          0.1519,
+          1.0461
+        ]
+      },
+      "num_vertices": 291,
+      "bbox_diag": 1.302
+    },
+    {
+      "instance_id": 100,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "6C4C07",
+      "position": [
+        6.4814,
+        0.2124,
+        13.6526
+      ],
+      "aabb": {
+        "center": [
+          6.511,
+          0.3491,
+          13.6626
+        ],
+        "sizes": [
+          0.5734,
+          0.6,
+          0.082
+        ]
+      },
+      "num_vertices": 697,
+      "bbox_diag": 0.834
+    },
+    {
+      "instance_id": 101,
+      "category": "cabinet",
+      "region_id": "1",
+      "hex_color": "903A93",
+      "position": [
+        5.8984,
+        0.2053,
+        13.6483
+      ],
+      "aabb": {
+        "center": [
+          5.9387,
+          0.3591,
+          13.6577
+        ],
+        "sizes": [
+          0.602,
+          0.62,
+          0.0773
+        ]
+      },
+      "num_vertices": 951,
+      "bbox_diag": 0.868
+    },
+    {
+      "instance_id": 102,
+      "category": "stool",
+      "region_id": "1",
+      "hex_color": "BF8A5E",
+      "position": [
+        7.0495,
+        0.4401,
+        14.1387
+      ],
+      "aabb": {
+        "center": [
+          7.0479,
+          0.4063,
+          14.1313
+        ],
+        "sizes": [
+          0.3601,
+          0.415,
+          0.3994
+        ]
+      },
+      "num_vertices": 4353,
+      "bbox_diag": 0.679
+    },
+    {
+      "instance_id": 103,
+      "category": "stool",
+      "region_id": "1",
+      "hex_color": "5BC4DE",
+      "position": [
+        6.4285,
+        0.4595,
+        14.6581
+      ],
+      "aabb": {
+        "center": [
+          6.4315,
+          0.4006,
+          14.6221
+        ],
+        "sizes": [
+          0.3817,
+          0.423,
+          0.404
+        ]
+      },
+      "num_vertices": 3442,
+      "bbox_diag": 0.698
+    },
+    {
+      "instance_id": 104,
+      "category": "stool",
+      "region_id": "1",
+      "hex_color": "F13568",
+      "position": [
+        5.8791,
+        0.4535,
+        14.6579
+      ],
+      "aabb": {
+        "center": [
+          5.8973,
+          0.4001,
+          14.6355
+        ],
+        "sizes": [
+          0.4119,
+          0.4219,
+          0.3849
+        ]
+      },
+      "num_vertices": 4433,
+      "bbox_diag": 0.704
+    },
+    {
+      "instance_id": 105,
+      "category": "stool",
+      "region_id": "1",
+      "hex_color": "F220F8",
+      "position": [
+        5.3488,
+        0.4621,
+        14.0185
+      ],
+      "aabb": {
+        "center": [
+          5.3602,
+          0.4087,
+          14.0053
+        ],
+        "sizes": [
+          0.3951,
+          0.3992,
+          0.3874
+        ]
+      },
+      "num_vertices": 4125,
+      "bbox_diag": 0.682
+    },
+    {
+      "instance_id": 107,
+      "category": "tray",
+      "region_id": "1",
+      "hex_color": "01A401",
+      "position": [
+        6.5841,
+        0.9744,
+        14.0878
+      ],
+      "aabb": {
+        "center": [
+          6.6107,
+          0.9806,
+          14.16
+        ],
+        "sizes": [
+          0.4541,
+          0.0649,
+          0.4031
+        ]
+      },
+      "num_vertices": 654,
+      "bbox_diag": 0.611
+    },
+    {
+      "instance_id": 108,
+      "category": "plant",
+      "region_id": "1",
+      "hex_color": "1B1D6E",
+      "position": [
+        6.6397,
+        1.1908,
+        14.2896
+      ],
+      "aabb": {
+        "center": [
+          6.6364,
+          1.1791,
+          14.2909
+        ],
+        "sizes": [
+          0.2027,
+          0.38,
+          0.2214
+        ]
+      },
+      "num_vertices": 1936,
+      "bbox_diag": 0.484
+    },
+    {
+      "instance_id": 109,
+      "category": "decoration",
+      "region_id": "1",
+      "hex_color": "A075DD",
+      "position": [
+        6.5691,
+        1.0105,
+        14.1344
+      ],
+      "aabb": {
+        "center": [
+          6.5735,
+          0.9963,
+          14.1324
+        ],
+        "sizes": [
+          0.2968,
+          0.089,
+          0.3017
+        ]
+      },
+      "num_vertices": 979,
+      "bbox_diag": 0.432
+    },
+    {
+      "instance_id": 110,
+      "category": "ceiling",
+      "region_id": "1",
+      "hex_color": "BEAD35",
+      "position": [
+        6.2591,
+        2.7609,
+        16.0353
+      ],
+      "aabb": {
+        "center": [
+          6.3477,
+          1.4491,
+          15.3568
+        ],
+        "sizes": [
+          5.14,
+          2.68,
+          7.3104
+        ]
+      },
+      "num_vertices": 3450,
+      "bbox_diag": 9.33
+    },
+    {
+      "instance_id": 111,
+      "category": "ceiling lamp",
+      "region_id": "1",
+      "hex_color": "E480CE",
+      "position": [
+        6.2297,
+        2.6098,
+        16.8735
+      ],
+      "aabb": {
+        "center": [
+          6.2109,
+          2.5871,
+          16.8806
+        ],
+        "sizes": [
+          1.0264,
+          0.3607,
+          1.078
+        ]
+      },
+      "num_vertices": 21019,
+      "bbox_diag": 1.532
+    },
+    {
+      "instance_id": 112,
+      "category": "floor",
+      "region_id": "1",
+      "hex_color": "1DA9A1",
+      "position": [
+        6.4104,
+        0.0102,
+        14.8627
+      ],
+      "aabb": {
+        "center": [
+          6.1866,
+          0.1562,
+          15.5186
+        ],
+        "sizes": [
+          4.9777,
+          0.3857,
+          6.5259
+        ]
+      },
+      "num_vertices": 8407,
+      "bbox_diag": 8.217
+    },
+    {
+      "instance_id": 113,
+      "category": "rug",
+      "region_id": "1",
+      "hex_color": "7E9438",
+      "position": [
+        8.2818,
+        0.0261,
+        15.2011
+      ],
+      "aabb": {
+        "center": [
+          8.2977,
+          0.027,
+          15.5
+        ],
+        "sizes": [
+          0.68,
+          0.0442,
+          0.9632
+        ]
+      },
+      "num_vertices": 379,
+      "bbox_diag": 1.18
+    },
+    {
+      "instance_id": 114,
+      "category": "rug",
+      "region_id": "1",
+      "hex_color": "9C8EE4",
+      "position": [
+        6.3353,
+        0.0204,
+        17.8603
+      ],
+      "aabb": {
+        "center": [
+          6.3277,
+          0.0662,
+          17.7627
+        ],
+        "sizes": [
+          3.06,
+          0.1439,
+          2.4022
+        ]
+      },
+      "num_vertices": 12167,
+      "bbox_diag": 3.893
+    },
+    {
+      "instance_id": 115,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "6BC913",
+      "position": [
+        1.1308,
+        1.7279,
+        17.4905
+      ],
+      "aabb": {
+        "center": [
+          2.084,
+          1.4018,
+          17.5316
+        ],
+        "sizes": [
+          2.2126,
+          2.7455,
+          2.98
+        ]
+      },
+      "num_vertices": 2348,
+      "bbox_diag": 4.617
+    },
+    {
+      "instance_id": 116,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "F1BE49",
+      "position": [
+        1.6262,
+        1.0662,
+        18.994
+      ],
+      "aabb": {
+        "center": [
+          1.6076,
+          1.2691,
+          18.9363
+        ],
+        "sizes": [
+          0.9803,
+          2.56,
+          0.3181
+        ]
+      },
+      "num_vertices": 1138,
+      "bbox_diag": 2.76
+    },
+    {
+      "instance_id": 117,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "B8BF26",
+      "position": [
+        2.078,
+        1.1708,
+        18.3213
+      ],
+      "aabb": {
+        "center": [
+          2.0599,
+          1.3439,
+          18.4185
+        ],
+        "sizes": [
+          0.1015,
+          2.6503,
+          1.1661
+        ]
+      },
+      "num_vertices": 3062,
+      "bbox_diag": 2.897
+    },
+    {
+      "instance_id": 118,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "2D4AF9",
+      "position": [
+        2.4716,
+        1.1298,
+        17.8464
+      ],
+      "aabb": {
+        "center": [
+          2.4733,
+          1.3391,
+          17.8461
+        ],
+        "sizes": [
+          0.7942,
+          2.66,
+          0.0359
+        ]
+      },
+      "num_vertices": 1468,
+      "bbox_diag": 2.776
+    },
+    {
+      "instance_id": 119,
+      "category": "picture",
+      "region_id": "2",
+      "hex_color": "52E49E",
+      "position": [
+        2.5218,
+        1.6157,
+        17.8236
+      ],
+      "aabb": {
+        "center": [
+          2.4544,
+          1.5091,
+          17.8259
+        ],
+        "sizes": [
+          0.2732,
+          0.8,
+          0.0526
+        ]
+      },
+      "num_vertices": 325,
+      "bbox_diag": 0.847
+    },
+    {
+      "instance_id": 120,
+      "category": "blinds",
+      "region_id": "2",
+      "hex_color": "64C113",
+      "position": [
+        1.5821,
+        2.1827,
+        19.0475
+      ],
+      "aabb": {
+        "center": [
+          1.6063,
+          2.2091,
+          19.0376
+        ],
+        "sizes": [
+          0.5829,
+          0.44,
+          0.0743
+        ]
+      },
+      "num_vertices": 1572,
+      "bbox_diag": 0.734
+    },
+    {
+      "instance_id": 121,
+      "category": "picture",
+      "region_id": "2",
+      "hex_color": "63CBAB",
+      "position": [
+        1.6149,
+        1.1226,
+        18.9684
+      ],
+      "aabb": {
+        "center": [
+          1.6177,
+          1.1291,
+          18.9752
+        ],
+        "sizes": [
+          0.32,
+          0.28,
+          0.0252
+        ]
+      },
+      "num_vertices": 87,
+      "bbox_diag": 0.426
+    },
+    {
+      "instance_id": 122,
+      "category": "toilet",
+      "region_id": "2",
+      "hex_color": "DBF4C1",
+      "position": [
+        1.6138,
+        0.3024,
+        18.6681
+      ],
+      "aabb": {
+        "center": [
+          1.6478,
+          0.3751,
+          18.6346
+        ],
+        "sizes": [
+          0.62,
+          0.831,
+          0.807
+        ]
+      },
+      "num_vertices": 5978,
+      "bbox_diag": 1.314
+    },
+    {
+      "instance_id": 123,
+      "category": "trashcan",
+      "region_id": "2",
+      "hex_color": "63E0F1",
+      "position": [
+        1.9068,
+        0.156,
+        18.7723
+      ],
+      "aabb": {
+        "center": [
+          1.9135,
+          0.1278,
+          18.7894
+        ],
+        "sizes": [
+          0.3015,
+          0.2826,
+          0.3844
+        ]
+      },
+      "num_vertices": 2525,
+      "bbox_diag": 0.564
+    },
+    {
+      "instance_id": 124,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "98E861",
+      "position": [
+        2.6063,
+        2.29,
+        16.06
+      ],
+      "aabb": {
+        "center": [
+          2.3796,
+          1.5428,
+          16.0416
+        ],
+        "sizes": [
+          2.5192,
+          2.4675,
+          0.12
+        ]
+      },
+      "num_vertices": 1444,
+      "bbox_diag": 3.528
+    },
+    {
+      "instance_id": 125,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "0B3605",
+      "position": [
+        3.6097,
+        1.1898,
+        18.205
+      ],
+      "aabb": {
+        "center": [
+          3.6151,
+          1.3884,
+          17.7642
+        ],
+        "sizes": [
+          0.0909,
+          2.7586,
+          2.4451
+        ]
+      },
+      "num_vertices": 4896,
+      "bbox_diag": 3.687
+    },
+    {
+      "instance_id": 126,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "F7CB99",
+      "position": [
+        3.1986,
+        0.9647,
+        18.9794
+      ],
+      "aabb": {
+        "center": [
+          2.9274,
+          1.3749,
+          18.9769
+        ],
+        "sizes": [
+          1.3844,
+          2.7317,
+          0.036
+        ]
+      },
+      "num_vertices": 621,
+      "bbox_diag": 3.063
+    },
+    {
+      "instance_id": 127,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "E83D84",
+      "position": [
+        2.238,
+        1.2326,
+        18.4319
+      ],
+      "aabb": {
+        "center": [
+          2.2415,
+          1.3791,
+          18.4885
+        ],
+        "sizes": [
+          0.0725,
+          2.7,
+          0.9752
+        ]
+      },
+      "num_vertices": 597,
+      "bbox_diag": 2.872
+    },
+    {
+      "instance_id": 128,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "746AA3",
+      "position": [
+        2.6794,
+        1.1888,
+        18.0141
+      ],
+      "aabb": {
+        "center": [
+          2.5506,
+          1.3705,
+          18.0197
+        ],
+        "sizes": [
+          0.6272,
+          2.7229,
+          0.0763
+        ]
+      },
+      "num_vertices": 1620,
+      "bbox_diag": 2.795
+    },
+    {
+      "instance_id": 129,
+      "category": "wall",
+      "region_id": "2",
+      "hex_color": "0F0434",
+      "position": [
+        2.8638,
+        1.2658,
+        17.9204
+      ],
+      "aabb": {
+        "center": [
+          2.8649,
+          1.3591,
+          17.933
+        ],
+        "sizes": [
+          0.0404,
+          2.66,
+          0.1512
+        ]
+      },
+      "num_vertices": 1056,
+      "bbox_diag": 2.665
+    },
+    {
+      "instance_id": 132,
+      "category": "bathroom cabinet",
+      "region_id": "2",
+      "hex_color": "63DFA4",
+      "position": [
+        2.5121,
+        0.4751,
+        16.455
+      ],
+      "aabb": {
+        "center": [
+          2.7322,
+          0.462,
+          16.3626
+        ],
+        "sizes": [
+          0.851,
+          0.8943,
+          0.568
+        ]
+      },
+      "num_vertices": 1351,
+      "bbox_diag": 1.359
+    },
+    {
+      "instance_id": 133,
+      "category": "bathroom cabinet",
+      "region_id": "2",
+      "hex_color": "D5A6E4",
+      "position": [
+        3.2722,
+        1.6852,
+        16.4097
+      ],
+      "aabb": {
+        "center": [
+          3.3672,
+          1.3091,
+          16.3516
+        ],
+        "sizes": [
+          0.581,
+          2.04,
+          0.7
+        ]
+      },
+      "num_vertices": 5805,
+      "bbox_diag": 2.234
+    },
+    {
+      "instance_id": 134,
+      "category": "bathroom counter",
+      "region_id": "2",
+      "hex_color": "F43F60",
+      "position": [
+        2.7984,
+        0.9244,
+        16.3255
+      ],
+      "aabb": {
+        "center": [
+          2.7345,
+          0.8832,
+          16.3412
+        ],
+        "sizes": [
+          0.8949,
+          0.1318,
+          0.5809
+        ]
+      },
+      "num_vertices": 835,
+      "bbox_diag": 1.075
+    },
+    {
+      "instance_id": 135,
+      "category": "sink",
+      "region_id": "2",
+      "hex_color": "2F0B44",
+      "position": [
+        2.75,
+        0.8323,
+        16.409
+      ],
+      "aabb": {
+        "center": [
+          2.7751,
+          0.7969,
+          16.3805
+        ],
+        "sizes": [
+          0.3948,
+          0.2428,
+          0.2821
+        ]
+      },
+      "num_vertices": 1115,
+      "bbox_diag": 0.543
+    },
+    {
+      "instance_id": 136,
+      "category": "knob",
+      "region_id": "2",
+      "hex_color": "D4273D",
+      "position": [
+        2.8644,
+        0.9384,
+        16.1124
+      ],
+      "aabb": {
+        "center": [
+          2.8677,
+          0.9391,
+          16.1116
+        ],
+        "sizes": [
+          0.06,
+          0.02,
+          0.1
+        ]
+      },
+      "num_vertices": 30,
+      "bbox_diag": 0.118
+    },
+    {
+      "instance_id": 137,
+      "category": "knob",
+      "region_id": "2",
+      "hex_color": "B17F4F",
+      "position": [
+        2.5928,
+        0.9383,
+        16.0785
+      ],
+      "aabb": {
+        "center": [
+          2.5899,
+          0.9392,
+          16.0762
+        ],
+        "sizes": [
+          0.0643,
+          0.0198,
+          0.0509
+        ]
+      },
+      "num_vertices": 11,
+      "bbox_diag": 0.084
+    },
+    {
+      "instance_id": 138,
+      "category": "faucet",
+      "region_id": "2",
+      "hex_color": "E10DF9",
+      "position": [
+        2.6934,
+        0.9357,
+        16.1021
+      ],
+      "aabb": {
+        "center": [
+          2.6977,
+          0.9391,
+          16.1075
+        ],
+        "sizes": [
+          0.12,
+          0.02,
+          0.1082
+        ]
+      },
+      "num_vertices": 46,
+      "bbox_diag": 0.163
+    },
+    {
+      "instance_id": 139,
+      "category": "towel",
+      "region_id": "2",
+      "hex_color": "A64B18",
+      "position": [
+        3.1095,
+        1.311,
+        16.4681
+      ],
+      "aabb": {
+        "center": [
+          3.1267,
+          1.3105,
+          16.4653
+        ],
+        "sizes": [
+          0.1214,
+          0.3729,
+          0.1674
+        ]
+      },
+      "num_vertices": 600,
+      "bbox_diag": 0.426
+    },
+    {
+      "instance_id": 140,
+      "category": "towel",
+      "region_id": "2",
+      "hex_color": "BC9965",
+      "position": [
+        3.1598,
+        1.2784,
+        16.1724
+      ],
+      "aabb": {
+        "center": [
+          3.1335,
+          1.2791,
+          16.186
+        ],
+        "sizes": [
+          0.1008,
+          0.42,
+          0.2313
+        ]
+      },
+      "num_vertices": 548,
+      "bbox_diag": 0.49
+    },
+    {
+      "instance_id": 142,
+      "category": "towel ring",
+      "region_id": "2",
+      "hex_color": "D90DE1",
+      "position": [
+        3.181,
+        1.5906,
+        16.4791
+      ],
+      "aabb": {
+        "center": [
+          3.1776,
+          1.5585,
+          16.4916
+        ],
+        "sizes": [
+          0.02,
+          0.1413,
+          0.1
+        ]
+      },
+      "num_vertices": 62,
+      "bbox_diag": 0.174
+    },
+    {
+      "instance_id": 143,
+      "category": "towel ring",
+      "region_id": "2",
+      "hex_color": "38B16A",
+      "position": [
+        3.1827,
+        1.585,
+        16.175
+      ],
+      "aabb": {
+        "center": [
+          3.1839,
+          1.5791,
+          16.1781
+        ],
+        "sizes": [
+          0.0277,
+          0.1,
+          0.207
+        ]
+      },
+      "num_vertices": 60,
+      "bbox_diag": 0.232
+    },
+    {
+      "instance_id": 144,
+      "category": "showerhead",
+      "region_id": "2",
+      "hex_color": "B47DD9",
+      "position": [
+        2.401,
+        2.4154,
+        18.1558
+      ],
+      "aabb": {
+        "center": [
+          2.4361,
+          2.4276,
+          18.1905
+        ],
+        "sizes": [
+          0.4834,
+          0.6341,
+          0.3822
+        ]
+      },
+      "num_vertices": 655,
+      "bbox_diag": 0.884
+    },
+    {
+      "instance_id": 145,
+      "category": "shower knob",
+      "region_id": "2",
+      "hex_color": "D5252F",
+      "position": [
+        2.6525,
+        1.033,
+        18.0553
+      ],
+      "aabb": {
+        "center": [
+          2.6478,
+          1.054,
+          18.0581
+        ],
+        "sizes": [
+          0.14,
+          0.1502,
+          0.113
+        ]
+      },
+      "num_vertices": 329,
+      "bbox_diag": 0.234
+    },
+    {
+      "instance_id": 146,
+      "category": "toilet paper",
+      "region_id": "2",
+      "hex_color": "D7FDDA",
+      "position": [
+        2.0175,
+        0.7895,
+        18.1173
+      ],
+      "aabb": {
+        "center": [
+          2.014,
+          0.7872,
+          18.1207
+        ],
+        "sizes": [
+          0.1303,
+          0.1375,
+          0.1834
+        ]
+      },
+      "num_vertices": 610,
+      "bbox_diag": 0.264
+    },
+    {
+      "instance_id": 147,
+      "category": "bathroom accessory",
+      "region_id": "2",
+      "hex_color": "4BDF08",
+      "position": [
+        1.739,
+        0.9187,
+        18.9293
+      ],
+      "aabb": {
+        "center": [
+          1.7378,
+          0.9178,
+          18.9382
+        ],
+        "sizes": [
+          0.08,
+          0.2226,
+          0.1351
+        ]
+      },
+      "num_vertices": 428,
+      "bbox_diag": 0.272
+    },
+    {
+      "instance_id": 148,
+      "category": "door frame",
+      "region_id": "2",
+      "hex_color": "7F318B",
+      "position": [
+        1.0649,
+        1.8503,
+        17.5352
+      ],
+      "aabb": {
+        "center": [
+          1.0477,
+          1.3624,
+          17.541
+        ],
+        "sizes": [
+          0.22,
+          2.4666,
+          1.3658
+        ]
+      },
+      "num_vertices": 3599,
+      "bbox_diag": 2.828
+    },
+    {
+      "instance_id": 149,
+      "category": "door frame",
+      "region_id": "2",
+      "hex_color": "4DB298",
+      "position": [
+        1.5001,
+        1.0286,
+        16.0185
+      ],
+      "aabb": {
+        "center": [
+          1.6678,
+          1.3119,
+          16.028
+        ],
+        "sizes": [
+          1.1425,
+          2.5944,
+          0.3072
+        ]
+      },
+      "num_vertices": 7233,
+      "bbox_diag": 2.851
+    },
+    {
+      "instance_id": 150,
+      "category": "door",
+      "region_id": "2",
+      "hex_color": "A67B01",
+      "position": [
+        1.3117,
+        1.4582,
+        16.6521
+      ],
+      "aabb": {
+        "center": [
+          1.2402,
+          1.3391,
+          16.5152
+        ],
+        "sizes": [
+          0.4258,
+          2.5,
+          0.9872
+        ]
+      },
+      "num_vertices": 12440,
+      "bbox_diag": 2.721
+    },
+    {
+      "instance_id": 151,
+      "category": "ceiling",
+      "region_id": "2",
+      "hex_color": "F1FB14",
+      "position": [
+        2.6367,
+        2.7518,
+        17.811
+      ],
+      "aabb": {
+        "center": [
+          2.3778,
+          2.746,
+          17.5456
+        ],
+        "sizes": [
+          2.5201,
+          0.0632,
+          2.8879
+        ]
+      },
+      "num_vertices": 1306,
+      "bbox_diag": 3.833
+    },
+    {
+      "instance_id": 152,
+      "category": "floor",
+      "region_id": "2",
+      "hex_color": "786017",
+      "position": [
+        2.2816,
+        0.0082,
+        17.9243
+      ],
+      "aabb": {
+        "center": [
+          2.3678,
+          0.0211,
+          17.5295
+        ],
+        "sizes": [
+          2.82,
+          0.0959,
+          2.8958
+        ]
+      },
+      "num_vertices": 3150,
+      "bbox_diag": 4.043
+    },
+    {
+      "instance_id": 153,
+      "category": "rug",
+      "region_id": "2",
+      "hex_color": "21FD5C",
+      "position": [
+        2.6165,
+        0.0509,
+        16.6428
+      ],
+      "aabb": {
+        "center": [
+          2.7078,
+          0.0756,
+          16.7916
+        ],
+        "sizes": [
+          0.86,
+          0.147,
+          0.54
+        ]
+      },
+      "num_vertices": 648,
+      "bbox_diag": 1.026
+    },
+    {
+      "instance_id": 154,
+      "category": "bathroom shelf",
+      "region_id": "2",
+      "hex_color": "BBF1C5",
+      "position": [
+        2.1953,
+        1.6001,
+        18.4015
+      ],
+      "aabb": {
+        "center": [
+          2.1963,
+          1.5183,
+          18.4137
+        ],
+        "sizes": [
+          0.1023,
+          0.4984,
+          0.3359
+        ]
+      },
+      "num_vertices": 1098,
+      "bbox_diag": 0.61
+    },
+    {
+      "instance_id": 155,
+      "category": "unknown",
+      "region_id": "2",
+      "hex_color": "6AEB44",
+      "position": [
+        2.1545,
+        1.2938,
+        18.5051
+      ],
+      "aabb": {
+        "center": [
+          2.1538,
+          1.3051,
+          18.5016
+        ],
+        "sizes": [
+          0.0079,
+          0.048,
+          0.04
+        ]
+      },
+      "num_vertices": 17,
+      "bbox_diag": 0.063
+    },
+    {
+      "instance_id": 156,
+      "category": "unknown",
+      "region_id": "2",
+      "hex_color": "9EE246",
+      "position": [
+        2.2051,
+        1.3408,
+        18.3325
+      ],
+      "aabb": {
+        "center": [
+          2.1945,
+          1.3456,
+          18.3216
+        ],
+        "sizes": [
+          0.0939,
+          0.1385,
+          0.12
+        ]
+      },
+      "num_vertices": 110,
+      "bbox_diag": 0.206
+    },
+    {
+      "instance_id": 157,
+      "category": "unknown",
+      "region_id": "2",
+      "hex_color": "1D94D0",
+      "position": [
+        2.1836,
+        1.3002,
+        18.5524
+      ],
+      "aabb": {
+        "center": [
+          2.1828,
+          1.3125,
+          18.5527
+        ],
+        "sizes": [
+          0.0698,
+          0.0732,
+          0.0353
+        ]
+      },
+      "num_vertices": 95,
+      "bbox_diag": 0.107
+    },
+    {
+      "instance_id": 158,
+      "category": "parapet",
+      "region_id": "2",
+      "hex_color": "1EC285",
+      "position": [
+        1.5935,
+        1.6178,
+        19.0029
+      ],
+      "aabb": {
+        "center": [
+          1.5978,
+          1.6141,
+          19.0244
+        ],
+        "sizes": [
+          0.6,
+          0.05,
+          0.1385
+        ]
+      },
+      "num_vertices": 422,
+      "bbox_diag": 0.618
+    },
+    {
+      "instance_id": 159,
+      "category": "window",
+      "region_id": "2",
+      "hex_color": "ABE88F",
+      "position": [
+        1.6913,
+        1.8503,
+        19.0855
+      ],
+      "aabb": {
+        "center": [
+          1.6046,
+          1.8255,
+          19.0814
+        ],
+        "sizes": [
+          0.5464,
+          0.3928,
+          0.0699
+        ]
+      },
+      "num_vertices": 342,
+      "bbox_diag": 0.677
+    },
+    {
+      "instance_id": 160,
+      "category": "wall",
+      "region_id": "3",
+      "hex_color": "381E82",
+      "position": [
+        0.6678,
+        1.4733,
+        17.2553
+      ],
+      "aabb": {
+        "center": [
+          0.2808,
+          1.4054,
+          17.5504
+        ],
+        "sizes": [
+          1.4469,
+          2.8225,
+          3.0224
+        ]
+      },
+      "num_vertices": 20499,
+      "bbox_diag": 4.381
+    },
+    {
+      "instance_id": 161,
+      "category": "wall",
+      "region_id": "3",
+      "hex_color": "E07183",
+      "position": [
+        -0.4272,
+        1.1908,
+        17.5294
+      ],
+      "aabb": {
+        "center": [
+          -0.399,
+          1.3859,
+          17.5573
+        ],
+        "sizes": [
+          0.1968,
+          2.7664,
+          2.8713
+        ]
+      },
+      "num_vertices": 4707,
+      "bbox_diag": 3.992
+    },
+    {
+      "instance_id": 162,
+      "category": "wall",
+      "region_id": "3",
+      "hex_color": "E5175F",
+      "position": [
+        0.3171,
+        1.7036,
+        19.0173
+      ],
+      "aabb": {
+        "center": [
+          0.1364,
+          1.4322,
+          18.98
+        ],
+        "sizes": [
+          1.1626,
+          2.6861,
+          0.3567
+        ]
+      },
+      "num_vertices": 1822,
+      "bbox_diag": 2.949
+    },
+    {
+      "instance_id": 163,
+      "category": "wall",
+      "region_id": "3",
+      "hex_color": "7010B7",
+      "position": [
+        -0.0703,
+        1.5308,
+        16.0547
+      ],
+      "aabb": {
+        "center": [
+          -0.0072,
+          1.6984,
+          16.1073
+        ],
+        "sizes": [
+          0.8098,
+          2.1015,
+          0.1887
+        ]
+      },
+      "num_vertices": 899,
+      "bbox_diag": 2.26
+    },
+    {
+      "instance_id": 164,
+      "category": "rack",
+      "region_id": "3",
+      "hex_color": "76AE68",
+      "position": [
+        -0.2529,
+        1.2388,
+        17.488
+      ],
+      "aabb": {
+        "center": [
+          -0.266,
+          1.2539,
+          17.5316
+        ],
+        "sizes": [
+          0.3721,
+          2.1696,
+          1.14
+        ]
+      },
+      "num_vertices": 14525,
+      "bbox_diag": 2.479
+    },
+    {
+      "instance_id": 165,
+      "category": "blanket",
+      "region_id": "3",
+      "hex_color": "3D24F8",
+      "position": [
+        -0.1801,
+        1.1286,
+        17.5037
+      ],
+      "aabb": {
+        "center": [
+          -0.2509,
+          1.1324,
+          17.4116
+        ],
+        "sizes": [
+          0.3774,
+          0.2609,
+          0.62
+        ]
+      },
+      "num_vertices": 1527,
+      "bbox_diag": 0.771
+    },
+    {
+      "instance_id": 166,
+      "category": "unknown",
+      "region_id": "3",
+      "hex_color": "CFE892",
+      "position": [
+        -0.2772,
+        1.7809,
+        17.2142
+      ],
+      "aabb": {
+        "center": [
+          -0.3015,
+          1.7906,
+          17.2113
+        ],
+        "sizes": [
+          0.2449,
+          0.2504,
+          0.1545
+        ]
+      },
+      "num_vertices": 1160,
+      "bbox_diag": 0.383
+    },
+    {
+      "instance_id": 167,
+      "category": "blanket",
+      "region_id": "3",
+      "hex_color": "350694",
+      "position": [
+        -0.26,
+        1.48,
+        17.7415
+      ],
+      "aabb": {
+        "center": [
+          -0.2981,
+          1.4691,
+          17.7723
+        ],
+        "sizes": [
+          0.2756,
+          0.2,
+          0.3987
+        ]
+      },
+      "num_vertices": 891,
+      "bbox_diag": 0.524
+    },
+    {
+      "instance_id": 168,
+      "category": "unknown",
+      "region_id": "3",
+      "hex_color": "7DE97F",
+      "position": [
+        -0.2586,
+        1.4278,
+        17.2952
+      ],
+      "aabb": {
+        "center": [
+          -0.2581,
+          1.4134,
+          17.2416
+        ],
+        "sizes": [
+          0.3485,
+          0.1287,
+          0.36
+        ]
+      },
+      "num_vertices": 852,
+      "bbox_diag": 0.517
+    },
+    {
+      "instance_id": 169,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "5B6504",
+      "position": [
+        -0.0472,
+        2.4773,
+        18.7764
+      ],
+      "aabb": {
+        "center": [
+          0.0602,
+          2.5045,
+          18.7571
+        ],
+        "sizes": [
+          1.0751,
+          0.5291,
+          0.711
+        ]
+      },
+      "num_vertices": 1976,
+      "bbox_diag": 1.393
+    },
+    {
+      "instance_id": 170,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "DB0303",
+      "position": [
+        0.1118,
+        1.8369,
+        18.6653
+      ],
+      "aabb": {
+        "center": [
+          0.1083,
+          1.8868,
+          18.6916
+        ],
+        "sizes": [
+          1.0683,
+          0.3154,
+          0.62
+        ]
+      },
+      "num_vertices": 2481,
+      "bbox_diag": 1.275
+    },
+    {
+      "instance_id": 171,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "2CD169",
+      "position": [
+        -0.0961,
+        2.463,
+        16.2751
+      ],
+      "aabb": {
+        "center": [
+          -0.035,
+          2.4875,
+          16.3323
+        ],
+        "sizes": [
+          0.7855,
+          0.4963,
+          0.6214
+        ]
+      },
+      "num_vertices": 1206,
+      "bbox_diag": 1.118
+    },
+    {
+      "instance_id": 172,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "83BF0E",
+      "position": [
+        0.0422,
+        1.871,
+        16.3625
+      ],
+      "aabb": {
+        "center": [
+          0.053,
+          1.9091,
+          16.3431
+        ],
+        "sizes": [
+          0.9743,
+          0.24,
+          0.6098
+        ]
+      },
+      "num_vertices": 1538,
+      "bbox_diag": 1.174
+    },
+    {
+      "instance_id": 173,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "9F0D61",
+      "position": [
+        -0.025,
+        1.4233,
+        16.4689
+      ],
+      "aabb": {
+        "center": [
+          0.0474,
+          1.3991,
+          16.3478
+        ],
+        "sizes": [
+          0.9407,
+          0.14,
+          0.5957
+        ]
+      },
+      "num_vertices": 843,
+      "bbox_diag": 1.122
+    },
+    {
+      "instance_id": 174,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "8FD58B",
+      "position": [
+        -0.0961,
+        0.9302,
+        16.2761
+      ],
+      "aabb": {
+        "center": [
+          -0.0395,
+          0.8922,
+          16.2716
+        ],
+        "sizes": [
+          0.8745,
+          0.4064,
+          0.74
+        ]
+      },
+      "num_vertices": 2244,
+      "bbox_diag": 1.216
+    },
+    {
+      "instance_id": 175,
+      "category": "shelf",
+      "region_id": "3",
+      "hex_color": "FB91A3",
+      "position": [
+        -0.0971,
+        0.335,
+        16.226
+      ],
+      "aabb": {
+        "center": [
+          -0.0396,
+          0.3391,
+          16.2734
+        ],
+        "sizes": [
+          1.1594,
+          0.66,
+          0.7437
+        ]
+      },
+      "num_vertices": 2823,
+      "bbox_diag": 1.527
+    },
+    {
+      "instance_id": 176,
+      "category": "unknown",
+      "region_id": "3",
+      "hex_color": "EA6E3E",
+      "position": [
+        -0.1931,
+        1.2266,
+        16.4291
+      ],
+      "aabb": {
+        "center": [
+          -0.2156,
+          1.2303,
+          16.3816
+        ],
+        "sizes": [
+          0.4467,
+          0.3614,
+          0.64
+        ]
+      },
+      "num_vertices": 3005,
+      "bbox_diag": 0.86
+    },
+    {
+      "instance_id": 177,
+      "category": "ironing board",
+      "region_id": "3",
+      "hex_color": "94F8B3",
+      "position": [
+        -0.1998,
+        0.7556,
+        16.8763
+      ],
+      "aabb": {
+        "center": [
+          -0.2333,
+          0.7419,
+          16.8616
+        ],
+        "sizes": [
+          0.4407,
+          1.4257,
+          0.36
+        ]
+      },
+      "num_vertices": 5558,
+      "bbox_diag": 1.535
+    },
+    {
+      "instance_id": 178,
+      "category": "door",
+      "region_id": "3",
+      "hex_color": "68B18F",
+      "position": [
+        0.5753,
+        1.4907,
+        16.8479
+      ],
+      "aabb": {
+        "center": [
+          0.6502,
+          1.3341,
+          16.8563
+        ],
+        "sizes": [
+          0.6951,
+          2.41,
+          0.2177
+        ]
+      },
+      "num_vertices": 4175,
+      "bbox_diag": 2.518
+    },
+    {
+      "instance_id": 179,
+      "category": "door",
+      "region_id": "3",
+      "hex_color": "61BBB1",
+      "position": [
+        0.6893,
+        0.8915,
+        18.2685
+      ],
+      "aabb": {
+        "center": [
+          0.6878,
+          1.2611,
+          18.307
+        ],
+        "sizes": [
+          0.62,
+          2.5173,
+          0.447
+        ]
+      },
+      "num_vertices": 6241,
+      "bbox_diag": 2.631
+    },
+    {
+      "instance_id": 180,
+      "category": "ceiling",
+      "region_id": "3",
+      "hex_color": "1E2238",
+      "position": [
+        0.359,
+        2.7721,
+        17.5119
+      ],
+      "aabb": {
+        "center": [
+          0.2789,
+          2.7843,
+          17.5078
+        ],
+        "sizes": [
+          1.4188,
+          0.0753,
+          2.8924
+        ]
+      },
+      "num_vertices": 1509,
+      "bbox_diag": 3.223
+    },
+    {
+      "instance_id": 181,
+      "category": "floor",
+      "region_id": "3",
+      "hex_color": "3BB2F0",
+      "position": [
+        0.1075,
+        0.0129,
+        17.2135
+      ],
+      "aabb": {
+        "center": [
+          0.2677,
+          0.0306,
+          17.3916
+        ],
+        "sizes": [
+          1.42,
+          0.077,
+          2.66
+        ]
+      },
+      "num_vertices": 1723,
+      "bbox_diag": 3.016
+    },
+    {
+      "instance_id": 182,
+      "category": "wall",
+      "region_id": "4",
+      "hex_color": "6D4C5F",
+      "position": [
+        1.2744,
+        1.3139,
+        11.7027
+      ],
+      "aabb": {
+        "center": [
+          1.5778,
+          1.3891,
+          12.8816
+        ],
+        "sizes": [
+          4.12,
+          2.76,
+          2.48
+        ]
+      },
+      "num_vertices": 3607,
+      "bbox_diag": 5.545
+    },
+    {
+      "instance_id": 183,
+      "category": "wall",
+      "region_id": "4",
+      "hex_color": "750FB4",
+      "position": [
+        1.4522,
+        1.7984,
+        15.9073
+      ],
+      "aabb": {
+        "center": [
+          1.5609,
+          1.3926,
+          15.9016
+        ],
+        "sizes": [
+          3.9937,
+          2.7594,
+          0.24
+        ]
+      },
+      "num_vertices": 7116,
+      "bbox_diag": 4.86
+    },
+    {
+      "instance_id": 184,
+      "category": "wall",
+      "region_id": "4",
+      "hex_color": "E2E65B",
+      "position": [
+        3.6359,
+        1.2797,
+        13.9142
+      ],
+      "aabb": {
+        "center": [
+          3.6151,
+          1.3896,
+          13.7954
+        ],
+        "sizes": [
+          0.097,
+          2.7469,
+          4.2149
+        ]
+      },
+      "num_vertices": 3510,
+      "bbox_diag": 5.032
+    },
+    {
+      "instance_id": 185,
+      "category": "wall",
+      "region_id": "4",
+      "hex_color": "8C4DE2",
+      "position": [
+        -0.4111,
+        1.718,
+        13.0621
+      ],
+      "aabb": {
+        "center": [
+          -0.3957,
+          1.3856,
+          13.7624
+        ],
+        "sizes": [
+          0.3468,
+          2.7783,
+          4.1984
+        ]
+      },
+      "num_vertices": 11169,
+      "bbox_diag": 5.046
+    },
+    {
+      "instance_id": 186,
+      "category": "ceiling",
+      "region_id": "4",
+      "hex_color": "F51CC5",
+      "position": [
+        1.0937,
+        2.7673,
+        13.1524
+      ],
+      "aabb": {
+        "center": [
+          1.6087,
+          2.7579,
+          13.7862
+        ],
+        "sizes": [
+          3.982,
+          0.0759,
+          4.151
+        ]
+      },
+      "num_vertices": 3646,
+      "bbox_diag": 5.753
+    },
+    {
+      "instance_id": 187,
+      "category": "ceiling lamp",
+      "region_id": "4",
+      "hex_color": "BA877A",
+      "position": [
+        1.5511,
+        2.2791,
+        13.83
+      ],
+      "aabb": {
+        "center": [
+          1.5988,
+          2.326,
+          13.7911
+        ],
+        "sizes": [
+          0.5008,
+          0.3463,
+          0.5207
+        ]
+      },
+      "num_vertices": 3570,
+      "bbox_diag": 0.801
+    },
+    {
+      "instance_id": 188,
+      "category": "picture",
+      "region_id": "4",
+      "hex_color": "C05F17",
+      "position": [
+        3.6129,
+        1.7222,
+        12.3925
+      ],
+      "aabb": {
+        "center": [
+          3.6243,
+          1.7083,
+          12.6916
+        ],
+        "sizes": [
+          0.0531,
+          0.8531,
+          0.8999
+        ]
+      },
+      "num_vertices": 404,
+      "bbox_diag": 1.241
+    },
+    {
+      "instance_id": 189,
+      "category": "decoration",
+      "region_id": "4",
+      "hex_color": "F130D8",
+      "position": [
+        3.619,
+        1.6128,
+        13.6929
+      ],
+      "aabb": {
+        "center": [
+          3.6211,
+          1.5991,
+          13.7287
+        ],
+        "sizes": [
+          0.0367,
+          0.14,
+          0.3859
+        ]
+      },
+      "num_vertices": 87,
+      "bbox_diag": 0.412
+    },
+    {
+      "instance_id": 190,
+      "category": "hanger",
+      "region_id": "4",
+      "hex_color": "33A3B7",
+      "position": [
+        3.6283,
+        1.3633,
+        13.6248
+      ],
+      "aabb": {
+        "center": [
+          3.6219,
+          1.3591,
+          13.6861
+        ],
+        "sizes": [
+          0.0319,
+          0.1,
+          0.4089
+        ]
+      },
+      "num_vertices": 106,
+      "bbox_diag": 0.422
+    },
+    {
+      "instance_id": 191,
+      "category": "picture",
+      "region_id": "4",
+      "hex_color": "F557F3",
+      "position": [
+        1.6041,
+        1.936,
+        11.6979
+      ],
+      "aabb": {
+        "center": [
+          1.6178,
+          1.9201,
+          11.6972
+        ],
+        "sizes": [
+          1.04,
+          0.1821,
+          0.0126
+        ]
+      },
+      "num_vertices": 127,
+      "bbox_diag": 1.056
+    },
+    {
+      "instance_id": 192,
+      "category": "mirror",
+      "region_id": "4",
+      "hex_color": "90F165",
+      "position": [
+        3.0259,
+        1.6367,
+        11.689
+      ],
+      "aabb": {
+        "center": [
+          3.0277,
+          1.6091,
+          11.6838
+        ],
+        "sizes": [
+          0.42,
+          0.44,
+          0.0843
+        ]
+      },
+      "num_vertices": 535,
+      "bbox_diag": 0.614
+    },
+    {
+      "instance_id": 193,
+      "category": "mirror",
+      "region_id": "4",
+      "hex_color": "F28282",
+      "position": [
+        2.9513,
+        1.051,
+        11.7034
+      ],
+      "aabb": {
+        "center": [
+          3.0077,
+          1.0591,
+          11.7033
+        ],
+        "sizes": [
+          0.46,
+          0.46,
+          0.0366
+        ]
+      },
+      "num_vertices": 248,
+      "bbox_diag": 0.652
+    },
+    {
+      "instance_id": 194,
+      "category": "mirror",
+      "region_id": "4",
+      "hex_color": "900EE4",
+      "position": [
+        0.2442,
+        1.5445,
+        11.6949
+      ],
+      "aabb": {
+        "center": [
+          0.1893,
+          1.592,
+          11.703
+        ],
+        "sizes": [
+          0.4569,
+          0.4835,
+          0.1005
+        ]
+      },
+      "num_vertices": 817,
+      "bbox_diag": 0.673
+    },
+    {
+      "instance_id": 195,
+      "category": "mirror",
+      "region_id": "4",
+      "hex_color": "09D390",
+      "position": [
+        0.1242,
+        0.9841,
+        11.6976
+      ],
+      "aabb": {
+        "center": [
+          0.1978,
+          1.0691,
+          11.695
+        ],
+        "sizes": [
+          0.44,
+          0.44,
+          0.0415
+        ]
+      },
+      "num_vertices": 208,
+      "bbox_diag": 0.624
+    },
+    {
+      "instance_id": 196,
+      "category": "bed",
+      "region_id": "4",
+      "hex_color": "7C8244",
+      "position": [
+        1.7211,
+        0.5231,
+        13.0126
+      ],
+      "aabb": {
+        "center": [
+          1.6043,
+          0.8228,
+          12.946
+        ],
+        "sizes": [
+          2.073,
+          1.6273,
+          2.5436
+        ]
+      },
+      "num_vertices": 23210,
+      "bbox_diag": 3.663
+    },
+    {
+      "instance_id": 197,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "083381",
+      "position": [
+        1.5928,
+        0.9436,
+        12.5299
+      ],
+      "aabb": {
+        "center": [
+          1.6047,
+          0.8988,
+          12.526
+        ],
+        "sizes": [
+          0.4976,
+          0.3805,
+          0.2888
+        ]
+      },
+      "num_vertices": 1304,
+      "bbox_diag": 0.69
+    },
+    {
+      "instance_id": 198,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "D8F960",
+      "position": [
+        1.8169,
+        0.9947,
+        12.3249
+      ],
+      "aabb": {
+        "center": [
+          1.7909,
+          0.9112,
+          12.3516
+        ],
+        "sizes": [
+          0.4663,
+          0.3642,
+          0.38
+        ]
+      },
+      "num_vertices": 1190,
+      "bbox_diag": 0.703
+    },
+    {
+      "instance_id": 199,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "9FF95C",
+      "position": [
+        1.2838,
+        0.9848,
+        12.3206
+      ],
+      "aabb": {
+        "center": [
+          1.3294,
+          0.923,
+          12.3298
+        ],
+        "sizes": [
+          0.4567,
+          0.3478,
+          0.3436
+        ]
+      },
+      "num_vertices": 893,
+      "bbox_diag": 0.669
+    },
+    {
+      "instance_id": 200,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "0B6902",
+      "position": [
+        1.9778,
+        0.9705,
+        12.1436
+      ],
+      "aabb": {
+        "center": [
+          1.924,
+          0.8923,
+          12.1816
+        ],
+        "sizes": [
+          0.5726,
+          0.3665,
+          0.4
+        ]
+      },
+      "num_vertices": 1237,
+      "bbox_diag": 0.789
+    },
+    {
+      "instance_id": 201,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "0F2F28",
+      "position": [
+        2.282,
+        0.9218,
+        12.0154
+      ],
+      "aabb": {
+        "center": [
+          2.1667,
+          0.8791,
+          12.0116
+        ],
+        "sizes": [
+          0.8179,
+          0.42,
+          0.3
+        ]
+      },
+      "num_vertices": 1089,
+      "bbox_diag": 0.967
+    },
+    {
+      "instance_id": 202,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "A8EBC3",
+      "position": [
+        1.2048,
+        0.9877,
+        12.1308
+      ],
+      "aabb": {
+        "center": [
+          1.2619,
+          0.9229,
+          12.1454
+        ],
+        "sizes": [
+          0.5917,
+          0.3876,
+          0.3124
+        ]
+      },
+      "num_vertices": 1261,
+      "bbox_diag": 0.773
+    },
+    {
+      "instance_id": 203,
+      "category": "pillow",
+      "region_id": "4",
+      "hex_color": "0D890F",
+      "position": [
+        1.021,
+        0.9485,
+        11.9859
+      ],
+      "aabb": {
+        "center": [
+          1.1727,
+          0.9146,
+          11.9916
+        ],
+        "sizes": [
+          0.89,
+          0.4109,
+          0.26
+        ]
+      },
+      "num_vertices": 1414,
+      "bbox_diag": 1.014
+    },
+    {
+      "instance_id": 204,
+      "category": "chest of drawers",
+      "region_id": "4",
+      "hex_color": "F13574",
+      "position": [
+        3.0016,
+        0.3836,
+        12.0032
+      ],
+      "aabb": {
+        "center": [
+          2.9577,
+          0.3791,
+          11.9585
+        ],
+        "sizes": [
+          0.8,
+          0.74,
+          0.5803
+        ]
+      },
+      "num_vertices": 10744,
+      "bbox_diag": 1.235
+    },
+    {
+      "instance_id": 205,
+      "category": "bedside lamp",
+      "region_id": "4",
+      "hex_color": "E1E932",
+      "position": [
+        2.9765,
+        1.1527,
+        11.9665
+      ],
+      "aabb": {
+        "center": [
+          2.9789,
+          1.0555,
+          11.9202
+        ],
+        "sizes": [
+          0.3834,
+          0.751,
+          0.4697
+        ]
+      },
+      "num_vertices": 3155,
+      "bbox_diag": 0.965
+    },
+    {
+      "instance_id": 206,
+      "category": "unknown",
+      "region_id": "4",
+      "hex_color": "74EEE3",
+      "position": [
+        2.7494,
+        0.7956,
+        11.9614
+      ],
+      "aabb": {
+        "center": [
+          2.753,
+          0.7991,
+          11.9638
+        ],
+        "sizes": [
+          0.0495,
+          0.14,
+          0.0751
+        ]
+      },
+      "num_vertices": 172,
+      "bbox_diag": 0.166
+    },
+    {
+      "instance_id": 207,
+      "category": "chest of drawers",
+      "region_id": "4",
+      "hex_color": "ACA84A",
+      "position": [
+        0.2429,
+        0.3556,
+        11.9817
+      ],
+      "aabb": {
+        "center": [
+          0.2656,
+          0.3723,
+          11.9316
+        ],
+        "sizes": [
+          0.7756,
+          0.7264,
+          0.5923
+        ]
+      },
+      "num_vertices": 11518,
+      "bbox_diag": 1.217
+    },
+    {
+      "instance_id": 208,
+      "category": "bedside lamp",
+      "region_id": "4",
+      "hex_color": "3A4E0E",
+      "position": [
+        0.2654,
+        1.1768,
+        11.9531
+      ],
+      "aabb": {
+        "center": [
+          0.2602,
+          1.0738,
+          11.9024
+        ],
+        "sizes": [
+          0.3852,
+          0.7255,
+          0.4415
+        ]
+      },
+      "num_vertices": 2502,
+      "bbox_diag": 0.933
+    },
+    {
+      "instance_id": 209,
+      "category": "unknown",
+      "region_id": "4",
+      "hex_color": "F2F3B2",
+      "position": [
+        0.443,
+        0.7909,
+        11.919
+      ],
+      "aabb": {
+        "center": [
+          0.448,
+          0.7923,
+          11.9172
+        ],
+        "sizes": [
+          0.0817,
+          0.1303,
+          0.0712
+        ]
+      },
+      "num_vertices": 205,
+      "bbox_diag": 0.169
+    },
+    {
+      "instance_id": 210,
+      "category": "tv",
+      "region_id": "4",
+      "hex_color": "0AA5F0",
+      "position": [
+        0.383,
+        1.8219,
+        15.8275
+      ],
+      "aabb": {
+        "center": [
+          0.3452,
+          1.8191,
+          15.8392
+        ],
+        "sizes": [
+          0.7542,
+          0.5,
+          0.2124
+        ]
+      },
+      "num_vertices": 6352,
+      "bbox_diag": 0.93
+    },
+    {
+      "instance_id": 211,
+      "category": "chest of drawers",
+      "region_id": "4",
+      "hex_color": "77EADE",
+      "position": [
+        0.1409,
+        0.6535,
+        15.6549
+      ],
+      "aabb": {
+        "center": [
+          0.187,
+          0.7287,
+          15.6898
+        ],
+        "sizes": [
+          1.3038,
+          1.4997,
+          0.5436
+        ]
+      },
+      "num_vertices": 14806,
+      "bbox_diag": 2.06
+    },
+    {
+      "instance_id": 212,
+      "category": "window",
+      "region_id": "4",
+      "hex_color": "5F1D9A",
+      "position": [
+        -0.5212,
+        1.8138,
+        12.632
+      ],
+      "aabb": {
+        "center": [
+          -0.5641,
+          1.7555,
+          12.712
+        ],
+        "sizes": [
+          0.3764,
+          1.5106,
+          1.8506
+        ]
+      },
+      "num_vertices": 30792,
+      "bbox_diag": 2.418
+    },
+    {
+      "instance_id": 213,
+      "category": "curtain",
+      "region_id": "4",
+      "hex_color": "3F4995",
+      "position": [
+        -0.327,
+        1.5676,
+        13.4633
+      ],
+      "aabb": {
+        "center": [
+          -0.3622,
+          1.3935,
+          13.4838
+        ],
+        "sizes": [
+          0.3708,
+          2.5689,
+          0.7156
+        ]
+      },
+      "num_vertices": 12414,
+      "bbox_diag": 2.692
+    },
+    {
+      "instance_id": 214,
+      "category": "curtain",
+      "region_id": "4",
+      "hex_color": "57CE71",
+      "position": [
+        -0.3369,
+        1.6913,
+        12.0947
+      ],
+      "aabb": {
+        "center": [
+          -0.3708,
+          1.4591,
+          12.0831
+        ],
+        "sizes": [
+          0.27,
+          2.46,
+          0.4877
+        ]
+      },
+      "num_vertices": 14175,
+      "bbox_diag": 2.522
+    },
+    {
+      "instance_id": 215,
+      "category": "floor",
+      "region_id": "4",
+      "hex_color": "E2530B",
+      "position": [
+        1.1679,
+        0.0111,
+        13.9096
+      ],
+      "aabb": {
+        "center": [
+          1.6178,
+          0.0291,
+          13.8253
+        ],
+        "sizes": [
+          4.2001,
+          0.08,
+          4.2727
+        ]
+      },
+      "num_vertices": 3164,
+      "bbox_diag": 5.992
+    },
+    {
+      "instance_id": 216,
+      "category": "door",
+      "region_id": "4",
+      "hex_color": "91512A",
+      "position": [
+        3.3441,
+        1.0569,
+        15.8303
+      ],
+      "aabb": {
+        "center": [
+          3.1724,
+          1.2507,
+          15.8209
+        ],
+        "sizes": [
+          0.9969,
+          2.5005,
+          0.3815
+        ]
+      },
+      "num_vertices": 18434,
+      "bbox_diag": 2.719
+    },
+    {
+      "instance_id": 217,
+      "category": "door",
+      "region_id": "4",
+      "hex_color": "F3FB13",
+      "position": [
+        0.0791,
+        0.9979,
+        15.0112
+      ],
+      "aabb": {
+        "center": [
+          -0.0123,
+          1.2288,
+          14.9954
+        ],
+        "sizes": [
+          1.06,
+          2.4406,
+          0.3512
+        ]
+      },
+      "num_vertices": 25744,
+      "bbox_diag": 2.684
+    },
+    {
+      "instance_id": 218,
+      "category": "wall",
+      "region_id": "5",
+      "hex_color": "130790",
+      "position": [
+        -0.6867,
+        1.527,
+        13.4688
+      ],
+      "aabb": {
+        "center": [
+          -1.3022,
+          1.3745,
+          13.4335
+        ],
+        "sizes": [
+          1.52,
+          2.8065,
+          3.5037
+        ]
+      },
+      "num_vertices": 12918,
+      "bbox_diag": 4.74
+    },
+    {
+      "instance_id": 219,
+      "category": "wall",
+      "region_id": "5",
+      "hex_color": "1CED77",
+      "position": [
+        -2.0421,
+        1.4171,
+        15.1824
+      ],
+      "aabb": {
+        "center": [
+          -2.2622,
+          1.353,
+          15.1729
+        ],
+        "sizes": [
+          3.16,
+          2.8204,
+          0.0626
+        ]
+      },
+      "num_vertices": 6704,
+      "bbox_diag": 4.236
+    },
+    {
+      "instance_id": 220,
+      "category": "wall",
+      "region_id": "5",
+      "hex_color": "CD2A3F",
+      "position": [
+        -1.0526,
+        1.5675,
+        11.768
+      ],
+      "aabb": {
+        "center": [
+          -1.0222,
+          1.5291,
+          11.7633
+        ],
+        "sizes": [
+          0.64,
+          2.44,
+          0.0475
+        ]
+      },
+      "num_vertices": 2292,
+      "bbox_diag": 2.523
+    },
+    {
+      "instance_id": 221,
+      "category": "wall",
+      "region_id": "5",
+      "hex_color": "9D50CB",
+      "position": [
+        -1.3214,
+        1.7449,
+        11.5393
+      ],
+      "aabb": {
+        "center": [
+          -1.3898,
+          1.4391,
+          11.2355
+        ],
+        "sizes": [
+          0.2249,
+          2.66,
+          1.0678
+        ]
+      },
+      "num_vertices": 3416,
+      "bbox_diag": 2.875
+    },
+    {
+      "instance_id": 222,
+      "category": "wall",
+      "region_id": "5",
+      "hex_color": "EBEFF3",
+      "position": [
+        -3.4985,
+        1.4415,
+        11.3828
+      ],
+      "aabb": {
+        "center": [
+          -3.308,
+          1.2661,
+          11.3809
+        ],
+        "sizes": [
+          3.8116,
+          2.6639,
+          0.2386
+        ]
+      },
+      "num_vertices": 29205,
+      "bbox_diag": 4.656
+    },
+    {
+      "instance_id": 223,
+      "category": "chair",
+      "region_id": "5",
+      "hex_color": "D77C91",
+      "position": [
+        -2.6689,
+        0.4916,
+        12.1244
+      ],
+      "aabb": {
+        "center": [
+          -2.7432,
+          0.4431,
+          12.0518
+        ],
+        "sizes": [
+          1.1764,
+          0.9719,
+          1.2002
+        ]
+      },
+      "num_vertices": 6825,
+      "bbox_diag": 1.941
+    },
+    {
+      "instance_id": 224,
+      "category": "chair",
+      "region_id": "5",
+      "hex_color": "6A6725",
+      "position": [
+        -1.4188,
+        0.4186,
+        13.1724
+      ],
+      "aabb": {
+        "center": [
+          -1.4426,
+          0.3534,
+          13.2716
+        ],
+        "sizes": [
+          1.1392,
+          1.1914,
+          1.1
+        ]
+      },
+      "num_vertices": 21740,
+      "bbox_diag": 1.982
+    },
+    {
+      "instance_id": 225,
+      "category": "table",
+      "region_id": "5",
+      "hex_color": "713A50",
+      "position": [
+        -1.9756,
+        0.3804,
+        12.6131
+      ],
+      "aabb": {
+        "center": [
+          -1.9736,
+          0.3143,
+          12.5513
+        ],
+        "sizes": [
+          0.72,
+          0.3897,
+          0.7178
+        ]
+      },
+      "num_vertices": 4040,
+      "bbox_diag": 1.089
+    },
+    {
+      "instance_id": 226,
+      "category": "wall",
+      "region_id": "5",
+      "hex_color": "2E0751",
+      "position": [
+        -5.2086,
+        1.7364,
+        12.0594
+      ],
+      "aabb": {
+        "center": [
+          -5.2922,
+          1.333,
+          12.7616
+        ],
+        "sizes": [
+          0.34,
+          2.8182,
+          4.24
+        ]
+      },
+      "num_vertices": 2879,
+      "bbox_diag": 5.102
+    },
+    {
+      "instance_id": 227,
+      "category": "plant",
+      "region_id": "5",
+      "hex_color": "B2A11D",
+      "position": [
+        -4.8315,
+        0.5002,
+        13.179
+      ],
+      "aabb": {
+        "center": [
+          -4.91,
+          0.3491,
+          13.1707
+        ],
+        "sizes": [
+          0.7445,
+          0.8,
+          1.2219
+        ]
+      },
+      "num_vertices": 15421,
+      "bbox_diag": 1.639
+    },
+    {
+      "instance_id": 228,
+      "category": "ceiling",
+      "region_id": "5",
+      "hex_color": "9D6F70",
+      "position": [
+        -3.4953,
+        2.7617,
+        12.1523
+      ],
+      "aabb": {
+        "center": [
+          -2.9505,
+          2.8428,
+          12.7016
+        ],
+        "sizes": [
+          4.5536,
+          0.2464,
+          5.2
+        ]
+      },
+      "num_vertices": 17766,
+      "bbox_diag": 6.916
+    },
+    {
+      "instance_id": 229,
+      "category": "floor",
+      "region_id": "5",
+      "hex_color": "E1359B",
+      "position": [
+        -2.4135,
+        -0.0504,
+        12.7698
+      ],
+      "aabb": {
+        "center": [
+          -3.0359,
+          -0.1079,
+          13.3616
+        ],
+        "sizes": [
+          5.2128,
+          0.314,
+          4.0
+        ]
+      },
+      "num_vertices": 9022,
+      "bbox_diag": 6.578
+    },
+    {
+      "instance_id": 230,
+      "category": "rug",
+      "region_id": "5",
+      "hex_color": "502865",
+      "position": [
+        -0.8753,
+        -0.0248,
+        14.289
+      ],
+      "aabb": {
+        "center": [
+          -0.9222,
+          -0.0274,
+          14.3216
+        ],
+        "sizes": [
+          0.4399,
+          0.0223,
+          0.84
+        ]
+      },
+      "num_vertices": 188,
+      "bbox_diag": 0.949
+    },
+    {
+      "instance_id": 231,
+      "category": "door frame",
+      "region_id": "5",
+      "hex_color": "D58679",
+      "position": [
+        -0.5169,
+        1.4902,
+        14.1773
+      ],
+      "aabb": {
+        "center": [
+          -0.5453,
+          1.2983,
+          14.4116
+        ],
+        "sizes": [
+          0.3033,
+          2.5415,
+          1.14
+        ]
+      },
+      "num_vertices": 6072,
+      "bbox_diag": 2.802
+    },
+    {
+      "instance_id": 232,
+      "category": "lamp",
+      "region_id": "5",
+      "hex_color": "33569A",
+      "position": [
+        -0.7832,
+        2.0435,
+        15.0697
+      ],
+      "aabb": {
+        "center": [
+          -0.7847,
+          2.0441,
+          15.0692
+        ],
+        "sizes": [
+          0.2048,
+          0.2499,
+          0.1894
+        ]
+      },
+      "num_vertices": 1514,
+      "bbox_diag": 0.375
+    },
+    {
+      "instance_id": 233,
+      "category": "rug",
+      "region_id": "4",
+      "hex_color": "6B0EC8",
+      "position": [
+        1.3945,
+        0.0357,
+        13.5619
+      ],
+      "aabb": {
+        "center": [
+          1.5681,
+          0.0472,
+          13.519
+        ],
+        "sizes": [
+          3.3408,
+          0.1237,
+          2.6452
+        ]
+      },
+      "num_vertices": 3157,
+      "bbox_diag": 4.263
+    }
+  ]
+}

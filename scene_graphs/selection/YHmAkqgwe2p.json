@@ -1,0 +1,162 @@
+{
+  "scene": "YHmAkqgwe2p",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    24,
+    206,
+    221,
+    219,
+    141,
+    217,
+    193,
+    92,
+    318,
+    11,
+    170,
+    296,
+    47,
+    126,
+    224,
+    101,
+    336,
+    30,
+    159,
+    295,
+    49,
+    123
+  ],
+  "nodes": [
+    {
+      "instance_id": 24,
+      "category": "bed",
+      "region_id": "0",
+      "bbox_diag": 3.36
+    },
+    {
+      "instance_id": 206,
+      "category": "tv",
+      "region_id": "5",
+      "bbox_diag": 1.413
+    },
+    {
+      "instance_id": 221,
+      "category": "couch",
+      "region_id": "5",
+      "bbox_diag": 10.648
+    },
+    {
+      "instance_id": 219,
+      "category": "armchair",
+      "region_id": "5",
+      "bbox_diag": 1.461
+    },
+    {
+      "instance_id": 141,
+      "category": "toilet",
+      "region_id": "4",
+      "bbox_diag": 1.215
+    },
+    {
+      "instance_id": 217,
+      "category": "vase",
+      "region_id": "5",
+      "bbox_diag": 0.374
+    },
+    {
+      "instance_id": 193,
+      "category": "picture",
+      "region_id": "5",
+      "bbox_diag": 6.49
+    },
+    {
+      "instance_id": 92,
+      "category": "couch",
+      "region_id": "2",
+      "bbox_diag": 2.973
+    },
+    {
+      "instance_id": 318,
+      "category": "table",
+      "region_id": "7",
+      "bbox_diag": 3.393
+    },
+    {
+      "instance_id": 11,
+      "category": "wall lamp",
+      "region_id": "0",
+      "bbox_diag": 8.55
+    },
+    {
+      "instance_id": 170,
+      "category": "shower hose",
+      "region_id": "4",
+      "bbox_diag": 6.932
+    },
+    {
+      "instance_id": 296,
+      "category": "cabinet",
+      "region_id": "6",
+      "bbox_diag": 2.606
+    },
+    {
+      "instance_id": 47,
+      "category": "wardrobe",
+      "region_id": "1",
+      "bbox_diag": 3.238
+    },
+    {
+      "instance_id": 126,
+      "category": "mirror",
+      "region_id": "3",
+      "bbox_diag": 1.291
+    },
+    {
+      "instance_id": 224,
+      "category": "rug",
+      "region_id": "5",
+      "bbox_diag": 3.74
+    },
+    {
+      "instance_id": 101,
+      "category": "cabinet",
+      "region_id": "2",
+      "bbox_diag": 2.447
+    },
+    {
+      "instance_id": 336,
+      "category": "refrigerator",
+      "region_id": "7",
+      "bbox_diag": 2.365
+    },
+    {
+      "instance_id": 30,
+      "category": "watch",
+      "region_id": "0",
+      "bbox_diag": 4.915
+    },
+    {
+      "instance_id": 159,
+      "category": "cabinet",
+      "region_id": "4",
+      "bbox_diag": 2.216
+    },
+    {
+      "instance_id": 295,
+      "category": "cabinet",
+      "region_id": "6",
+      "bbox_diag": 1.457
+    },
+    {
+      "instance_id": 49,
+      "category": "cabinet",
+      "region_id": "1",
+      "bbox_diag": 1.702
+    },
+    {
+      "instance_id": 123,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 0.966
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "scene": "741Fdj7NLF9",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    6,
+    24,
+    67,
+    227,
+    122,
+    196,
+    47,
+    233,
+    133,
+    164,
+    12,
+    224,
+    114,
+    213,
+    132,
+    177,
+    5,
+    223,
+    83,
+    214,
+    134,
+    175
+  ],
+  "nodes": [
+    {
+      "instance_id": 6,
+      "category": "chair",
+      "region_id": "0",
+      "bbox_diag": 2.221
+    },
+    {
+      "instance_id": 24,
+      "category": "couch",
+      "region_id": "1",
+      "bbox_diag": 2.687
+    },
+    {
+      "instance_id": 67,
+      "category": "tv",
+      "region_id": "1",
+      "bbox_diag": 1.348
+    },
+    {
+      "instance_id": 227,
+      "category": "plant",
+      "region_id": "5",
+      "bbox_diag": 1.639
+    },
+    {
+      "instance_id": 122,
+      "category": "toilet",
+      "region_id": "2",
+      "bbox_diag": 1.314
+    },
+    {
+      "instance_id": 196,
+      "category": "bed",
+      "region_id": "4",
+      "bbox_diag": 3.663
+    },
+    {
+      "instance_id": 47,
+      "category": "kitchen counter",
+      "region_id": "1",
+      "bbox_diag": 4.233
+    },
+    {
+      "instance_id": 233,
+      "category": "rug",
+      "region_id": "4",
+      "bbox_diag": 4.263
+    },
+    {
+      "instance_id": 133,
+      "category": "bathroom cabinet",
+      "region_id": "2",
+      "bbox_diag": 2.234
+    },
+    {
+      "instance_id": 164,
+      "category": "rack",
+      "region_id": "3",
+      "bbox_diag": 2.479
+    },
+    {
+      "instance_id": 12,
+      "category": "rack",
+      "region_id": "0",
+      "bbox_diag": 2.691
+    },
+    {
+      "instance_id": 224,
+      "category": "chair",
+      "region_id": "5",
+      "bbox_diag": 1.982
+    },
+    {
+      "instance_id": 114,
+      "category": "rug",
+      "region_id": "1",
+      "bbox_diag": 3.893
+    },
+    {
+      "instance_id": 213,
+      "category": "curtain",
+      "region_id": "4",
+      "bbox_diag": 2.692
+    },
+    {
+      "instance_id": 132,
+      "category": "bathroom cabinet",
+      "region_id": "2",
+      "bbox_diag": 1.359
+    },
+    {
+      "instance_id": 177,
+      "category": "ironing board",
+      "region_id": "3",
+      "bbox_diag": 1.535
+    },
+    {
+      "instance_id": 5,
+      "category": "chair",
+      "region_id": "0",
+      "bbox_diag": 1.877
+    },
+    {
+      "instance_id": 223,
+      "category": "chair",
+      "region_id": "5",
+      "bbox_diag": 1.941
+    },
+    {
+      "instance_id": 83,
+      "category": "curtain",
+      "region_id": "1",
+      "bbox_diag": 2.645
+    },
+    {
+      "instance_id": 214,
+      "category": "curtain",
+      "region_id": "4",
+      "bbox_diag": 2.522
+    },
+    {
+      "instance_id": 134,
+      "category": "bathroom counter",
+      "region_id": "2",
+      "bbox_diag": 1.075
+    },
+    {
+      "instance_id": 175,
+      "category": "shelf",
+      "region_id": "3",
+      "bbox_diag": 1.527
+    }
+  ]
+}

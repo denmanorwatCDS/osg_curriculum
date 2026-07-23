@@ -1,0 +1,162 @@
+{
+  "scene": "H8rQCnvBgo6",
+  "num_nodes": 22,
+  "node_instance_ids": [
+    19,
+    23,
+    27,
+    121,
+    211,
+    158,
+    6,
+    48,
+    226,
+    133,
+    202,
+    244,
+    258,
+    273,
+    175,
+    37,
+    55,
+    227,
+    113,
+    253,
+    243,
+    157
+  ],
+  "nodes": [
+    {
+      "instance_id": 19,
+      "category": "armchair",
+      "region_id": "0",
+      "bbox_diag": 1.768
+    },
+    {
+      "instance_id": 23,
+      "category": "sofa",
+      "region_id": "0",
+      "bbox_diag": 2.606
+    },
+    {
+      "instance_id": 27,
+      "category": "tv",
+      "region_id": "0",
+      "bbox_diag": 0.936
+    },
+    {
+      "instance_id": 121,
+      "category": "bed",
+      "region_id": "3",
+      "bbox_diag": 3.294
+    },
+    {
+      "instance_id": 211,
+      "category": "toilet",
+      "region_id": "6",
+      "bbox_diag": 1.253
+    },
+    {
+      "instance_id": 158,
+      "category": "bath curtain",
+      "region_id": "4",
+      "bbox_diag": 2.076
+    },
+    {
+      "instance_id": 6,
+      "category": "fireplace",
+      "region_id": "0",
+      "bbox_diag": 3.548
+    },
+    {
+      "instance_id": 48,
+      "category": "kitchen cabinet",
+      "region_id": "1",
+      "bbox_diag": 2.038
+    },
+    {
+      "instance_id": 226,
+      "category": "shower curtain",
+      "region_id": "6",
+      "bbox_diag": 2.308
+    },
+    {
+      "instance_id": 133,
+      "category": "ceiling lamp",
+      "region_id": "3",
+      "bbox_diag": 1.87
+    },
+    {
+      "instance_id": 202,
+      "category": "ceiling fan",
+      "region_id": "5",
+      "bbox_diag": 5.402
+    },
+    {
+      "instance_id": 244,
+      "category": "shelf",
+      "region_id": "7",
+      "bbox_diag": 1.923
+    },
+    {
+      "instance_id": 258,
+      "category": "ceiling lamp",
+      "region_id": "2",
+      "bbox_diag": 0.318
+    },
+    {
+      "instance_id": 273,
+      "category": "ceiling lamp",
+      "region_id": "8",
+      "bbox_diag": 0.428
+    },
+    {
+      "instance_id": 175,
+      "category": "cabinet",
+      "region_id": "4",
+      "bbox_diag": 1.908
+    },
+    {
+      "instance_id": 37,
+      "category": "table",
+      "region_id": "0",
+      "bbox_diag": 2.087
+    },
+    {
+      "instance_id": 55,
+      "category": "fridge",
+      "region_id": "1",
+      "bbox_diag": 2.035
+    },
+    {
+      "instance_id": 227,
+      "category": "shower bar",
+      "region_id": "6",
+      "bbox_diag": 1.215
+    },
+    {
+      "instance_id": 113,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 1.692
+    },
+    {
+      "instance_id": 253,
+      "category": "bed",
+      "region_id": "5",
+      "bbox_diag": 3.232
+    },
+    {
+      "instance_id": 243,
+      "category": "shelf",
+      "region_id": "7",
+      "bbox_diag": 1.895
+    },
+    {
+      "instance_id": 157,
+      "category": "bath",
+      "region_id": "4",
+      "bbox_diag": 1.778
+    }
+  ]
+}
