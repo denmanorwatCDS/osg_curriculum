@@ -258,6 +258,11 @@ python -u navigate_homerobot.py > logs/osg_gt.log 2>&1
 pip install skrl==1.4.3
 ```
 
+## Step 21 - Downgrade protobuf
+```
+python -m pip install --force-reinstall "protobuf==3.20.1"
+```
+
 ---
 
 ## Known issues / workarounds summary

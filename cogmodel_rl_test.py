@@ -1,14 +1,12 @@
-import tqdm
-from skrl.utils.spaces.torch import sample_space
-
 from utils.habitat_utils import setup_env_config
 from habitat.config import read_write
 from skrl.envs.wrappers.torch import wrap_env
+from skrl.trainers.torch.sequential import SequentialTrainer
 from curriculum_habitat.helper_wrappers import (
     CLIPWrapper,
     ToSKRLWrapper,
-    MemoryWrapper,
 )
+from curriculum_habitat.RL.DDQN_stub import create_ddqn
 from curriculum_habitat.curriculum_wrapper import (
     CurriculumVectorEnv,
     ObjRLNav,
@@ -46,20 +44,20 @@ def main():
     )
     
     vec_env = CLIPWrapper(vec_env, device="cuda")
-    vec_env = MemoryWrapper(vec_env)
     vec_env = ToSKRLWrapper(vec_env, device="cuda")
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
 
     try:
-        vec_env.reset()
-        for _ in tqdm.tqdm(range(NUM_OF_STEPS)):
-            actions = sample_space(
-                vec_env.action_space,
-                batch_size=vec_env.num_envs,
-                backend="native",
-                device=vec_env.device,
-            )
-            vec_env.step(actions)
+        agent = create_ddqn(vec_env)
+        SequentialTrainer(
+            env=vec_env,
+            agents=agent,
+            cfg={
+                "timesteps": NUM_OF_STEPS,
+                "headless": True,
+                "close_environment_at_exit": False,
+            },
+        ).train()
     finally:
         # Flush the active episode from every vector slot even if interrupted.
         vec_env.close()
