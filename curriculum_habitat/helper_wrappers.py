@@ -8,6 +8,11 @@ import numpy as np
 import torch
 from transformers import CLIPModel, CLIPProcessor
 
+import gymnasium
+from gymnasium.vector.utils import batch_space
+from gymnasium.vector import VectorEnv
+from skrl.utils.spaces.torch import convert_gym_space
+
 class CLIPWrapper:
     def __init__(self, env, device = "cuda"):
         self.env, self.device = env, device
@@ -55,6 +60,10 @@ class CLIPWrapper:
     def __getattr__(self, name): 
         return getattr(self.env, name)
 
+    @property
+    def unwrapped(self):
+        return getattr(self.env, "unwrapped", self.env)
+
 
 class MemoryWrapper:
     def __init__(self, env):
@@ -87,7 +96,7 @@ class MemoryWrapper:
 
     def step(self, actions):
         obs, rewards, dones, infos = self.env.step(actions)
-        executed = np.asarray([info["executed_action"]["action"] for info in infos])
+        executed = np.asarray([info["executed_action"]['name'] for info in infos])
         action = np.stack((executed == "move_forward", (executed == "turn_left").astype(float) - (executed == "turn_right")), 1).astype(np.float32)
         self._update(obs["observation"], action)
         self.embeddings[dones], self.actions[dones], self.initialized[dones] = obs["observation"][dones, None], 0, True
@@ -96,6 +105,77 @@ class MemoryWrapper:
 
     def __getattr__(self, name):
         return getattr(self.env, name)
+
+    @property
+    def unwrapped(self):
+        return getattr(self.env, "unwrapped", self.env)
+
+
+class ToSKRLWrapper(VectorEnv):
+    def __init__(self, env, device = None):
+        super().__init__()
+        self.env = env
+        self.device = torch.device(
+            device or getattr(env, "device", None) or "cpu"
+        )
+        self.num_envs = env.num_envs
+        observation_space = convert_gym_space(
+            env.observation_space, squeeze_batch_dimension=True
+        )
+        self._scalar_keys = {
+            key for key, space in observation_space.spaces.items()
+            if isinstance(space, gymnasium.spaces.Box) and space.shape == ()
+        }
+        self.single_observation_space = gymnasium.spaces.Dict({
+            key: gymnasium.spaces.Box(
+                np.asarray(space.low).reshape(1),
+                np.asarray(space.high).reshape(1),
+                dtype=space.dtype,
+            ) if key in self._scalar_keys else space
+            for key, space in observation_space.spaces.items()
+            if np.prod(space.shape, dtype=np.int64)
+        })
+        self.single_action_space = convert_gym_space(env.action_spaces[0])
+        self.observation_space = batch_space(
+            self.single_observation_space, self.num_envs
+        )
+        self.action_space = batch_space(
+            self.single_action_space, self.num_envs
+        )
+
+    def _obs(self, obs):
+        return {
+            key: np.asarray(obs[key]).reshape(self.num_envs, 1)
+            if key in self._scalar_keys else obs[key]
+            for key in self.single_observation_space.spaces
+        }
+
+    def reset(self):
+        return self._obs(self.env.reset()), {}
+
+    def step(self, actions):
+        obs, rewards, _, infos = self.env.step(
+            np.asarray(actions).reshape(self.num_envs)
+        )
+        # In-place substitution: environment may have modified the actions
+        actions[...] = np.expand_dims(np.stack([infos[i]['executed_action']['value'] \
+                                                for i in range(self.num_envs)], axis=0), axis=1)
+        return (
+            self._obs(obs),
+            np.asarray(rewards, np.float32),
+            np.asarray([info["terminated"] for info in infos], np.bool_),
+            np.asarray([info["truncated"] for info in infos], np.bool_),
+            infos
+        )
+
+    def call(self, name, *args, **kwargs):
+        return getattr(self, name)(*args, **kwargs)
+
+    def render(self, *args, **kwargs):
+        return self.env.render(*args, **kwargs)
+
+    def close(self):
+        return self.env.close()
 
 
 class DebugVideoWrapper:
@@ -528,3 +608,7 @@ class DebugVideoWrapper:
 
     def __getattr__(self, name):
         return getattr(self.env, name)
+
+    @property
+    def unwrapped(self):
+        return getattr(self.env, "unwrapped", self.env)

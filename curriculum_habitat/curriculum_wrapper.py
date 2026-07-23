@@ -119,13 +119,14 @@ class ObjRLNav(RLEnv):
 
     def step(self, action):
         self.previous_distance_to_goal = self.habitat_env.get_metrics()['distance_to_goal']
+        action_value = action
         if action == -1:
-            action = self.calculate_next_best_action()
-        action = self.convert_action(action)
+            action_value = self.calculate_next_best_action()
+        action_name = self.convert_action(action_value)
 
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, info = super().step(action_name)
         obs = self.calculate_full_observation(obs)
-        info['executed_action'] = action
+        info['executed_action'] = {'value': action_value, 'name': action_name['action']}
         self.relevant_observation = deepcopy(obs)
         if self.debug_video_enabled:
             info["_debug_video_state"] = self.get_debug_video_state(
@@ -182,6 +183,8 @@ class ObjRLNav(RLEnv):
     
     def get_info(self, observations: Observations):
         info = dict(self.habitat_env.get_metrics())
+        info['truncated'] = self.habitat_env._past_limit()
+        info['terminated'] = self.habitat_env.task.is_stop_called
         return info
 
     def get_debug_video_state(
@@ -467,7 +470,8 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
                                                 max_angle_error = max_angle_error)[0]
                 for key in obs.keys():
                     obs[key][i] = deepcopy(reset_result[key])
-
+            else:
+                infos[i]['done_observation'] = np.full(obs['observation'][i].shape, np.nan, dtype=obs['observation'][i].dtype)
         return obs, rewards, dones, infos
     
     def reset(self):

@@ -21,10 +21,50 @@
             "preLaunchTask": "make-logs-dir"
         },
         {
-            "name": "Sanity_check",
+            "name": "Sanity check",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/sanity_test.py",
+            "program": "${workspaceFolder}/cogmodel_sanity_test.py",
+            "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
+            "justMyCode": false,
+            "args": [],
+            "env": {
+                "OSG_GT_SEM": "1",
+                "OSG_NO_CV2_VIS": "1",
+                "OSG_TEST_EPISODES": "100",
+                "OSG_LATENCY_LOG": "logs/latency_gt.jsonl",
+                "MAGNUM_LOG": "quiet",
+                "GLOG_minloglevel": "2"
+            },
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "make-logs-dir"
+        },
+        {
+            "name": "Smoke check",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cogmodel_smoke_test.py",
+            "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
+            "justMyCode": false,
+            "args": [],
+            "env": {
+                "OSG_GT_SEM": "1",
+                "OSG_NO_CV2_VIS": "1",
+                "OSG_TEST_EPISODES": "100",
+                "OSG_LATENCY_LOG": "logs/latency_gt.jsonl",
+                "MAGNUM_LOG": "quiet",
+                "GLOG_minloglevel": "2"
+            },
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "make-logs-dir"
+        },
+        {
+            "name": "RL test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cogmodel_rl_test.py",
             "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
             "justMyCode": false,
             "args": [],

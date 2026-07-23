@@ -5,3 +5,4 @@ scenes/*
 data/*
 configs/*
 *.pyc
+debug_videos/*

@@ -3,6 +3,7 @@
 import tqdm
 
 from utils.habitat_utils import setup_env_config
+from habitat.config import read_write
 from curriculum_habitat.helper_wrappers import (
     CLIPWrapper,
     DebugVideoWrapper,
@@ -29,8 +30,9 @@ def create_homerobot_env(
         params_path=data_path,
         default_config_path=task_config_path,
     )
+    with read_write(config):
+        config.habitat.seed = int(config.habitat.seed) + index
     env = ObjRLNav(config=config)
-    env.seed(config.habitat.seed + index)
     return env
 
 

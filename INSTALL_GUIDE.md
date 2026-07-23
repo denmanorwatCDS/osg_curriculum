@@ -253,6 +253,11 @@ MAGNUM_LOG=quiet GLOG_minloglevel=2 \
 python -u navigate_homerobot.py > logs/osg_gt.log 2>&1
 ```
 
+## Step 20 - Install skrl
+```
+pip install skrl==1.4.3
+```
+
 ---
 
 ## Known issues / workarounds summary

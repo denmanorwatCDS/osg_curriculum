@@ -25,8 +25,8 @@ habitat:
       main_agent:
         sim_sensors:
           semantic_sensor:
-            width: 640
-            height: 480
+            width: 224
+            height: 224
             hfov: 90
             position: [0, 0.88, 0]
             orientation: [0, 0, 0]

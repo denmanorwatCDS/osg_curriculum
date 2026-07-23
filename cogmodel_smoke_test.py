@@ -7,6 +7,7 @@ batched wrappers share the same setup without importing the navigator.
 import habitat
 import tqdm
 
+from habitat.config.read_write import read_write
 from utils.habitat_utils import ObjNavEnv, setup_env_config
 from curriculum_habitat.helper_wrappers import CLIPWrapper, MemoryWrapper
 from curriculum_habitat.curriculum_wrapper import CurriculumVectorEnv, ObjRLNav
@@ -29,8 +30,10 @@ def create_homerobot_env(
         params_path=data_path,
         default_config_path=task_config_path,
     )
+    
+    with read_write(config):
+        config.habitat.seed = int(config.habitat.seed) + index
     env = ObjRLNav(config=config)
-    env.seed(config.habitat.seed + index)
     return env
 
 if __name__ == "__main__":
