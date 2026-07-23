@@ -24,13 +24,7 @@ def create_homerobot_env(
     task_config_path: str = DEFAULT_TASK_CONFIG_PATH,
     data_path: str = DEFAULT_DATA_PATH,
     index: int = 0
-) -> ObjNavEnv:
-    """Create an ObjectNav environment exactly as ``navigate_homerobot`` does.
-
-    A fresh Habitat environment and wrapper are created on every call, which
-    allows a batched environment to use this function as its environment
-    factory. The resolved Habitat config remains available as ``env.config``.
-    """
+) -> ObjRLNav:
     config = setup_env_config(
         params_path=data_path,
         default_config_path=task_config_path,

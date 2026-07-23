@@ -21,10 +21,10 @@
             "preLaunchTask": "make-logs-dir"
         },
         {
-            "name": "homerobot_env (GT sem)",
+            "name": "Sanity_check",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/homerobot_env.py",
+            "program": "${workspaceFolder}/sanity_test.py",
             "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
             "justMyCode": false,
             "args": [],

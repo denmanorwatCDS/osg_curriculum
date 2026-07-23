@@ -25,6 +25,8 @@ from typing import (
 
 from habitat.core.simulator import Observations
 from habitat.tasks.nav.shortest_path_follower import ShortestPathFollower
+from habitat.utils.geometry_utils import quaternion_rotate_vector
+from habitat.utils.visualizations import maps
 from omegaconf import DictConfig
 from habitat.core.dataset import Dataset
 
@@ -37,6 +39,7 @@ class ObjRLNav(RLEnv):
 
         self.observation_memory = []
         self.action_memory = []
+        self.debug_video_enabled = False
 
         # IMPORTANT
         # Due to environment specifics, we don't add it. Episode is done only when agent said so
@@ -49,7 +52,7 @@ class ObjRLNav(RLEnv):
         self.observation_space = gym.spaces.Dict({
             "observation": self.habitat_env.observation_space["forward_rgb"],
             "absolute_goal_position": gym.spaces.Box(-np.inf, np.inf, (2,), np.float32),
-            "angle_to_goal": gym.spaces.Box(-np.pi, np.pi, (), np.float64),
+            "angle_to_goal": gym.spaces.Box(-np.pi, np.pi, (), np.float32),
             "knowledge_graph": gym.spaces.Box(-np.inf, np.inf, (0,), np.float32),
         })
         self.action_space = self.original_action_space = gym.spaces.Discrete(4)
@@ -59,20 +62,15 @@ class ObjRLNav(RLEnv):
             return_one_hot=False,
         )
 
-    def _sample_position_and_direction(self, mean_distance, max_angle_error):
-        sim, goal, original = self.habitat_env.sim, self.navigation_goal, self.habitat_env.sim.get_agent_state()
+    def _sample_position_and_direction(self, mean_distance, max_angle_error, goal):
+        sim, height = self.habitat_env.sim, self.habitat_env.sim.get_agent_state().position[1]
+        goal_position = np.asarray(goal.position)
+        goal_islands = {sim.pathfinder.get_island(v.agent_state.position) for v in goal.view_points}
         for _ in range(100):
             distance, bearing = max(np.random.normal(mean_distance, 0.1), 1.2), np.random.uniform(-np.pi, np.pi)
-            position = np.array([goal[0] + distance * np.cos(bearing), original.position[1], goal[2] + distance * np.sin(bearing)])
-            path = habitat_sim.ShortestPath()
-            path.requested_start, path.requested_end = position, goal
-            if not sim.is_navigable(position) or not sim.pathfinder.find_path(path) or len(path.points) < 2:
-                continue
-            direction = path.points[1] - path.points[0]
-            angle = np.arctan2(direction[0], -direction[2]) + np.random.uniform(-max_angle_error, max_angle_error)
-            rotation = [0, -np.sin(angle / 2), 0, np.cos(angle / 2)]
-            if sim.set_agent_state(position, rotation):
-                sim.set_agent_state(original.position, original.rotation)
+            position = np.array([goal_position[0] + distance * np.cos(bearing), height, goal_position[2] + distance * np.sin(bearing)])
+            if sim.is_navigable(position) and sim.pathfinder.get_island(position) in goal_islands:
+                angle = np.arctan2(goal_position[0] - position[0], position[2] - goal_position[2]) + np.random.uniform(-max_angle_error, max_angle_error)
                 self.sampled_position, self.sampled_angle = position[[0, 2]], float((angle + np.pi) % (2 * np.pi) - np.pi)
                 return self.sampled_position, self.sampled_angle
         self.sampled_position = self.sampled_angle = None
@@ -85,14 +83,12 @@ class ObjRLNav(RLEnv):
         """Optionally reset at map position [x, z] and absolute yaw angle."""
         obs = super().reset()
 
-        _, viewpoint, _ = self.get_closest_target_object()
-        self.navigation_goal = np.asarray(viewpoint.agent_state.position)
-
         if mean_distance is not None or max_angle_error is not None:
             if (mean_distance is None) != (max_angle_error is None):
                 raise ValueError("Both mean_distance and max_angle_error must be provided together.")
-            
-            position, angle = self._sample_position_and_direction(mean_distance, max_angle_error)
+
+            goal = np.random.choice(self.habitat_env.current_episode.goals)
+            position, angle = self._sample_position_and_direction(mean_distance, max_angle_error, goal)
 
             if position is not None and angle is not None:
                 state = self.habitat_env.sim.get_agent_state()
@@ -112,6 +108,9 @@ class ObjRLNav(RLEnv):
                     observations=obs,
                 )
 
+        viewpoint = self.get_closest_viewpoint()
+        self.viewpoint_goal = np.asarray(viewpoint.agent_state.position)
+
         self.previous_distance_to_goal = self.habitat_env.get_metrics()['distance_to_goal']
         obs = self.calculate_full_observation(obs)
 
@@ -128,6 +127,10 @@ class ObjRLNav(RLEnv):
         obs = self.calculate_full_observation(obs)
         info['executed_action'] = action
         self.relevant_observation = deepcopy(obs)
+        if self.debug_video_enabled:
+            info["_debug_video_state"] = self.get_debug_video_state(
+                include_map=False
+            )
         return obs, reward, done, info
 
     def convert_action(self, action):
@@ -137,7 +140,9 @@ class ObjRLNav(RLEnv):
         return {"action": ("turn_left", "turn_right", "move_forward", "stop")[action]}
 
     def calculate_full_observation(self, observations: Observations):
-        goal, _, _ = self.get_closest_target_object()
+        # Recompute this on every observation because the closest goal can
+        # change as the agent moves.
+        goal = self.get_closest_goal()
         goal_position = np.asarray(goal.position, dtype=np.float32)
         if goal_position.shape != (3,):
             raise ValueError("Goal position must be a 3D Habitat coordinate")
@@ -178,8 +183,59 @@ class ObjRLNav(RLEnv):
     def get_info(self, observations: Observations):
         info = dict(self.habitat_env.get_metrics())
         return info
+
+    def get_debug_video_state(
+        self, include_map=True, map_resolution=512
+    ):
+        """Return serializable state needed to render a debug-video frame."""
+        # Calling this method from DebugVideoWrapper opts the worker into
+        # returning exact post-action poses in subsequent step infos.
+        self.debug_video_enabled = True
+        sim = self.habitat_env.sim
+        agent_position_3d = np.asarray(
+            sim.get_agent_state().position, dtype=np.float32
+        )
+        if self.relevant_observation is None:
+            goal_position_3d = np.asarray(
+                self.get_closest_goal().position, dtype=np.float32
+            )
+            goal_position = goal_position_3d[[0, 2]]
+            angle_error = self.calculate_angle_to_goal(goal_position_3d)
+        else:
+            goal_position = np.asarray(
+                self.relevant_observation["absolute_goal_position"],
+                dtype=np.float32,
+            )
+            angle_error = np.float32(
+                self.relevant_observation["angle_to_goal"]
+            )
+
+        if include_map:
+            top_down_map = maps.get_topdown_map_from_sim(
+                sim, map_resolution=int(map_resolution), draw_border=True
+            )
+            top_down_map = maps.colorize_topdown_map(top_down_map)
+        else:
+            top_down_map = None
+        lower_bound, upper_bound = sim.pathfinder.get_bounds()
+        target_object = getattr(
+            self.habitat_env.current_episode,
+            "object_category",
+            None,
+        )
+        return {
+            "top_down_map": top_down_map,
+            "map_lower_bound": np.asarray(lower_bound, dtype=np.float32),
+            "map_upper_bound": np.asarray(upper_bound, dtype=np.float32),
+            "agent_position": agent_position_3d[[0, 2]],
+            "goal_position": goal_position,
+            "angle_error": angle_error,
+            "target_object": (
+                target_object if target_object is not None else "unknown"
+            ),
+        }
     
-    def get_closest_target_object(self):
+    def get_closest_viewpoint(self):
         episode = self.habitat_env.current_episode
         robot_position = self.habitat_env.sim.get_agent_state().position
 
@@ -190,8 +246,7 @@ class ObjRLNav(RLEnv):
                 position = viewpoint.agent_state.position
                 distance = self.habitat_env.sim.geodesic_distance(
                     robot_position,
-                    position,
-                    episode,
+                    position
                 )
                 if np.isfinite(distance):
                     candidates.append((float(distance), goal, viewpoint))
@@ -206,35 +261,35 @@ class ObjRLNav(RLEnv):
             key=lambda candidate: candidate[0],
         )
 
-        return goal, viewpoint, distance
+        return viewpoint
+
+    def get_closest_goal(self):
+        """Return the goal owning the nearest reachable viewpoint."""
+        sim = self.habitat_env.sim
+        goals, positions = zip(*(
+            (goal, viewpoint.agent_state.position)
+            for goal in self.habitat_env.current_episode.goals
+            for viewpoint in goal.view_points
+        ))
+        path = habitat_sim.MultiGoalShortestPath()
+        path.requested_start = sim.get_agent_state().position
+        path.requested_ends = np.asarray(positions, dtype=np.float32)
+        if not sim.pathfinder.find_path(path):
+            raise RuntimeError(
+                "No reachable target goals in the current ObjectNav episode"
+            )
+        return goals[path.closest_end_point_index]
     
     def calculate_angle_to_goal(self, closest_goal_position):
-        """Return the absolute Habitat yaw needed to face the goal.
-
-        Habitat agents face along the negative Z axis at zero yaw.  The
-        returned angle is in radians in the interval [-pi, pi].  Height is
-        intentionally ignored because navigation heading is measured in the
-        horizontal X-Z plane.
-        """
-        current_robot_position = np.asarray(
-            self.habitat_env.sim.get_agent_state().position, dtype=np.float64
-        )
-        closest_goal_position = np.asarray(
-            closest_goal_position, dtype=np.float64
-        )
-
-        if current_robot_position.shape != (3,) or closest_goal_position.shape != (3,):
-            raise ValueError("Robot and goal positions must be 3D vectors")
-
-        direction = closest_goal_position - current_robot_position
-        if np.allclose(direction[[0, 2]], 0.0):
-            raise ValueError("Cannot calculate yaw when robot and goal share the same X-Z position")
-
-        return float(np.arctan2(direction[0], -direction[2]))
+        state = self.habitat_env.sim.get_agent_state()
+        direction = np.asarray(closest_goal_position) - state.position
+        forward = quaternion_rotate_vector(state.rotation, np.array([0, 0, -1]))
+        angle = np.arctan2(direction[0], -direction[2]) - np.arctan2(forward[0], -forward[2])
+        return np.float32((angle + np.pi) % (2 * np.pi) - np.pi)
     
     def calculate_next_best_action(self):
         self.shortest_path_follower._build_follower()  # Usually just one string comparison
-        action = self.shortest_path_follower._follower.next_action_along(self.navigation_goal)
+        action = self.shortest_path_follower._follower.next_action_along(self.viewpoint_goal)
         return (3, 2, 0, 1)[action]
 
 class CurriculumVectorEnv(ModifiedVectorEnv):
@@ -339,7 +394,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
             elif self.failed_ep_num > self.fail_episode_threshold:
                 self._decrease_difficulty()
         
-        if self.max_mean_radius - self.cur_mean_radius < 1e-3:
+        if (self.max_mean_radius - self.cur_mean_radius < 1e-3) and self.stage < 2:
             self.stage = 2
             self._update_sr_stack()
 
