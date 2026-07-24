@@ -13,7 +13,7 @@ from curriculum_habitat.helper_wrappers import CLIPWrapper, MemoryWrapper
 from curriculum_habitat.curriculum_wrapper import CurriculumVectorEnv, ObjRLNav
 
 DEFAULT_TASK_CONFIG_PATH = "configs/objectnav_hm3d_v2_with_semantic.yaml"
-DEFAULT_DATA_PATH = "configs/homerobot_hm3d_objectnav.yaml"
+DEFAULT_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
 
 def convert_index_to_action(indexes: int, num_envs: int):
     assert len(indexes.shape) == 2 and indexes.shape[0] == num_envs and indexes.shape[1] == 1

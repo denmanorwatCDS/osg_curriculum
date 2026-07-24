@@ -82,6 +82,8 @@ class ObjRLNav(RLEnv):
     def reset(self, mean_distance = None, max_angle_error = None):
         """Optionally reset at map position [x, z] and absolute yaw angle."""
         obs = super().reset()
+        self.shortest_path_follower._follower = None
+        self.shortest_path_follower._current_scene = None
 
         if mean_distance is not None or max_angle_error is not None:
             if (mean_distance is None) != (max_angle_error is None):
@@ -92,8 +94,8 @@ class ObjRLNav(RLEnv):
 
             if position is not None and angle is not None:
                 state = self.habitat_env.sim.get_agent_state()
-                position = [position[0], state.position[1], position[1]]
-                rotation = [0, -np.sin(angle / 2), 0, np.cos(angle / 2)]
+                position = [float(position[0]), float(state.position[1]), float(position[1])]
+                rotation = [0.0, float(-np.sin(angle / 2)), 0.0, float(np.cos(angle / 2))]
                 obs = self.habitat_env.sim.get_observations_at(position, rotation, True)
                 if obs is None:
                     raise ValueError("Habitat-Sim could not place the agent at this position")
@@ -291,8 +293,13 @@ class ObjRLNav(RLEnv):
         return np.float32((angle + np.pi) % (2 * np.pi) - np.pi)
     
     def calculate_next_best_action(self):
-        self.shortest_path_follower._build_follower()  # Usually just one string comparison
-        action = self.shortest_path_follower._follower.next_action_along(self.viewpoint_goal)
+        self.shortest_path_follower._build_follower()
+        try:
+            action = self.shortest_path_follower._follower.next_action_along(
+                self.viewpoint_goal
+            )
+        except habitat_sim.errors.GreedyFollowerError:
+            return 3
         return (3, 2, 0, 1)[action]
 
 class CurriculumVectorEnv(ModifiedVectorEnv):
@@ -305,7 +312,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         stage_zero_experience: int = 100_000,
         maximal_expert_fraction: float = 0.6,
         min_coef_of_controlled_episodes: float = 1.8,
-        radius_stages: int = 6,
+        radius_stages: int = 3,
         angle_stages: int = 7,
         difficulty_increase_sr: float = 0.85,
         difficulty_decrease_sr: float = 0.7,
@@ -322,9 +329,9 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         self.observation_space = gym.vector.utils.batch_space(self.observation_spaces[0], self.num_envs)
         self.action_space = gym.vector.utils.batch_space(self.action_spaces[0], self.num_envs)
         self.stage = 0  # Phase (0=warm, 1=main, 2=final)
-        self.start_mean_radius, self.start_angle_error = 1.31, 0
+        self.start_mean_radius, self.start_angle_error = 3, 0
         self.max_mean_radius, self.max_angle_error = 6., math.pi
-        self.radius_increment = self.max_mean_radius / radius_stages
+        self.radius_increment = (self.max_mean_radius - self.start_mean_radius) / radius_stages
         self.angle_increment = self.max_angle_error / angle_stages
         
         self.difficulty_increase_sr, self.difficulty_decrease_sr = difficulty_increase_sr, difficulty_decrease_sr
@@ -346,8 +353,12 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         max_queue_size = 10 * self.num_envs
         self.success_queues = {'agent': deque(maxlen = max_queue_size),
                                'controller': deque(maxlen = max_queue_size)}
+        self.ammount_of_resets = [0 for _ in range(self.num_envs)]
         self.success_rates = {'agent': 0., 'controller': 0.}
         self.expert_envs = set([i for i in range(int(self.num_envs * self.maximal_expert_fraction))])
+
+        # Variables for testing
+        self.has_difficulty_changed = False
 
     def _update_success_queues(self, dones, infos):
         for idx, done in enumerate(dones):
@@ -363,6 +374,18 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
                 self.success_rates[key] = sum(queue) / len(queue)
             else:
                 self.success_rates[key] = 0.0
+
+    def get_logging_stats(self, rewards=None):
+        reset_per_env = {'Resets per env{}'.format(i): self.ammount_of_resets[i] for i in range(self.num_envs)}
+        return {
+            'controller_success_rate': self.success_rates['controller'],
+            'policy_success_rate': self.success_rates['agent'],
+            'stage': self.stage,
+            'current_mean_radius': self.cur_mean_radius,
+            'current_angle_error': self.cur_angle_error,
+            'fraction_of_controlled_environments': len(self.expert_envs) / self.num_envs,
+            **reset_per_env,
+        }
 
     def _update_controller_envs(self, dones):
         if len(self.success_queues['agent']) >= self.minimal_number_of_agent_episodes:
@@ -382,7 +405,13 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
             return 
         
         elif (len(self.success_queues['agent']) > self.minimal_number_of_agent_episodes) and self.stage < 2:
-            self.stage = 1
+            if self.stage != 1:
+                self._update_sr_stack()
+                self.has_difficulty_changed = True
+                self.stage = 1
+
+                return
+
             if self.success_rates['agent'] > self.difficulty_increase_sr:
                 self.success_ep_num += 1
                 self.failed_ep_num = 0
@@ -392,14 +421,23 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
             
             if self.success_ep_num > self.success_episode_threshold:
                 if self.max_mean_radius - self.cur_mean_radius > 1e-3:
+                    self.has_difficulty_changed = True
                     self._increase_difficulty()
             
             elif self.failed_ep_num > self.fail_episode_threshold:
+                self.has_difficulty_changed = True
                 self._decrease_difficulty()
         
         if (self.max_mean_radius - self.cur_mean_radius < 1e-3) and self.stage < 2:
             self.stage = 2
+            self.has_difficulty_changed = True
             self._update_sr_stack()
+
+    def check_if_difficulty_has_recently_changed(self):
+        if self.has_difficulty_changed:
+            self.has_difficulty_changed = False
+            return True
+        return False
 
     def _increase_difficulty(self):
         self.success_ep_num, self.failed_ep_num = 0, 0
@@ -408,9 +446,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         # Когда углы исчерпаны → переходим на радиус
         if self.cur_angle_error > self.max_angle_error:
             self.cur_angle_error = 0
-            increment = self.radius_increment/2 if np.abs(self.cur_mean_radius - self.start_mean_radius) < 1e-3 \
-                else self.radius_increment
-            self.cur_mean_radius = min(8.0, self.cur_mean_radius + increment)
+            self.cur_mean_radius = min(8.0, self.cur_mean_radius + self.radius_increment)
         print(f"""[UP ↑] SR={100 * self.success_rates['agent']:.0f}% → r={self.cur_mean_radius:.1f}m, 
               a={self.cur_angle_error:.2f}rad""")
         self._update_sr_stack()
@@ -442,8 +478,8 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         return actions
 
     def step(self, actions):
-        if not np.all(np.logical_and(actions >= 0, actions < 4)):
-            raise ValueError(f"Expected actions to be 0, 1, 2 or 3, got {actions!r}")
+        #if not np.all(np.logical_and(actions >= 0, actions < 4)):
+        #    raise ValueError(f"Expected actions to be 0, 1, 2 or 3, got {actions!r}")
         
         actions = self.substitute_action(actions)
         result = super().step(actions)
@@ -468,6 +504,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
                 max_angle_error = self.cur_angle_error if self.stage == 1 else None
                 reset_result = self.reset_at(i, mean_distance = mean_distance, 
                                                 max_angle_error = max_angle_error)[0]
+                self.ammount_of_resets[i] += 1
                 for key in obs.keys():
                     obs[key][i] = deepcopy(reset_result[key])
             else:
@@ -479,3 +516,59 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         obs = {key: np.stack([result[i][key] for i in range(self.num_envs)], axis=0) \
                     for key in result[0].keys()}
         return obs
+
+
+class EvalVectorEnv(ModifiedVectorEnv):
+    def __init__(
+        self,
+        make_env_fn: Callable[..., gym.Env],
+        env_fn_args: Sequence[Tuple],
+        multiprocessing_start_method: str = "forkserver",
+        workers_ignore_signals: bool = False,
+    ):
+        super().__init__(
+            make_env_fn=make_env_fn,
+            env_fn_args=env_fn_args,
+            auto_reset_done=False,
+            multiprocessing_start_method=multiprocessing_start_method,
+            workers_ignore_signals=workers_ignore_signals,
+        )
+        self.observation_space = gym.vector.utils.batch_space(
+            self.observation_spaces[0], self.num_envs
+        )
+        self.action_space = gym.vector.utils.batch_space(
+            self.action_spaces[0], self.num_envs
+        )
+
+    def step(self, actions):
+        result = super().step(actions)
+        obs = {
+            key: np.stack([result[i][0][key] for i in range(self.num_envs)])
+            for key in result[0][0]
+        }
+        rewards = np.stack([item[1] for item in result])
+        dones = np.stack([item[2] for item in result])
+        infos = [item[3] for item in result]
+
+        for i, done in enumerate(dones):
+            if done:
+                infos[i]["done_observation"] = {
+                    key: deepcopy(obs[key][i]) for key in obs
+                }
+                reset_obs = self.reset_at(i)[0]
+                for key in obs:
+                    obs[key][i] = deepcopy(reset_obs[key])
+            else:
+                infos[i]["done_observation"] = np.full(
+                    obs["observation"][i].shape,
+                    np.nan,
+                    dtype=obs["observation"][i].dtype,
+                )
+        return obs, rewards, dones, infos
+
+    def reset(self):
+        result = super().reset()
+        return {
+            key: np.stack([item[key] for item in result])
+            for key in result[0]
+        }

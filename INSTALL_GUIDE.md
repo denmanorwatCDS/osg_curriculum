@@ -263,6 +263,11 @@ pip install skrl==1.4.3
 python -m pip install --force-reinstall "protobuf==3.20.1"
 ```
 
+## Step 22 - install comet_ml
+```
+python -m pip install comet_ml
+```
+
 ---
 
 ## Known issues / workarounds summary

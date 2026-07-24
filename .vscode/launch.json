@@ -79,6 +79,26 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "make-logs-dir"
+        },
+        {
+            "name": "Curriculum test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/cogmodel_curriculum_sanity_test.py",
+            "python": "/mnt/ssd/miniconda3/envs/nav/bin/python",
+            "justMyCode": false,
+            "args": [],
+            "env": {
+                "OSG_GT_SEM": "1",
+                "OSG_NO_CV2_VIS": "1",
+                "OSG_TEST_EPISODES": "100",
+                "OSG_LATENCY_LOG": "logs/latency_gt.jsonl",
+                "MAGNUM_LOG": "quiet",
+                "GLOG_minloglevel": "2"
+            },
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "make-logs-dir"
         }
     ]
 }
