@@ -6,3 +6,4 @@ data/*
 *.pyc
 debug_videos/*
 runs/*
+.vscode/*
