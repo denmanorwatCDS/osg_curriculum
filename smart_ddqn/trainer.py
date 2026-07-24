@@ -12,9 +12,56 @@ from skrl.trainers.torch.sequential import SequentialTrainer
 from skrl.utils import set_seed
 
 from aux_trainer import ReplayOrientationAuxTrainer
-from habitat_factory import build_habitat_env
 from models import DDQNPerceptionQNetwork
 
+from utils.habitat_utils import setup_env_config
+from habitat.config import read_write
+from skrl.envs.wrappers.torch import wrap_env
+from curriculum_habitat.helper_wrappers import (
+    CLIPWrapper,
+    ToSKRLWrapper,
+)
+from curriculum_habitat.curriculum_wrapper import (
+    CurriculumVectorEnv,
+    ObjRLNav,
+)
+
+DEFAULT_TASK_CONFIG_PATH = "configs/objectnav_hm3d_v2_with_semantic.yaml"
+DEFAULT_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
+EVAL_DATA_PATH = "configs/homerobot_hm3d_objectnav_val.yaml"
+
+NUM_OF_PARALLEL_ENVS = 5
+EVAL_ROUNDS = 5
+
+NUM_OF_STEPS = 100_000
+EVAL_INTERVAL = 500
+
+def create_homerobot_env(
+    task_config_path=DEFAULT_TASK_CONFIG_PATH,
+    data_path=DEFAULT_DATA_PATH,
+    index=0,
+):
+    config = setup_env_config(
+        params_path=data_path,
+        default_config_path=task_config_path,
+    )
+    with read_write(config):
+        config.habitat.seed = int(config.habitat.seed) + index
+    env = ObjRLNav(config=config)
+    return env
+
+def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
+    vec_env = CurriculumVectorEnv(
+            make_env_fn=create_env_fn,
+            env_fn_args=[
+                (task_config_path, data_path, index)
+                for index in range(num_envs)
+            ],
+        )
+    vec_env = CLIPWrapper(vec_env, device="cuda")
+    vec_env = ToSKRLWrapper(vec_env, device="cuda")
+    vec_env = wrap_env(vec_env, wrapper='gymnasium')
+    return vec_env
 
 def build_agent(env, cfg: dict[str, Any]):
     online_model = DDQNPerceptionQNetwork(
@@ -99,9 +146,17 @@ def build_agent(env, cfg: dict[str, Any]):
 def run_training(cfg: dict[str, Any]) -> None:
     set_seed(int(cfg["run"]["seed"]))
 
-    raw_env = build_habitat_env(cfg)
+    # OLD
+    # raw_env = build_habitat_env(cfg)
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
-    env = wrap_env(raw_env, wrapper="gymnasium")
+    # env = wrap_env(raw_env, wrapper="gymnasium")
+    # NEW
+    env = make_env_vectorised(
+        create_homerobot_env,
+        DEFAULT_TASK_CONFIG_PATH,
+        DEFAULT_DATA_PATH,
+        NUM_OF_PARALLEL_ENVS,
+    )
 
     agent = None
     aux_trainer = None

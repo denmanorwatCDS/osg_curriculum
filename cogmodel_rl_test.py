@@ -40,6 +40,18 @@ def create_homerobot_env(
     env = ObjRLNav(config=config)
     return env
 
+def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
+    vec_env = CurriculumVectorEnv(
+            make_env_fn=create_env_fn,
+            env_fn_args=[
+                (task_config_path, data_path, index)
+                for index in range(num_envs)
+            ],
+        )
+    vec_env = CLIPWrapper(vec_env, device="cuda")
+    vec_env = ToSKRLWrapper(vec_env, device="cuda")
+    vec_env = wrap_env(vec_env, wrapper='gymnasium')
+    return vec_env
 
 def create_eval_homerobot_env(task_config_path, data_path, index):
     config = setup_env_config(
@@ -72,16 +84,12 @@ def create_evaluation_environment():
 
 
 def main():
-    vec_env = CurriculumVectorEnv(
-        make_env_fn=create_homerobot_env,
-        env_fn_args=[
-            (DEFAULT_TASK_CONFIG_PATH, DEFAULT_DATA_PATH, index)
-            for index in range(NUM_OF_PARALLEL_ENVS)
-        ],
+    vec_env = make_env_vectorised(
+        create_homerobot_env,
+        DEFAULT_TASK_CONFIG_PATH,
+        DEFAULT_DATA_PATH,
+        NUM_OF_PARALLEL_ENVS,
     )
-    vec_env = CLIPWrapper(vec_env, device="cuda")
-    vec_env = ToSKRLWrapper(vec_env, device="cuda")
-    vec_env = wrap_env(vec_env, wrapper='gymnasium')
     eval_env, eval_episodes_per_env = create_evaluation_environment()
 
     try:
@@ -90,7 +98,7 @@ def main():
             env=vec_env,
             eval_env=eval_env,
             agents=agent,
-            eval_episodes_per_env=eval_episodes_per_env,
+            eval_episodes=eval_episodes_per_env * EVAL_ROUNDS,
             cfg={
                 "timesteps": NUM_OF_STEPS,
                 "headless": True,
