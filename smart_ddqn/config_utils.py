@@ -15,8 +15,23 @@ def load_config(path: str | Path) -> dict[str, Any]:
     return cfg
 
 
+def _require_positive(mapping: dict, key: str, prefix: str) -> None:
+    if key not in mapping:
+        raise ValueError(f"Missing {prefix}.{key}")
+    if int(mapping[key]) <= 0:
+        raise ValueError(f"{prefix}.{key} must be positive")
+
+
 def _validate(cfg: dict[str, Any]) -> None:
-    for section in ("run", "habitat", "observation", "action", "model", "agent", "aux"):
+    for section in (
+        "run",
+        "habitat",
+        "observation",
+        "action",
+        "model",
+        "agent",
+        "aux",
+    ):
         if section not in cfg:
             raise ValueError(f"Missing config section: {section}")
 
@@ -27,10 +42,40 @@ def _validate(cfg: dict[str, Any]) -> None:
 
     dims = cfg["observation"]["dims"]
     for key in ("img", "goal", "graph", "teacher_orientation"):
-        if key not in dims:
-            raise ValueError(f"Missing observation.dims.{key}")
-        if int(dims[key]) <= 0:
-            raise ValueError(f"observation.dims.{key} must be positive")
+        _require_positive(dims, key, "observation.dims")
 
     if int(dims["teacher_orientation"]) != 1:
-        raise ValueError("teacher_orientation must have dimension 1 and contain yaw in radians")
+        raise ValueError(
+            "teacher_orientation must have dimension 1 and contain yaw in radians"
+        )
+
+    model = cfg["model"]
+    for key in (
+        "dqn_img_hidden",
+        "goal_hidden",
+        "graph_embedding_dim",
+        "orientation_img_hidden",
+        "orientation_hidden",
+        "orientation_bins",
+    ):
+        _require_positive(model, key, "model")
+
+    if not isinstance(model.get("q_hidden"), list) or not model["q_hidden"]:
+        raise ValueError("model.q_hidden must be a non-empty list")
+    if any(int(value) <= 0 for value in model["q_hidden"]):
+        raise ValueError("Every model.q_hidden value must be positive")
+
+    orientation_source = str(model.get("orientation_source", "pred"))
+    if orientation_source not in {"gt", "pred"}:
+        raise ValueError("model.orientation_source must be either 'gt' or 'pred'")
+
+    aux = cfg["aux"]
+    for key in (
+        "learning_rate_graph",
+        "learning_rate_orientation",
+        "batch_size",
+    ):
+        if key not in aux:
+            raise ValueError(f"Missing aux.{key}")
+        if float(aux[key]) <= 0:
+            raise ValueError(f"aux.{key} must be positive")

@@ -5,7 +5,9 @@
     "num_envs": 5,
     "timesteps": 100000,
     "eval": false,
-    "python_paths": ["."],
+    "python_paths": [
+      "."
+    ],
     "log_dir": "logs/skrl/habitat_ddqn_simple",
     "experiment_name": "ddqn_aux_orientation",
     "write_interval": 100,
@@ -43,11 +45,18 @@
     "_TODO": "Set the exact number and order of discrete Habitat actions. Use habitat.action_id_map if policy IDs and Habitat IDs differ."
   },
   "model": {
-    "img_hidden": 256,
-    "graph_hidden": 128,
+    "dqn_img_hidden": 256,
     "goal_hidden": 64,
+    "graph_embedding_dim": 128,
+    "orientation_img_hidden": 256,
+    "orientation_hidden": 256,
     "orientation_bins": 36,
-    "q_hidden": [256, 256]
+    "q_hidden": [
+      256,
+      256
+    ],
+    "orientation_source": "gt",
+    "_TODO": "GraphEmbeddingModule and OrientationModule are external to DDQN. Use 'gt' for observation.teacher_orientation or 'pred' for the detached orientation-module output."
   },
   "agent": {
     "memory_size": 10000,
@@ -66,15 +75,17 @@
   },
   "aux": {
     "enabled": true,
-    "learning_rate": 0.0001,
+    "learning_rate_graph": 0.00003,
+    "learning_rate_orientation": 0.0001,
+    "weight_decay": 0.0001,
     "batch_size": 256,
     "updates_per_step": 1,
     "start_after_samples": 1000,
-    "train_encoders": true,
     "grad_norm_clip": 1.0,
     "log_interval": 500,
     "save_interval": 10000,
-    "checkpoint_dir": "logs/skrl/habitat_ddqn_simple/aux",
-    "resume_from": null
+    "checkpoint_dir": "logs/skrl/habitat_ddqn_simple/perception",
+    "resume_from": null,
+    "_NOTE": "These optimizers own only graph_encoder and orientation_module parameters. DDQN has no access to them."
   }
 }
