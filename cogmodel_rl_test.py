@@ -41,7 +41,7 @@ def create_homerobot_env(
     return env
 
 
-def create_eval_homerobot_env(task_config_path, data_path, index, num_envs):
+def create_eval_homerobot_env(task_config_path, data_path, index):
     config = setup_env_config(
         params_path=data_path,
         default_config_path=task_config_path,
@@ -53,7 +53,6 @@ def create_eval_homerobot_env(task_config_path, data_path, index, num_envs):
         config.habitat.environment.iterator_options.cycle = True
 
     env = ObjRLNav(config=config)
-    env.episodes = list(env.episodes)[index::num_envs]
     env.eval_episodes_per_round = len(env.episodes)
     return env
 
@@ -62,22 +61,14 @@ def create_evaluation_environment():
     eval_env = EvalVectorEnv(
         make_env_fn=create_eval_homerobot_env,
         env_fn_args=[
-            (
-                DEFAULT_TASK_CONFIG_PATH,
-                EVAL_DATA_PATH,
-                index,
-                NUM_OF_PARALLEL_ENVS,
-            )
-            for index in range(NUM_OF_PARALLEL_ENVS)
+            (DEFAULT_TASK_CONFIG_PATH, EVAL_DATA_PATH, index)
+            for index in range(EVAL_ROUNDS)
         ],
     )
-    episodes_per_round = [
-        eval_env.call_at(index, "eval_episodes_per_round")
-        for index in range(eval_env.num_envs)
-    ]
+    episodes_per_env = eval_env.call_at(0, "eval_episodes_per_round")
     eval_env = CLIPWrapper(eval_env, device="cuda")
     eval_env = ToSKRLWrapper(eval_env, device="cuda")
-    return wrap_env(eval_env, wrapper="gymnasium"), episodes_per_round
+    return wrap_env(eval_env, wrapper="gymnasium"), episodes_per_env
 
 
 def main():
@@ -99,10 +90,7 @@ def main():
             env=vec_env,
             eval_env=eval_env,
             agents=agent,
-            eval_episodes=[
-                EVAL_ROUNDS * episodes
-                for episodes in eval_episodes_per_env
-            ],
+            eval_episodes_per_env=eval_episodes_per_env,
             cfg={
                 "timesteps": NUM_OF_STEPS,
                 "headless": True,

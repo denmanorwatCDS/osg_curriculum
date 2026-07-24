@@ -1,4 +1,4 @@
-from typing import List, Optional, Sequence, Union
+from typing import List, Optional, Union
 
 import torch
 
@@ -10,10 +10,9 @@ from skrl.trainers.torch.sequential import SequentialTrainer
 class EvalSequentialTrainer(SequentialTrainer):
     """Sequential trainer with deterministic DDQN evaluation.
 
-    An integer ``eval_episodes`` is distributed between vector slots; a
-    sequence specifies each slot's exact quota. Habitat evaluation environments
-    must use ``cycle=True`` so slots that finish their quota earlier can
-    continue stepping while the remaining slots finish.
+    Every vector slot evaluates ``eval_episodes_per_env`` episodes. Habitat
+    evaluation environments must use ``cycle=True`` so slots that finish their
+    quota earlier can continue stepping while the remaining slots finish.
     """
 
     def __init__(
@@ -21,22 +20,14 @@ class EvalSequentialTrainer(SequentialTrainer):
         env: Wrapper,
         eval_env: Wrapper,
         agents: Union[Agent, List[Agent]],
-        eval_episodes: Union[int, Sequence[int]],
+        eval_episodes_per_env: int,
         agents_scope: Optional[List[int]] = None,
         cfg: Optional[dict] = None,
     ):
-        if isinstance(eval_episodes, int):
-            if eval_episodes < 1:
-                raise ValueError("eval_episodes must be positive")
-        elif (
-            len(eval_episodes) != eval_env.num_envs
-            or any(episodes < 1 for episodes in eval_episodes)
-        ):
-            raise ValueError(
-                "eval_episodes must contain one positive value per environment"
-            )
+        if eval_episodes_per_env < 1:
+            raise ValueError("eval_episodes_per_env must be positive")
         self.eval_env = eval_env
-        self.eval_episodes = eval_episodes
+        self.eval_episodes_per_env = eval_episodes_per_env
         super().__init__(env, agents, agents_scope, cfg)
 
     def eval(self):
@@ -49,16 +40,7 @@ class EvalSequentialTrainer(SequentialTrainer):
         episode_returns = torch.zeros(
             self.eval_env.num_envs, device=self.eval_env.device
         )
-        if isinstance(self.eval_episodes, int):
-            episodes_per_env, remainder = divmod(
-                self.eval_episodes, self.eval_env.num_envs
-            )
-            targets = [
-                episodes_per_env + (index < remainder)
-                for index in range(self.eval_env.num_envs)
-            ]
-        else:
-            targets = list(self.eval_episodes)
+        targets = [self.eval_episodes_per_env] * self.eval_env.num_envs
         completed = [0] * self.eval_env.num_envs
         returns, successes = [], 0.0
         self.agents.set_running_mode("eval")
