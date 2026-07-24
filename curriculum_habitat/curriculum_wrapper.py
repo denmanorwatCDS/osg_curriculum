@@ -1,4 +1,5 @@
 import math
+import os
 import gym
 import habitat_sim
 import numpy as np
@@ -7,6 +8,7 @@ from copy import deepcopy
 from collections import deque
 from habitat.core.env import RLEnv
 from curriculum_habitat.modified_vector_env import ModifiedVectorEnv
+from curriculum_habitat.perception.graph_builder import MetricGraphBuilder, NUM_NODES
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -30,6 +32,9 @@ from habitat.utils.visualizations import maps
 from omegaconf import DictConfig
 from habitat.core.dataset import Dataset
 
+GRAPH_NODE_FIELDS = 6
+
+
 class ObjRLNav(RLEnv):
     def __init__(self, config: "DictConfig", dataset: Optional[Dataset] = None):
         self.previous_distance_to_goal = None
@@ -40,6 +45,7 @@ class ObjRLNav(RLEnv):
         self.observation_memory = []
         self.action_memory = []
         self.debug_video_enabled = False
+        self._metric_graph_builders = {}
 
         # IMPORTANT
         # Due to environment specifics, we don't add it. Episode is done only when agent said so
@@ -53,7 +59,12 @@ class ObjRLNav(RLEnv):
             "observation": self.habitat_env.observation_space["forward_rgb"],
             "absolute_goal_position": gym.spaces.Box(-np.inf, np.inf, (2,), np.float32),
             "angle_to_goal": gym.spaces.Box(-np.pi, np.pi, (), np.float32),
-            "knowledge_graph": gym.spaces.Box(-np.inf, np.inf, (0,), np.float32),
+            "knowledge_graph": gym.spaces.Box(
+                -np.inf,
+                np.inf,
+                (NUM_NODES * GRAPH_NODE_FIELDS,),
+                np.float32,
+            ),
         })
         self.action_space = self.original_action_space = gym.spaces.Discrete(4)
         self.shortest_path_follower = ShortestPathFollower(
@@ -156,14 +167,70 @@ class ObjRLNav(RLEnv):
             "observation": observations['forward_rgb'],
             "absolute_goal_position": goal_position_2d,
             "angle_to_goal": self.calculate_angle_to_goal(goal_position),
-            "knowledge_graph": self.calculate_knowledge_graph(observations)
+            "knowledge_graph": self.calculate_knowledge_graph(
+                observations,
+                goal=goal,
+            )
         }
         return obs_dict
 
-    def calculate_knowledge_graph(self, observations: Observations):
-        # Stub for implementation of knowledge graph construction
-        knowledge_graph = np.empty(0, dtype=np.float32)
-        return knowledge_graph
+    def _current_scene_key(self):
+        """Return the scene hash used by scene_graphs/<stage>/<scene>.json."""
+        scene_id = getattr(self.habitat_env.current_episode, "scene_id", None)
+        if scene_id is None:
+            raise RuntimeError(
+                "Current episode is missing scene_id; cannot build knowledge graph"
+            )
+
+        scene_name = os.path.basename(os.path.normpath(str(scene_id)))
+        for suffix in (".basis.glb", ".semantic.glb", ".glb"):
+            if scene_name.endswith(suffix):
+                scene_name = scene_name[: -len(suffix)]
+                break
+        else:
+            scene_name = os.path.splitext(scene_name)[0]
+
+        scene_index, separator, scene_hash = scene_name.partition("-")
+        if separator and scene_index.isdigit():
+            return scene_hash
+        return scene_name
+
+    def _metric_graph_builder(self):
+        scene = self._current_scene_key()
+        if scene not in self._metric_graph_builders:
+            self._metric_graph_builders[scene] = MetricGraphBuilder(scene)
+        return self._metric_graph_builders[scene]
+
+    def calculate_knowledge_graph(
+        self,
+        observations: Observations,
+        goal=None,
+    ):
+        if goal is None:
+            goal = self.get_closest_goal()
+
+        target_category = getattr(
+            self.habitat_env.current_episode,
+            "object_category",
+            None,
+        )
+        if target_category is None:
+            raise RuntimeError(
+                "Current episode is missing object_category; cannot build "
+                "knowledge graph"
+            )
+
+        knowledge_graph = self._metric_graph_builder().build_flat(
+            target_category,
+            goal.position,
+        )
+        expected_shape = (NUM_NODES * GRAPH_NODE_FIELDS,)
+        if knowledge_graph.shape != expected_shape:
+            raise RuntimeError(
+                "MetricGraphBuilder returned graph with shape "
+                f"{knowledge_graph.shape}; expected {expected_shape}"
+            )
+        return knowledge_graph.astype(np.float32, copy=False)
 
     def get_reward(self, observations: Observations):
         # IMPORTANT 
