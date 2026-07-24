@@ -1,0 +1,218 @@
+{
+  "scene": "DNWbUAJYsPy",
+  "num_nodes": 30,
+  "node_instance_ids": [
+    28,
+    34,
+    36,
+    141,
+    184,
+    133,
+    174,
+    291,
+    143,
+    312,
+    221,
+    274,
+    150,
+    32,
+    210,
+    282,
+    31,
+    212,
+    276,
+    129,
+    183,
+    277,
+    97,
+    211,
+    30,
+    198,
+    314,
+    189,
+    313,
+    180
+  ],
+  "nodes": [
+    {
+      "instance_id": 28,
+      "category": "armchair",
+      "region_id": "1",
+      "bbox_diag": 1.914
+    },
+    {
+      "instance_id": 34,
+      "category": "tv",
+      "region_id": "1",
+      "bbox_diag": 1.293
+    },
+    {
+      "instance_id": 36,
+      "category": "couch",
+      "region_id": "1",
+      "bbox_diag": 2.893
+    },
+    {
+      "instance_id": 141,
+      "category": "toilet",
+      "region_id": "2",
+      "bbox_diag": 1.06
+    },
+    {
+      "instance_id": 184,
+      "category": "bed",
+      "region_id": "3",
+      "bbox_diag": 3.487
+    },
+    {
+      "instance_id": 133,
+      "category": "table",
+      "region_id": "1",
+      "bbox_diag": 2.353
+    },
+    {
+      "instance_id": 174,
+      "category": "armchair",
+      "region_id": "3",
+      "bbox_diag": 1.884
+    },
+    {
+      "instance_id": 291,
+      "category": "bathtub",
+      "region_id": "4",
+      "bbox_diag": 3.217
+    },
+    {
+      "instance_id": 143,
+      "category": "sink cabinet",
+      "region_id": "2",
+      "bbox_diag": 1.476
+    },
+    {
+      "instance_id": 312,
+      "category": "table",
+      "region_id": "1",
+      "bbox_diag": 2.167
+    },
+    {
+      "instance_id": 221,
+      "category": "wardrobe",
+      "region_id": "3",
+      "bbox_diag": 1.762
+    },
+    {
+      "instance_id": 274,
+      "category": "sink cabinet",
+      "region_id": "4",
+      "bbox_diag": 2.208
+    },
+    {
+      "instance_id": 150,
+      "category": "lamp",
+      "region_id": "2",
+      "bbox_diag": 0.399
+    },
+    {
+      "instance_id": 32,
+      "category": "cabinet",
+      "region_id": "1",
+      "bbox_diag": 2.128
+    },
+    {
+      "instance_id": 210,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 1.701
+    },
+    {
+      "instance_id": 282,
+      "category": "toilet",
+      "region_id": "4",
+      "bbox_diag": 1.027
+    },
+    {
+      "instance_id": 31,
+      "category": "cabinet",
+      "region_id": "1",
+      "bbox_diag": 2.109
+    },
+    {
+      "instance_id": 212,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 1.592
+    },
+    {
+      "instance_id": 276,
+      "category": "lamp",
+      "region_id": "4",
+      "bbox_diag": 0.517
+    },
+    {
+      "instance_id": 129,
+      "category": "armchair",
+      "region_id": "1",
+      "bbox_diag": 1.89
+    },
+    {
+      "instance_id": 183,
+      "category": "sofa seat",
+      "region_id": "3",
+      "bbox_diag": 1.445
+    },
+    {
+      "instance_id": 277,
+      "category": "lamp",
+      "region_id": "4",
+      "bbox_diag": 0.513
+    },
+    {
+      "instance_id": 97,
+      "category": "table",
+      "region_id": "1",
+      "bbox_diag": 1.862
+    },
+    {
+      "instance_id": 211,
+      "category": "tv",
+      "region_id": "3",
+      "bbox_diag": 1.286
+    },
+    {
+      "instance_id": 30,
+      "category": "armchair",
+      "region_id": "1",
+      "bbox_diag": 1.654
+    },
+    {
+      "instance_id": 198,
+      "category": "lamp",
+      "region_id": "3",
+      "bbox_diag": 1.266
+    },
+    {
+      "instance_id": 314,
+      "category": "chair",
+      "region_id": "1",
+      "bbox_diag": 1.549
+    },
+    {
+      "instance_id": 189,
+      "category": "table",
+      "region_id": "3",
+      "bbox_diag": 1.152
+    },
+    {
+      "instance_id": 313,
+      "category": "chair",
+      "region_id": "1",
+      "bbox_diag": 1.503
+    },
+    {
+      "instance_id": 180,
+      "category": "table",
+      "region_id": "3",
+      "bbox_diag": 1.098
+    }
+  ]
+}
