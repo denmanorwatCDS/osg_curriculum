@@ -1,0 +1,25 @@
+sensor_setup: ['left_rgb', 'forward_rgb', 'right_rgb', 'rear_rgb', 'left_depth', 'forward_depth', 'right_depth', 'rear_depth', 'left_semantic', 'forward_semantic', 'right_semantic', 'rear_semantic']
+# habitat_data:
+#   metadata_path: '/data/home/joel/storage/objectnav/objectnav_hm3d_v1/val/val.json.gz'
+#   content_scenes: ["6s7QHgap2fW"]
+#   scenes_dir: "/data/home/joel/source/foundation_obj_nav/data/scene_datasets/"
+# 10-scene eval data lives under data/scene_datasets/ (episodes in hm3d/val/,
+# scene meshes + scene_dataset_config in hm3d_v0.2/). RELATIVE paths so it works
+# on any machine (the repo is always run from its root). A teammate only needs
+# the 10-scene subset placed here — NOT the full HM3D dataset. HM3D semantics
+# only load when the meshes+config sit at data/scene_datasets/hm3d_v0.2/
+# (habitat's default scene-dataset discovery location).
+habitat_data:
+  metadata_path: "data/scene_datasets/hm3d/val/val.json.gz"
+  content_scenes:
+#    - oPj9qMxrDEa
+#    - RaYrxWt5pR1
+#    - 741Fdj7NLF9
+#    - DoSbsoo4EAg
+#    - H8rQCnvBgo6
+#    - nGhNxKrgBPb
+#    - QVAA6zecMHu
+#    - GsQBY83r3hb
+    - DNWbUAJYsPy
+    - YHmAkqgwe2p
+  scenes_dir: "data/scene_datasets/"

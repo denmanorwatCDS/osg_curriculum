@@ -3,7 +3,6 @@ checkpoints/*
 logs/*
 scenes/*
 data/*
-configs/*
 *.pyc
 debug_videos/*
 runs/*
