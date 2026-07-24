@@ -1,0 +1,80 @@
+{
+  "run": {
+    "seed": 42,
+    "device": "cuda",
+    "num_envs": 5,
+    "timesteps": 100000,
+    "eval": false,
+    "python_paths": ["."],
+    "log_dir": "logs/skrl/habitat_ddqn_simple",
+    "experiment_name": "ddqn_aux_orientation",
+    "write_interval": 100,
+    "checkpoint_interval": 10000,
+    "agent_checkpoint": null
+  },
+  "habitat": {
+    "task_config_path": "configs/objectnav_hm3d_v2_with_semantic.yaml",
+    "data_path": "configs/homerobot_hm3d_objectnav.yaml",
+    "use_clip_wrapper": true,
+    "clip_device": "cuda",
+    "actions_as_list": true,
+    "action_id_map": null,
+    "truncation_info_key": "TimeLimit.truncated",
+    "_TODO": "Check imports and constructors in habitat_factory.py against your project. The adapter assumes Habitat auto-resets completed sub-environments."
+  },
+  "observation": {
+    "source_keys": {
+      "img": "clip",
+      "goal": "goal",
+      "graph": "graph",
+      "teacher_orientation": "orientation"
+    },
+    "dims": {
+      "img": 512,
+      "goal": 32,
+      "graph": 168,
+      "teacher_orientation": 1
+    },
+    "teacher_required": true,
+    "_TODO": "Replace source_keys and dims with the actual output of CLIPWrapper / ObjRLNav. teacher_orientation must be radians."
+  },
+  "action": {
+    "num_actions": 4,
+    "_TODO": "Set the exact number and order of discrete Habitat actions. Use habitat.action_id_map if policy IDs and Habitat IDs differ."
+  },
+  "model": {
+    "img_hidden": 256,
+    "graph_hidden": 128,
+    "goal_hidden": 64,
+    "orientation_bins": 36,
+    "q_hidden": [256, 256]
+  },
+  "agent": {
+    "memory_size": 10000,
+    "batch_size": 256,
+    "gradient_steps": 1,
+    "gamma": 0.99,
+    "polyak": 0.005,
+    "learning_rate": 0.0003,
+    "random_timesteps": 1000,
+    "learning_starts": 1000,
+    "update_interval": 1,
+    "target_update_interval": 10,
+    "initial_epsilon": 1.0,
+    "final_epsilon": 0.05,
+    "exploration_timesteps": 50000
+  },
+  "aux": {
+    "enabled": true,
+    "learning_rate": 0.0001,
+    "batch_size": 256,
+    "updates_per_step": 1,
+    "start_after_samples": 1000,
+    "train_encoders": true,
+    "grad_norm_clip": 1.0,
+    "log_interval": 500,
+    "save_interval": 10000,
+    "checkpoint_dir": "logs/skrl/habitat_ddqn_simple/aux",
+    "resume_from": null
+  }
+}
