@@ -54,7 +54,7 @@ def create_homerobot_env(
 def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
     vec_env = CurriculumVectorEnv(
             make_env_fn=create_env_fn,
-            stage_zero_experience=NUM_OF_PARALLEL_ENVS*50,
+            stage_zero_experience=NUM_OF_PARALLEL_ENVS*1_000,
             env_fn_args=[
                 (task_config_path, data_path, index)
                 for index in range(num_envs)
