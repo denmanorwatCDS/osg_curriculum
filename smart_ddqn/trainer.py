@@ -60,7 +60,7 @@ def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
                 for index in range(num_envs)
             ],
         )
-    vec_env = DebugVideoWrapper(vec_env, device="cuda")
+    vec_env = DebugVideoWrapper(vec_env)
     vec_env = CLIPWrapper(vec_env, device="cuda")
     vec_env = ToSKRLWrapper(vec_env, device="cuda")
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
