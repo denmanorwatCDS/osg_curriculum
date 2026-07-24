@@ -98,7 +98,7 @@ def main():
             env=vec_env,
             eval_env=eval_env,
             agents=agent,
-            eval_episodes=eval_episodes_per_env * EVAL_ROUNDS,
+            eval_episodes_per_env=eval_episodes_per_env,
             cfg={
                 "timesteps": NUM_OF_STEPS,
                 "headless": True,
