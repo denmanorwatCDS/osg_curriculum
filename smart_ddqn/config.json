@@ -3,7 +3,7 @@
     "seed": 42,
     "device": "cuda",
     "num_envs": 5,
-    "timesteps": 100000,
+    "timesteps": 1000,
     "eval": false,
     "python_paths": [
       "."
