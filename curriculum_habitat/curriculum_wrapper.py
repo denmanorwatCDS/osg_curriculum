@@ -552,7 +552,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         result = super().step(actions)
 
         self.generated_transitions += self.num_envs
-        if (self.generated_transitions // self.num_envs) % 200 == 0:
+        if (self.generated_transitions // self.num_envs) % 25 == 0:
             print(f"[LOG] env stat: {self.get_logging_stats()}")
         obs = {key: np.stack([result[i][0][key] for i in range(self.num_envs)], axis=0) \
                     for key in result[0][0].keys()}

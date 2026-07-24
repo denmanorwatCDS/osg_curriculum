@@ -32,10 +32,9 @@ DEFAULT_TASK_CONFIG_PATH = "configs/objectnav_hm3d_v2_with_semantic.yaml"
 DEFAULT_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
 EVAL_DATA_PATH = "configs/homerobot_hm3d_objectnav_val.yaml"
 
-NUM_OF_PARALLEL_ENVS = 5
+NUM_OF_PARALLEL_ENVS = 8
 EVAL_ROUNDS = 5
 
-NUM_OF_STEPS = 100_000
 EVAL_INTERVAL = 500
 
 def create_homerobot_env(
@@ -55,12 +54,13 @@ def create_homerobot_env(
 def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
     vec_env = CurriculumVectorEnv(
             make_env_fn=create_env_fn,
+            stage_zero_experience=NUM_OF_PARALLEL_ENVS*50,
             env_fn_args=[
                 (task_config_path, data_path, index)
                 for index in range(num_envs)
             ],
         )
-    vec_env = DebugVideoWrapper(vec_env)
+    # vec_env = DebugVideoWrapper(vec_env)
     vec_env = CLIPWrapper(vec_env, device="cuda")
     vec_env = ToSKRLWrapper(vec_env, device="cuda")
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
