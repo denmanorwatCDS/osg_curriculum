@@ -89,9 +89,9 @@ class ReplayOrientationAuxTrainer:
         for _ in range(self.updates_per_step):
             states = self._sample_states()
             loss, metrics = self.perception.orientation_loss(
-                img=states["img"],
-                graph=states["graph"],
-                teacher_yaw=states["teacher_orientation"],
+                img=states["observation"],
+                graph=states["knowledge_graph"],
+                teacher_yaw=states["angle_to_goal"],
             )
 
             self.graph_optimizer.zero_grad(set_to_none=True)
@@ -147,7 +147,7 @@ class ReplayOrientationAuxTrainer:
             if isinstance(sample_result, tuple)
             else sample_result
         )
-        raw_states = samples[0]
+        raw_states = samples[0][0]
         return unflatten_tensorized_space(self.observation_space, raw_states)
 
     def _accumulate(self, metrics: dict[str, float]) -> None:

@@ -62,7 +62,7 @@ Only:
 - `OrientationModule` via `orientation_optimizer`.
 
 Both receive gradients from the supervised orientation loss sampled from replay
-states. The GT yaw is stored in `observation["teacher_orientation"]`.
+states. The GT angle is stored in `observation["angle_to_goal"]`.
 
 ## GT or predicted orientation
 
@@ -102,10 +102,10 @@ After Habitat wrappers, every worker must expose equivalents of:
 
 ```python
 {
-    "clip": float_array[img_dim],
-    "goal": float_array[goal_dim],
-    "graph": float_array[graph_dim],
-    "orientation": float_or_array[1],  # yaw in radians
+    "observation": float_array[512],          # CLIP image embedding
+    "absolute_goal_position": float_array[2], # Habitat X-Z goal position
+    "knowledge_graph": float_array[186],      # 31 nodes x 6 fields
+    "angle_to_goal": float_or_array[1],       # relative angle in radians
 }
 ```
 

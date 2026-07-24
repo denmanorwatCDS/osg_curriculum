@@ -26,19 +26,19 @@
   },
   "observation": {
     "source_keys": {
-      "img": "clip",
-      "goal": "goal",
-      "graph": "graph",
-      "teacher_orientation": "orientation"
+      "img": "observation",
+      "goal": "absolute_goal_position",
+      "graph": "knowledge_graph",
+      "teacher_orientation": "angle_to_goal"
     },
     "dims": {
       "img": 512,
-      "goal": 32,
-      "graph": 168,
+      "goal": 2,
+      "graph": 186,
       "teacher_orientation": 1
     },
     "teacher_required": true,
-    "_TODO": "Replace source_keys and dims with the actual output of CLIPWrapper / ObjRLNav. teacher_orientation must be radians."
+    "_NOTE": "The names and dimensions match the active CLIPWrapper / ObjRLNav observation contract."
   },
   "action": {
     "num_actions": 4,
@@ -56,7 +56,7 @@
       256
     ],
     "orientation_source": "gt",
-    "_TODO": "GraphEmbeddingModule and OrientationModule are external to DDQN. Use 'gt' for observation.teacher_orientation or 'pred' for the detached orientation-module output."
+    "_TODO": "GraphEmbeddingModule and OrientationModule are external to DDQN. Use 'gt' for angle_to_goal or 'pred' for the detached orientation-module output."
   },
   "agent": {
     "memory_size": 10000,

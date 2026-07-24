@@ -87,18 +87,22 @@ class DDQNQNetwork(DeterministicMixin, Model):
             self.observation_space,
             inputs["states"],
         )
+        img = observation["observation"]
+        goal = observation["absolute_goal_position"]
+        graph = observation["knowledge_graph"]
+        teacher_orientation = observation.get("angle_to_goal")
 
         graph_embedding, orientation_feature = (
             self._perception().detached_policy_features(
-                img=observation["img"],
-                graph=observation["graph"],
-                teacher_yaw=observation.get("teacher_orientation"),
+                img=img,
+                graph=graph,
+                teacher_yaw=teacher_orientation,
             )
         )
 
         # These two encoders and q_head are the only trainable DDQN path.
-        img_feature = self.img_encoder(observation["img"].float())
-        goal_feature = self.goal_encoder(observation["goal"].float())
+        img_feature = self.img_encoder(img.float())
+        goal_feature = self.goal_encoder(goal.float())
 
         q_input = torch.cat(
             (

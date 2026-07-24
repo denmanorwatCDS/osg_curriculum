@@ -12,7 +12,6 @@ from skrl.trainers.torch.sequential import SequentialTrainer
 from skrl.utils import set_seed
 
 from aux_trainer import ReplayOrientationAuxTrainer
-from habitat_factory import build_habitat_env
 from models import DDQNQNetwork
 from perception import AuxPerceptionModules
 
@@ -22,6 +21,7 @@ from skrl.envs.wrappers.torch import wrap_env
 from curriculum_habitat.helper_wrappers import (
     CLIPWrapper,
     ToSKRLWrapper,
+    DebugVideoWrapper,
 )
 from curriculum_habitat.curriculum_wrapper import (
     CurriculumVectorEnv,
@@ -60,9 +60,11 @@ def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
                 for index in range(num_envs)
             ],
         )
+    vec_env = DebugVideoWrapper(vec_env, device="cuda")
     vec_env = CLIPWrapper(vec_env, device="cuda")
     vec_env = ToSKRLWrapper(vec_env, device="cuda")
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
+    
     return vec_env
 
 def _parameter_ids(module: torch.nn.Module) -> set[int]:
