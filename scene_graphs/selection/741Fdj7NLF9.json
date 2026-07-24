@@ -1,6 +1,6 @@
 {
   "scene": "741Fdj7NLF9",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
     6,
     24,
@@ -9,21 +9,29 @@
     122,
     196,
     47,
-    233,
-    133,
     164,
-    12,
+    211,
+    133,
     224,
-    114,
-    213,
+    12,
+    97,
+    175,
+    204,
     132,
-    177,
-    5,
     223,
-    83,
-    214,
+    5,
+    42,
+    169,
+    207,
     134,
-    175
+    225,
+    7,
+    74,
+    170,
+    205,
+    154,
+    232,
+    86
   ],
   "nodes": [
     {
@@ -69,10 +77,16 @@
       "bbox_diag": 4.233
     },
     {
-      "instance_id": 233,
-      "category": "rug",
+      "instance_id": 164,
+      "category": "rack",
+      "region_id": "3",
+      "bbox_diag": 2.479
+    },
+    {
+      "instance_id": 211,
+      "category": "chest of drawers",
       "region_id": "4",
-      "bbox_diag": 4.263
+      "bbox_diag": 2.06
     },
     {
       "instance_id": 133,
@@ -81,10 +95,10 @@
       "bbox_diag": 2.234
     },
     {
-      "instance_id": 164,
-      "category": "rack",
-      "region_id": "3",
-      "bbox_diag": 2.479
+      "instance_id": 224,
+      "category": "chair",
+      "region_id": "5",
+      "bbox_diag": 1.982
     },
     {
       "instance_id": 12,
@@ -93,22 +107,22 @@
       "bbox_diag": 2.691
     },
     {
-      "instance_id": 224,
-      "category": "chair",
-      "region_id": "5",
-      "bbox_diag": 1.982
-    },
-    {
-      "instance_id": 114,
-      "category": "rug",
+      "instance_id": 97,
+      "category": "kitchen island",
       "region_id": "1",
-      "bbox_diag": 3.893
+      "bbox_diag": 2.484
     },
     {
-      "instance_id": 213,
-      "category": "curtain",
+      "instance_id": 175,
+      "category": "shelf",
+      "region_id": "3",
+      "bbox_diag": 1.527
+    },
+    {
+      "instance_id": 204,
+      "category": "chest of drawers",
       "region_id": "4",
-      "bbox_diag": 2.692
+      "bbox_diag": 1.235
     },
     {
       "instance_id": 132,
@@ -117,10 +131,10 @@
       "bbox_diag": 1.359
     },
     {
-      "instance_id": 177,
-      "category": "ironing board",
-      "region_id": "3",
-      "bbox_diag": 1.535
+      "instance_id": 223,
+      "category": "chair",
+      "region_id": "5",
+      "bbox_diag": 1.941
     },
     {
       "instance_id": 5,
@@ -129,22 +143,22 @@
       "bbox_diag": 1.877
     },
     {
-      "instance_id": 223,
-      "category": "chair",
-      "region_id": "5",
-      "bbox_diag": 1.941
-    },
-    {
-      "instance_id": 83,
-      "category": "curtain",
+      "instance_id": 42,
+      "category": "refrigerator",
       "region_id": "1",
-      "bbox_diag": 2.645
+      "bbox_diag": 2.211
     },
     {
-      "instance_id": 214,
-      "category": "curtain",
+      "instance_id": 169,
+      "category": "shelf",
+      "region_id": "3",
+      "bbox_diag": 1.393
+    },
+    {
+      "instance_id": 207,
+      "category": "chest of drawers",
       "region_id": "4",
-      "bbox_diag": 2.522
+      "bbox_diag": 1.217
     },
     {
       "instance_id": 134,
@@ -153,10 +167,52 @@
       "bbox_diag": 1.075
     },
     {
-      "instance_id": 175,
+      "instance_id": 225,
+      "category": "table",
+      "region_id": "5",
+      "bbox_diag": 1.089
+    },
+    {
+      "instance_id": 7,
+      "category": "lamp",
+      "region_id": "0",
+      "bbox_diag": 0.324
+    },
+    {
+      "instance_id": 74,
+      "category": "armchair",
+      "region_id": "1",
+      "bbox_diag": 2.042
+    },
+    {
+      "instance_id": 170,
       "category": "shelf",
       "region_id": "3",
-      "bbox_diag": 1.527
+      "bbox_diag": 1.275
+    },
+    {
+      "instance_id": 205,
+      "category": "bedside lamp",
+      "region_id": "4",
+      "bbox_diag": 0.965
+    },
+    {
+      "instance_id": 154,
+      "category": "bathroom shelf",
+      "region_id": "2",
+      "bbox_diag": 0.61
+    },
+    {
+      "instance_id": 232,
+      "category": "lamp",
+      "region_id": "5",
+      "bbox_diag": 0.375
+    },
+    {
+      "instance_id": 86,
+      "category": "dresser",
+      "region_id": "1",
+      "bbox_diag": 1.741
     }
   ]
 }

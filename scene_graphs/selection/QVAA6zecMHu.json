@@ -1,6 +1,6 @@
 {
   "scene": "QVAA6zecMHu",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
     132,
     20,
@@ -8,22 +8,30 @@
     67,
     98,
     226,
-    252,
     166,
-    105,
-    127,
+    61,
+    87,
     192,
-    243,
-    1,
+    127,
+    227,
     18,
-    216,
-    72,
+    1,
     160,
-    96,
-    138,
+    253,
+    78,
     193,
-    236,
-    2
+    117,
+    228,
+    19,
+    2,
+    172,
+    47,
+    83,
+    190,
+    121,
+    229,
+    17,
+    154
   ],
   "nodes": [
     {
@@ -63,28 +71,22 @@
       "bbox_diag": 1.17
     },
     {
-      "instance_id": 252,
-      "category": "frame",
-      "region_id": "2",
-      "bbox_diag": 3.428
-    },
-    {
       "instance_id": 166,
       "category": "kitchen counter",
       "region_id": "5",
       "bbox_diag": 2.746
     },
     {
-      "instance_id": 105,
-      "category": "frame",
-      "region_id": "3",
-      "bbox_diag": 2.781
+      "instance_id": 61,
+      "category": "couch",
+      "region_id": "2",
+      "bbox_diag": 2.374
     },
     {
-      "instance_id": 127,
-      "category": "bed",
-      "region_id": "4",
-      "bbox_diag": 2.843
+      "instance_id": 87,
+      "category": "chest of drawers",
+      "region_id": "3",
+      "bbox_diag": 2.13
     },
     {
       "instance_id": 192,
@@ -93,16 +95,16 @@
       "bbox_diag": 1.736
     },
     {
-      "instance_id": 243,
-      "category": "soap",
-      "region_id": "8",
-      "bbox_diag": 2.911
+      "instance_id": 127,
+      "category": "bed",
+      "region_id": "4",
+      "bbox_diag": 2.843
     },
     {
-      "instance_id": 1,
-      "category": "washer-dryer",
-      "region_id": "0",
-      "bbox_diag": 1.508
+      "instance_id": 227,
+      "category": "bathtub",
+      "region_id": "8",
+      "bbox_diag": 1.758
     },
     {
       "instance_id": 18,
@@ -111,16 +113,10 @@
       "bbox_diag": 1.342
     },
     {
-      "instance_id": 216,
-      "category": "mirror",
-      "region_id": "7",
-      "bbox_diag": 1.084
-    },
-    {
-      "instance_id": 72,
-      "category": "rug",
-      "region_id": "2",
-      "bbox_diag": 2.417
+      "instance_id": 1,
+      "category": "washer-dryer",
+      "region_id": "0",
+      "bbox_diag": 1.508
     },
     {
       "instance_id": 160,
@@ -129,16 +125,16 @@
       "bbox_diag": 2.198
     },
     {
-      "instance_id": 96,
-      "category": "curtain",
-      "region_id": "3",
-      "bbox_diag": 2.343
+      "instance_id": 253,
+      "category": "table",
+      "region_id": "2",
+      "bbox_diag": 1.7
     },
     {
-      "instance_id": 138,
-      "category": "frame",
-      "region_id": "4",
-      "bbox_diag": 2.725
+      "instance_id": 78,
+      "category": "chest of drawers",
+      "region_id": "3",
+      "bbox_diag": 2.039
     },
     {
       "instance_id": 193,
@@ -147,16 +143,76 @@
       "bbox_diag": 1.525
     },
     {
-      "instance_id": 236,
-      "category": "shower curtain",
+      "instance_id": 117,
+      "category": "chest of drawers",
+      "region_id": "4",
+      "bbox_diag": 1.865
+    },
+    {
+      "instance_id": 228,
+      "category": "bathroom cabinet",
       "region_id": "8",
-      "bbox_diag": 1.936
+      "bbox_diag": 1.22
+    },
+    {
+      "instance_id": 19,
+      "category": "table",
+      "region_id": "1",
+      "bbox_diag": 1.305
     },
     {
       "instance_id": 2,
       "category": "washer-dryer",
       "region_id": "0",
       "bbox_diag": 1.457
+    },
+    {
+      "instance_id": 172,
+      "category": "kitchen counter",
+      "region_id": "5",
+      "bbox_diag": 2.051
+    },
+    {
+      "instance_id": 47,
+      "category": "table",
+      "region_id": "2",
+      "bbox_diag": 1.576
+    },
+    {
+      "instance_id": 83,
+      "category": "chest of drawers",
+      "region_id": "3",
+      "bbox_diag": 1.337
+    },
+    {
+      "instance_id": 190,
+      "category": "furniture",
+      "region_id": "6",
+      "bbox_diag": 1.423
+    },
+    {
+      "instance_id": 121,
+      "category": "lamp",
+      "region_id": "4",
+      "bbox_diag": 1.657
+    },
+    {
+      "instance_id": 229,
+      "category": "countertop",
+      "region_id": "8",
+      "bbox_diag": 0.976
+    },
+    {
+      "instance_id": 17,
+      "category": "chair",
+      "region_id": "1",
+      "bbox_diag": 1.281
+    },
+    {
+      "instance_id": 154,
+      "category": "cabinet",
+      "region_id": "5",
+      "bbox_diag": 1.647
     }
   ]
 }

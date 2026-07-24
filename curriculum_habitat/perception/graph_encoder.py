@@ -37,7 +37,7 @@ from torch_geometric.data import Batch, Data
 from torch_geometric.nn import GATv2Conv, global_add_pool, global_max_pool, global_mean_pool
 from torch_geometric.utils import softmax
 
-NUM_NODES = 28
+NUM_NODES = 31  # 1 goal + up to 30 context objects
 NODE_FIELDS = 6  # object_id, active, is_goal, x, y, z
 CLIP_DIM = 512
 BLOCK_DIM = 32

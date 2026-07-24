@@ -1,9 +1,8 @@
 {
   "scene": "RaYrxWt5pR1",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
     218,
-    201,
     272,
     191,
     208,
@@ -11,19 +10,28 @@
     54,
     196,
     250,
-    280,
+    140,
     161,
-    141,
-    118,
-    7,
+    283,
+    115,
     13,
     209,
     237,
-    283,
+    153,
     175,
-    140,
-    115,
-    89
+    286,
+    114,
+    89,
+    214,
+    239,
+    154,
+    184,
+    293,
+    110,
+    38,
+    227,
+    245,
+    152
   ],
   "nodes": [
     {
@@ -31,12 +39,6 @@
       "category": "armchair",
       "region_id": "5",
       "bbox_diag": 1.966
-    },
-    {
-      "instance_id": 201,
-      "category": "flower",
-      "region_id": "5",
-      "bbox_diag": 2.424
     },
     {
       "instance_id": 272,
@@ -81,10 +83,10 @@
       "bbox_diag": 3.795
     },
     {
-      "instance_id": 280,
-      "category": "shower cabin",
-      "region_id": "7",
-      "bbox_diag": 2.818
+      "instance_id": 140,
+      "category": "bathtub",
+      "region_id": "3",
+      "bbox_diag": 1.643
     },
     {
       "instance_id": 161,
@@ -93,22 +95,16 @@
       "bbox_diag": 2.545
     },
     {
-      "instance_id": 141,
-      "category": "shower curtain",
-      "region_id": "3",
-      "bbox_diag": 2.011
+      "instance_id": 283,
+      "category": "cabinet",
+      "region_id": "7",
+      "bbox_diag": 2.52
     },
     {
-      "instance_id": 118,
-      "category": "picture",
+      "instance_id": 115,
+      "category": "clothes dryer",
       "region_id": "2",
-      "bbox_diag": 4.122
-    },
-    {
-      "instance_id": 7,
-      "category": "ceiling lamp",
-      "region_id": "0",
-      "bbox_diag": 0.452
+      "bbox_diag": 1.57
     },
     {
       "instance_id": 13,
@@ -129,10 +125,10 @@
       "bbox_diag": 2.151
     },
     {
-      "instance_id": 283,
+      "instance_id": 153,
       "category": "cabinet",
-      "region_id": "7",
-      "bbox_diag": 2.52
+      "region_id": "3",
+      "bbox_diag": 1.544
     },
     {
       "instance_id": 175,
@@ -141,22 +137,82 @@
       "bbox_diag": 2.257
     },
     {
-      "instance_id": 140,
-      "category": "bathtub",
-      "region_id": "3",
-      "bbox_diag": 1.643
+      "instance_id": 286,
+      "category": "sink",
+      "region_id": "7",
+      "bbox_diag": 2.022
     },
     {
-      "instance_id": 115,
-      "category": "clothes dryer",
+      "instance_id": 114,
+      "category": "washing machine",
       "region_id": "2",
-      "bbox_diag": 1.57
+      "bbox_diag": 1.511
     },
     {
       "instance_id": 89,
       "category": "table",
       "region_id": "1",
       "bbox_diag": 2.124
+    },
+    {
+      "instance_id": 214,
+      "category": "coffee table",
+      "region_id": "5",
+      "bbox_diag": 1.554
+    },
+    {
+      "instance_id": 239,
+      "category": "armchair",
+      "region_id": "6",
+      "bbox_diag": 1.796
+    },
+    {
+      "instance_id": 154,
+      "category": "toilet",
+      "region_id": "3",
+      "bbox_diag": 1.192
+    },
+    {
+      "instance_id": 184,
+      "category": "chair",
+      "region_id": "4",
+      "bbox_diag": 1.568
+    },
+    {
+      "instance_id": 293,
+      "category": "cabinet",
+      "region_id": "7",
+      "bbox_diag": 1.063
+    },
+    {
+      "instance_id": 110,
+      "category": "cabinet",
+      "region_id": "2",
+      "bbox_diag": 1.301
+    },
+    {
+      "instance_id": 38,
+      "category": "cabinet",
+      "region_id": "1",
+      "bbox_diag": 1.671
+    },
+    {
+      "instance_id": 227,
+      "category": "lamp",
+      "region_id": "5",
+      "bbox_diag": 1.547
+    },
+    {
+      "instance_id": 245,
+      "category": "desk",
+      "region_id": "6",
+      "bbox_diag": 1.534
+    },
+    {
+      "instance_id": 152,
+      "category": "sink",
+      "region_id": "3",
+      "bbox_diag": 1.172
     }
   ]
 }

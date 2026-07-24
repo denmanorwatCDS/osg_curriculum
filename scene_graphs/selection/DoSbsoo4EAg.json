@@ -1,6 +1,6 @@
 {
   "scene": "DoSbsoo4EAg",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
     76,
     45,
@@ -9,21 +9,29 @@
     213,
     232,
     121,
-    40,
-    71,
-    7,
     157,
+    40,
+    2,
+    74,
     225,
     94,
-    39,
-    70,
-    24,
     148,
+    39,
+    1,
+    73,
     229,
-    108,
+    115,
+    147,
     36,
-    67,
-    2
+    226,
+    129,
+    145,
+    51,
+    230,
+    116,
+    249,
+    224,
+    117
   ],
   "nodes": [
     {
@@ -69,28 +77,28 @@
       "bbox_diag": 3.34
     },
     {
+      "instance_id": 157,
+      "category": "wardrobe",
+      "region_id": "4",
+      "bbox_diag": 2.642
+    },
+    {
       "instance_id": 40,
       "category": "wardrobe",
       "region_id": "1",
       "bbox_diag": 2.464
     },
     {
-      "instance_id": 71,
-      "category": "shower door frame",
-      "region_id": "2",
-      "bbox_diag": 2.648
-    },
-    {
-      "instance_id": 7,
-      "category": "shower glass",
+      "instance_id": 2,
+      "category": "sink",
       "region_id": "0",
-      "bbox_diag": 2.442
+      "bbox_diag": 1.49
     },
     {
-      "instance_id": 157,
-      "category": "wardrobe",
-      "region_id": "4",
-      "bbox_diag": 2.642
+      "instance_id": 74,
+      "category": "bath sink",
+      "region_id": "2",
+      "bbox_diag": 1.533
     },
     {
       "instance_id": 225,
@@ -105,28 +113,28 @@
       "bbox_diag": 2.612
     },
     {
+      "instance_id": 148,
+      "category": "wardrobe",
+      "region_id": "4",
+      "bbox_diag": 2.438
+    },
+    {
       "instance_id": 39,
       "category": "wardrobe",
       "region_id": "1",
       "bbox_diag": 2.326
     },
     {
-      "instance_id": 70,
-      "category": "shower tub",
-      "region_id": "2",
-      "bbox_diag": 2.035
-    },
-    {
-      "instance_id": 24,
-      "category": "shower floor",
+      "instance_id": 1,
+      "category": "toilet",
       "region_id": "0",
-      "bbox_diag": 1.701
+      "bbox_diag": 1.152
     },
     {
-      "instance_id": 148,
-      "category": "wardrobe",
-      "region_id": "4",
-      "bbox_diag": 2.438
+      "instance_id": 73,
+      "category": "tv",
+      "region_id": "2",
+      "bbox_diag": 0.719
     },
     {
       "instance_id": 229,
@@ -135,10 +143,16 @@
       "bbox_diag": 1.964
     },
     {
-      "instance_id": 108,
-      "category": "blinds",
+      "instance_id": 115,
+      "category": "dresser",
       "region_id": "3",
-      "bbox_diag": 2.198
+      "bbox_diag": 1.956
+    },
+    {
+      "instance_id": 147,
+      "category": "wardrobe",
+      "region_id": "4",
+      "bbox_diag": 2.436
     },
     {
       "instance_id": 36,
@@ -147,16 +161,58 @@
       "bbox_diag": 2.307
     },
     {
-      "instance_id": 67,
-      "category": "shower tap",
-      "region_id": "2",
-      "bbox_diag": 1.88
+      "instance_id": 226,
+      "category": "range hood",
+      "region_id": "5",
+      "bbox_diag": 1.815
     },
     {
-      "instance_id": 2,
-      "category": "sink",
-      "region_id": "0",
-      "bbox_diag": 1.49
+      "instance_id": 129,
+      "category": "tv",
+      "region_id": "3",
+      "bbox_diag": 1.143
+    },
+    {
+      "instance_id": 145,
+      "category": "panel screen",
+      "region_id": "4",
+      "bbox_diag": 0.371
+    },
+    {
+      "instance_id": 51,
+      "category": "cabinet",
+      "region_id": "1",
+      "bbox_diag": 0.998
+    },
+    {
+      "instance_id": 230,
+      "category": "dishwasher",
+      "region_id": "5",
+      "bbox_diag": 1.555
+    },
+    {
+      "instance_id": 116,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 1.076
+    },
+    {
+      "instance_id": 249,
+      "category": "lamp",
+      "region_id": "4",
+      "bbox_diag": 0.337
+    },
+    {
+      "instance_id": 224,
+      "category": "kitchen cabinet",
+      "region_id": "5",
+      "bbox_diag": 1.489
+    },
+    {
+      "instance_id": 117,
+      "category": "bedside lamp",
+      "region_id": "3",
+      "bbox_diag": 1.039
     }
   ]
 }

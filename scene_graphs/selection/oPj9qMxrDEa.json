@@ -1,42 +1,50 @@
 {
   "scene": "oPj9qMxrDEa",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
-    436,
     137,
+    436,
     154,
     183,
     258,
     351,
-    78,
-    377,
-    459,
-    264,
-    337,
-    318,
-    29,
     159,
-    439,
+    318,
     453,
-    222,
-    348,
-    291,
-    19,
+    337,
+    264,
+    377,
+    13,
     188,
-    385
+    291,
+    452,
+    341,
+    222,
+    438,
+    54,
+    290,
+    454,
+    353,
+    228,
+    106,
+    300,
+    455,
+    340,
+    230,
+    99
   ],
   "nodes": [
-    {
-      "instance_id": 436,
-      "category": "decorative plant",
-      "region_id": "6",
-      "bbox_diag": 1.217
-    },
     {
       "instance_id": 137,
       "category": "tv",
       "region_id": "1",
       "bbox_diag": 1.481
+    },
+    {
+      "instance_id": 436,
+      "category": "decorative plant",
+      "region_id": "6",
+      "bbox_diag": 1.217
     },
     {
       "instance_id": 154,
@@ -63,34 +71,10 @@
       "bbox_diag": 3.477
     },
     {
-      "instance_id": 78,
-      "category": "bottle",
+      "instance_id": 159,
+      "category": "kitchen island",
       "region_id": "1",
-      "bbox_diag": 3.449
-    },
-    {
-      "instance_id": 377,
-      "category": "rack",
-      "region_id": "6",
-      "bbox_diag": 4.823
-    },
-    {
-      "instance_id": 459,
-      "category": "boiler",
-      "region_id": "7",
-      "bbox_diag": 2.501
-    },
-    {
-      "instance_id": 264,
-      "category": "lamp",
-      "region_id": "2",
-      "bbox_diag": 3.671
-    },
-    {
-      "instance_id": 337,
-      "category": "cabinet",
-      "region_id": "5",
-      "bbox_diag": 2.506
+      "bbox_diag": 3.321
     },
     {
       "instance_id": 318,
@@ -99,52 +83,34 @@
       "bbox_diag": 2.51
     },
     {
-      "instance_id": 29,
-      "category": "doormat",
-      "region_id": "0",
-      "bbox_diag": 2.121
-    },
-    {
-      "instance_id": 159,
-      "category": "kitchen island",
-      "region_id": "1",
-      "bbox_diag": 3.321
-    },
-    {
-      "instance_id": 439,
-      "category": "mirror",
-      "region_id": "6",
-      "bbox_diag": 2.094
-    },
-    {
       "instance_id": 453,
       "category": "wardrobe",
       "region_id": "7",
       "bbox_diag": 2.285
     },
     {
-      "instance_id": 222,
-      "category": "rack",
-      "region_id": "2",
-      "bbox_diag": 2.348
-    },
-    {
-      "instance_id": 348,
-      "category": "picture",
+      "instance_id": 337,
+      "category": "cabinet",
       "region_id": "5",
-      "bbox_diag": 2.457
+      "bbox_diag": 2.506
     },
     {
-      "instance_id": 291,
-      "category": "desk",
-      "region_id": "4",
-      "bbox_diag": 2.329
+      "instance_id": 264,
+      "category": "lamp",
+      "region_id": "2",
+      "bbox_diag": 3.671
     },
     {
-      "instance_id": 19,
-      "category": "stack of clothes",
+      "instance_id": 377,
+      "category": "rack",
+      "region_id": "6",
+      "bbox_diag": 4.823
+    },
+    {
+      "instance_id": 13,
+      "category": "cabinet",
       "region_id": "0",
-      "bbox_diag": 1.71
+      "bbox_diag": 1.26
     },
     {
       "instance_id": 188,
@@ -153,10 +119,100 @@
       "bbox_diag": 2.767
     },
     {
-      "instance_id": 385,
-      "category": "stack of clothes",
+      "instance_id": 291,
+      "category": "desk",
+      "region_id": "4",
+      "bbox_diag": 2.329
+    },
+    {
+      "instance_id": 452,
+      "category": "refrigerator",
+      "region_id": "7",
+      "bbox_diag": 2.28
+    },
+    {
+      "instance_id": 341,
+      "category": "display cabinet",
+      "region_id": "5",
+      "bbox_diag": 1.936
+    },
+    {
+      "instance_id": 222,
+      "category": "rack",
+      "region_id": "2",
+      "bbox_diag": 2.348
+    },
+    {
+      "instance_id": 438,
+      "category": "stool",
       "region_id": "6",
-      "bbox_diag": 1.357
+      "bbox_diag": 0.849
+    },
+    {
+      "instance_id": 54,
+      "category": "refrigerator cabinet",
+      "region_id": "1",
+      "bbox_diag": 2.627
+    },
+    {
+      "instance_id": 290,
+      "category": "cabinet",
+      "region_id": "4",
+      "bbox_diag": 2.019
+    },
+    {
+      "instance_id": 454,
+      "category": "wardrobe",
+      "region_id": "7",
+      "bbox_diag": 2.267
+    },
+    {
+      "instance_id": 353,
+      "category": "bench",
+      "region_id": "5",
+      "bbox_diag": 1.895
+    },
+    {
+      "instance_id": 228,
+      "category": "countertop",
+      "region_id": "2",
+      "bbox_diag": 1.473
+    },
+    {
+      "instance_id": 106,
+      "category": "countertop",
+      "region_id": "1",
+      "bbox_diag": 2.45
+    },
+    {
+      "instance_id": 300,
+      "category": "office chair",
+      "region_id": "4",
+      "bbox_diag": 1.52
+    },
+    {
+      "instance_id": 455,
+      "category": "wardrobe",
+      "region_id": "7",
+      "bbox_diag": 2.235
+    },
+    {
+      "instance_id": 340,
+      "category": "armchair",
+      "region_id": "5",
+      "bbox_diag": 1.509
+    },
+    {
+      "instance_id": 230,
+      "category": "cabinet",
+      "region_id": "2",
+      "bbox_diag": 1.257
+    },
+    {
+      "instance_id": 99,
+      "category": "countertop",
+      "region_id": "1",
+      "bbox_diag": 2.152
     }
   ]
 }

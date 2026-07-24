@@ -31,7 +31,7 @@ SEM_DIR = REPO_ROOT / "scene_graphs" / "semantics"
 SEL_DIR = REPO_ROOT / "scene_graphs" / "selection"
 VOCAB_PATH = REPO_ROOT / "scene_graphs" / "vocab" / "categories.json"
 
-NUM_NODES = 28
+NUM_NODES = 31  # 1 injected goal + up to 30 static context objects
 GOAL_SLOT = 0
 UNKNOWN_ID = 0  # fallback object_id for categories missing from the vocab
 

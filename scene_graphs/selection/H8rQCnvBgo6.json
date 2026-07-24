@@ -1,29 +1,37 @@
 {
   "scene": "H8rQCnvBgo6",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
     19,
     23,
     27,
     121,
     211,
-    158,
-    6,
     48,
-    226,
-    133,
-    202,
-    244,
-    258,
-    273,
+    6,
     175,
-    37,
-    55,
-    227,
-    113,
     253,
+    113,
+    244,
+    55,
+    37,
+    157,
+    250,
+    127,
     243,
-    157
+    76,
+    20,
+    184,
+    251,
+    128,
+    245,
+    67,
+    26,
+    146,
+    198,
+    84,
+    16,
+    156
   ],
   "nodes": [
     {
@@ -57,10 +65,10 @@
       "bbox_diag": 1.253
     },
     {
-      "instance_id": 158,
-      "category": "bath curtain",
-      "region_id": "4",
-      "bbox_diag": 2.076
+      "instance_id": 48,
+      "category": "kitchen cabinet",
+      "region_id": "1",
+      "bbox_diag": 2.038
     },
     {
       "instance_id": 6,
@@ -69,76 +77,10 @@
       "bbox_diag": 3.548
     },
     {
-      "instance_id": 48,
-      "category": "kitchen cabinet",
-      "region_id": "1",
-      "bbox_diag": 2.038
-    },
-    {
-      "instance_id": 226,
-      "category": "shower curtain",
-      "region_id": "6",
-      "bbox_diag": 2.308
-    },
-    {
-      "instance_id": 133,
-      "category": "ceiling lamp",
-      "region_id": "3",
-      "bbox_diag": 1.87
-    },
-    {
-      "instance_id": 202,
-      "category": "ceiling fan",
-      "region_id": "5",
-      "bbox_diag": 5.402
-    },
-    {
-      "instance_id": 244,
-      "category": "shelf",
-      "region_id": "7",
-      "bbox_diag": 1.923
-    },
-    {
-      "instance_id": 258,
-      "category": "ceiling lamp",
-      "region_id": "2",
-      "bbox_diag": 0.318
-    },
-    {
-      "instance_id": 273,
-      "category": "ceiling lamp",
-      "region_id": "8",
-      "bbox_diag": 0.428
-    },
-    {
       "instance_id": 175,
       "category": "cabinet",
       "region_id": "4",
       "bbox_diag": 1.908
-    },
-    {
-      "instance_id": 37,
-      "category": "table",
-      "region_id": "0",
-      "bbox_diag": 2.087
-    },
-    {
-      "instance_id": 55,
-      "category": "fridge",
-      "region_id": "1",
-      "bbox_diag": 2.035
-    },
-    {
-      "instance_id": 227,
-      "category": "shower bar",
-      "region_id": "6",
-      "bbox_diag": 1.215
-    },
-    {
-      "instance_id": 113,
-      "category": "cabinet",
-      "region_id": "3",
-      "bbox_diag": 1.692
     },
     {
       "instance_id": 253,
@@ -147,16 +89,130 @@
       "bbox_diag": 3.232
     },
     {
-      "instance_id": 243,
+      "instance_id": 113,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 1.692
+    },
+    {
+      "instance_id": 244,
       "category": "shelf",
       "region_id": "7",
-      "bbox_diag": 1.895
+      "bbox_diag": 1.923
+    },
+    {
+      "instance_id": 55,
+      "category": "fridge",
+      "region_id": "1",
+      "bbox_diag": 2.035
+    },
+    {
+      "instance_id": 37,
+      "category": "table",
+      "region_id": "0",
+      "bbox_diag": 2.087
     },
     {
       "instance_id": 157,
       "category": "bath",
       "region_id": "4",
       "bbox_diag": 1.778
+    },
+    {
+      "instance_id": 250,
+      "category": "bedside table",
+      "region_id": "5",
+      "bbox_diag": 1.17
+    },
+    {
+      "instance_id": 127,
+      "category": "bedside table",
+      "region_id": "3",
+      "bbox_diag": 1.185
+    },
+    {
+      "instance_id": 243,
+      "category": "shelf",
+      "region_id": "7",
+      "bbox_diag": 1.895
+    },
+    {
+      "instance_id": 76,
+      "category": "kitchen cabinet lower",
+      "region_id": "1",
+      "bbox_diag": 1.744
+    },
+    {
+      "instance_id": 20,
+      "category": "table",
+      "region_id": "0",
+      "bbox_diag": 1.658
+    },
+    {
+      "instance_id": 184,
+      "category": "wash cabinet",
+      "region_id": "4",
+      "bbox_diag": 1.619
+    },
+    {
+      "instance_id": 251,
+      "category": "table lamp",
+      "region_id": "5",
+      "bbox_diag": 0.872
+    },
+    {
+      "instance_id": 128,
+      "category": "table lamp",
+      "region_id": "3",
+      "bbox_diag": 0.919
+    },
+    {
+      "instance_id": 245,
+      "category": "shelf",
+      "region_id": "7",
+      "bbox_diag": 1.102
+    },
+    {
+      "instance_id": 67,
+      "category": "oven",
+      "region_id": "1",
+      "bbox_diag": 1.675
+    },
+    {
+      "instance_id": 26,
+      "category": "tv stand",
+      "region_id": "0",
+      "bbox_diag": 1.645
+    },
+    {
+      "instance_id": 146,
+      "category": "wash cabinet",
+      "region_id": "4",
+      "bbox_diag": 1.334
+    },
+    {
+      "instance_id": 198,
+      "category": "storage unit",
+      "region_id": "5",
+      "bbox_diag": 0.727
+    },
+    {
+      "instance_id": 84,
+      "category": "kitchen cabinet lower",
+      "region_id": "1",
+      "bbox_diag": 1.483
+    },
+    {
+      "instance_id": 16,
+      "category": "fireplace shelf",
+      "region_id": "0",
+      "bbox_diag": 1.527
+    },
+    {
+      "instance_id": 156,
+      "category": "toilet",
+      "region_id": "4",
+      "bbox_diag": 1.215
     }
   ]
 }

@@ -1,29 +1,37 @@
 {
   "scene": "YHmAkqgwe2p",
-  "num_nodes": 22,
+  "num_nodes": 30,
   "node_instance_ids": [
     24,
     206,
-    221,
+    92,
     219,
     141,
-    217,
-    193,
-    92,
     318,
-    11,
-    170,
-    296,
-    47,
-    126,
-    224,
+    233,
     101,
-    336,
-    30,
+    296,
     159,
+    4,
+    47,
+    123,
+    336,
+    215,
+    80,
     295,
+    149,
+    21,
     49,
-    123
+    347,
+    226,
+    99,
+    276,
+    160,
+    17,
+    53,
+    352,
+    239,
+    89
   ],
   "nodes": [
     {
@@ -39,10 +47,10 @@
       "bbox_diag": 1.413
     },
     {
-      "instance_id": 221,
+      "instance_id": 92,
       "category": "couch",
-      "region_id": "5",
-      "bbox_diag": 10.648
+      "region_id": "2",
+      "bbox_diag": 2.973
     },
     {
       "instance_id": 219,
@@ -57,64 +65,16 @@
       "bbox_diag": 1.215
     },
     {
-      "instance_id": 217,
-      "category": "vase",
-      "region_id": "5",
-      "bbox_diag": 0.374
-    },
-    {
-      "instance_id": 193,
-      "category": "picture",
-      "region_id": "5",
-      "bbox_diag": 6.49
-    },
-    {
-      "instance_id": 92,
-      "category": "couch",
-      "region_id": "2",
-      "bbox_diag": 2.973
-    },
-    {
       "instance_id": 318,
       "category": "table",
       "region_id": "7",
       "bbox_diag": 3.393
     },
     {
-      "instance_id": 11,
-      "category": "wall lamp",
-      "region_id": "0",
-      "bbox_diag": 8.55
-    },
-    {
-      "instance_id": 170,
-      "category": "shower hose",
-      "region_id": "4",
-      "bbox_diag": 6.932
-    },
-    {
-      "instance_id": 296,
-      "category": "cabinet",
-      "region_id": "6",
-      "bbox_diag": 2.606
-    },
-    {
-      "instance_id": 47,
-      "category": "wardrobe",
-      "region_id": "1",
-      "bbox_diag": 3.238
-    },
-    {
-      "instance_id": 126,
-      "category": "mirror",
-      "region_id": "3",
-      "bbox_diag": 1.291
-    },
-    {
-      "instance_id": 224,
-      "category": "rug",
+      "instance_id": 233,
+      "category": "dresser",
       "region_id": "5",
-      "bbox_diag": 3.74
+      "bbox_diag": 2.89
     },
     {
       "instance_id": 101,
@@ -123,16 +83,10 @@
       "bbox_diag": 2.447
     },
     {
-      "instance_id": 336,
-      "category": "refrigerator",
-      "region_id": "7",
-      "bbox_diag": 2.365
-    },
-    {
-      "instance_id": 30,
-      "category": "watch",
-      "region_id": "0",
-      "bbox_diag": 4.915
+      "instance_id": 296,
+      "category": "cabinet",
+      "region_id": "6",
+      "bbox_diag": 2.606
     },
     {
       "instance_id": 159,
@@ -141,10 +95,58 @@
       "bbox_diag": 2.216
     },
     {
+      "instance_id": 4,
+      "category": "wardrobe",
+      "region_id": "0",
+      "bbox_diag": 4.387
+    },
+    {
+      "instance_id": 47,
+      "category": "wardrobe",
+      "region_id": "1",
+      "bbox_diag": 3.238
+    },
+    {
+      "instance_id": 123,
+      "category": "cabinet",
+      "region_id": "3",
+      "bbox_diag": 0.966
+    },
+    {
+      "instance_id": 336,
+      "category": "refrigerator",
+      "region_id": "7",
+      "bbox_diag": 2.365
+    },
+    {
+      "instance_id": 215,
+      "category": "radiator",
+      "region_id": "5",
+      "bbox_diag": 2.446
+    },
+    {
+      "instance_id": 80,
+      "category": "cabinet",
+      "region_id": "2",
+      "bbox_diag": 2.012
+    },
+    {
       "instance_id": 295,
       "category": "cabinet",
       "region_id": "6",
       "bbox_diag": 1.457
+    },
+    {
+      "instance_id": 149,
+      "category": "cabinet",
+      "region_id": "4",
+      "bbox_diag": 2.025
+    },
+    {
+      "instance_id": 21,
+      "category": "stand",
+      "region_id": "0",
+      "bbox_diag": 3.117
     },
     {
       "instance_id": 49,
@@ -153,10 +155,64 @@
       "bbox_diag": 1.702
     },
     {
-      "instance_id": 123,
-      "category": "cabinet",
-      "region_id": "3",
-      "bbox_diag": 0.966
+      "instance_id": 347,
+      "category": "table",
+      "region_id": "7",
+      "bbox_diag": 2.023
+    },
+    {
+      "instance_id": 226,
+      "category": "couch",
+      "region_id": "5",
+      "bbox_diag": 2.126
+    },
+    {
+      "instance_id": 99,
+      "category": "chair",
+      "region_id": "2",
+      "bbox_diag": 1.232
+    },
+    {
+      "instance_id": 276,
+      "category": "table",
+      "region_id": "6",
+      "bbox_diag": 1.401
+    },
+    {
+      "instance_id": 160,
+      "category": "bathroom cabinet",
+      "region_id": "4",
+      "bbox_diag": 1.753
+    },
+    {
+      "instance_id": 17,
+      "category": "heater",
+      "region_id": "0",
+      "bbox_diag": 1.278
+    },
+    {
+      "instance_id": 53,
+      "category": "radiator",
+      "region_id": "1",
+      "bbox_diag": 1.013
+    },
+    {
+      "instance_id": 352,
+      "category": "radiator",
+      "region_id": "7",
+      "bbox_diag": 1.964
+    },
+    {
+      "instance_id": 239,
+      "category": "dining table",
+      "region_id": "5",
+      "bbox_diag": 2.065
+    },
+    {
+      "instance_id": 89,
+      "category": "radiator",
+      "region_id": "2",
+      "bbox_diag": 1.168
     }
   ]
 }
