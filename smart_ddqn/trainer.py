@@ -38,10 +38,12 @@ def get_settings_by_mode(mode):
     random_timesteps = 1_000
     learning_starts = 1_000
     num_of_parallel_envs = 20
+    fixated_object = False
 
     if mode == 'debug_full':
         data_path = DEBUG_DATA_PATH
         stage_zero_experience = num_of_parallel_envs * 200
+        fixated_object = True
     elif mode == 'debug_ddqn':
         data_path = DEBUG_DATA_PATH
         stage_zero_experience = num_of_parallel_envs * 50
@@ -54,30 +56,36 @@ def get_settings_by_mode(mode):
         data_path = EVAL_DATA_PATH
     return {'task_config_path': task_config_path, 'data_path': data_path, 
             'random_timesteps': random_timesteps, 'learning_starts': learning_starts, 
-            'num_of_parallel_envs': num_of_parallel_envs, 
+            'num_of_parallel_envs': num_of_parallel_envs, 'fixated_object': fixated_object,
             'stage_zero_experience': stage_zero_experience}
 
 def create_homerobot_env(
     data_path,
     index,
     task_config_path,
+    fixated_object = False
 ):
+    dataset = None
+    if fixated_object:
+        dataset = dataset.filter_episodes(
+            lambda episode: episode.object_category == "chair"
+        )
     config = setup_env_config(
         params_path=data_path,
         default_config_path=task_config_path,
     )
     with read_write(config):
         config.habitat.seed = int(config.habitat.seed) + index
-    env = ObjRLNav(config=config)
+    env = ObjRLNav(config=config, dataset=dataset)
     return env
 
-def make_env_vectorised(create_env_fn, task_config_path, data_path, 
+def make_env_vectorised(create_env_fn, task_config_path, fixated_object, data_path, 
                         stage_zero_experience, num_envs):
     vec_env = CurriculumVectorEnv(
             make_env_fn=create_env_fn,
             stage_zero_experience=stage_zero_experience,
             env_fn_args=[
-                (data_path, index, task_config_path)
+                (data_path, index, task_config_path, fixated_object)
                 for index in range(num_envs)
             ],
         )
@@ -254,13 +262,15 @@ def run_training(cfg: dict[str, Any]) -> None:
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
     # env = wrap_env(raw_env, wrapper="gymnasium")
     # NEW
-    settings = get_settings_by_mode('debug_ddqn')
+    settings = get_settings_by_mode('debug_full')
+
     env = make_env_vectorised(
-        create_homerobot_env,
-        settings['task_config_path'],
-        settings['data_path'],
-        settings['num_of_parallel_envs'],
-        settings['stage_zero_experience'],
+        create_env_fn = create_homerobot_env,
+        task_config_path = settings['task_config_path'],
+        data_path = settings['data_path'],
+        fixated_object = settings['fixated_object'],
+        num_envs = settings['num_of_parallel_envs'],
+        stage_zero_experience = settings['stage_zero_experience'],
     )
     cfg.agent.random_timesteps = settings['random_timesteps']
     cfg.agent.learning_starts = settings['learning_starts']
