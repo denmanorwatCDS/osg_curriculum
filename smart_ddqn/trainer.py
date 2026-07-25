@@ -40,6 +40,7 @@ def get_settings_by_mode(mode):
     learning_starts = 1_000
     num_of_parallel_envs = 32
     fixated_object = False
+    save_interval = 500
 
     if mode == 'debug_full':
         data_path = DEBUG_DATA_PATH
@@ -50,6 +51,7 @@ def get_settings_by_mode(mode):
         data_path = DEBUG_DATA_PATH
         stage_zero_experience = num_of_parallel_envs * 50
         random_timesteps, learning_starts = 200, 200
+        save_interval = 50
     elif mode == 'train':
         data_path = TRAIN_DATA_PATH
         stage_zero_experience = num_of_parallel_envs * 1000 
@@ -58,7 +60,7 @@ def get_settings_by_mode(mode):
     return {'task_config_path': task_config_path, 'data_path': data_path, 
             'random_timesteps': random_timesteps, 'learning_starts': learning_starts, 
             'num_of_parallel_envs': num_of_parallel_envs, 'fixated_object': fixated_object,
-            'stage_zero_experience': stage_zero_experience}
+            'stage_zero_experience': stage_zero_experience, 'save_interval': save_interval}
 
 def create_homerobot_env(
     data_path,
@@ -83,7 +85,7 @@ def create_homerobot_env(
     return env
 
 def make_env_vectorised(create_env_fn, task_config_path, fixated_object, data_path, 
-                        stage_zero_experience, num_envs):
+                        stage_zero_experience, num_envs, curriculum_state = None):
     vec_env = CurriculumVectorEnv(
             make_env_fn=create_env_fn,
             stage_zero_experience=stage_zero_experience,
@@ -93,6 +95,9 @@ def make_env_vectorised(create_env_fn, task_config_path, fixated_object, data_pa
             ],
         )
     # vec_env = DebugVideoWrapper(vec_env)
+    if curriculum_state is not None:
+        vec_env.set_curriculum_state(**curriculum_state)
+
     vec_env = CLIPWrapper(vec_env, device="cuda")
     vec_env = ToSKRLWrapper(vec_env, device="cuda")
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
@@ -265,7 +270,25 @@ def run_training(cfg: dict[str, Any]) -> None:
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
     # env = wrap_env(raw_env, wrapper="gymnasium")
     # NEW
-    settings = get_settings_by_mode('debug_full')
+    settings = get_settings_by_mode('debug_ddqn')
+
+    cfg["agent"]["random_timesteps"] = settings["random_timesteps"]
+    cfg["agent"]["learning_starts"] = settings["learning_starts"]
+    cfg["aux"]["save_interval"] = settings["save_interval"]
+    cfg['run']['checkpoint_interval'] = settings["save_interval"]
+    curriculum_state = None
+
+    if (cfg["run"]["agent_checkpoint"] is not None) or (cfg['aux']['resume_from'] is not None):
+        if not ((cfg["run"]["agent_checkpoint"] is not None) and  (cfg['aux']['resume_from'] is not None)):
+            raise ValueError("Both agent_checkpoint and aux.resume_from must be provided together for resuming training.")
+
+        is_curriculum_config_correct = True
+        for key in cfg["curriculum_resume"].keys():
+            is_curriculum_config_correct = is_curriculum_config_correct and (cfg["curriculum_resume"][key] is not None)
+        if not is_curriculum_config_correct:
+            raise ValueError("All keys in curriculum_resume must be provided together for resuming training.")
+
+        curriculum_state = cfg["curriculum_resume"]
 
     env = make_env_vectorised(
         create_env_fn = create_homerobot_env,
@@ -274,10 +297,9 @@ def run_training(cfg: dict[str, Any]) -> None:
         fixated_object = settings['fixated_object'],
         num_envs = settings['num_of_parallel_envs'],
         stage_zero_experience = settings['stage_zero_experience'],
+        curriculum_state = curriculum_state
     )
-    cfg["agent"]["random_timesteps"] = settings["random_timesteps"]
-    cfg["agent"]["learning_starts"] = settings["learning_starts"]
-
+    
     agent = None
     aux_trainer = None
     perception = None

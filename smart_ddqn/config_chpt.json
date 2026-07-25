@@ -12,7 +12,7 @@
     "experiment_name": "ddqn_aux_orientation",
     "write_interval": 100,
     "checkpoint_interval": 10000,
-    "agent_checkpoint": null
+    "agent_checkpoint": "/mnt/ssd/osg_eval/logs/skrl/ddqn_aux_orientation/checkpoints/agent_10000.pt"
   },
   "habitat": {
     "task_config_path": "configs/objectnav_hm3d_v2_with_semantic.yaml",
@@ -88,14 +88,14 @@
     "log_interval": 500,
     "save_interval": 10000,
     "checkpoint_dir": "logs/skrl/habitat_ddqn_simple/perception",
-    "resume_from": null,
+    "resume_from": "/mnt/ssd/osg_eval/logs/skrl/habitat_ddqn_simple/perception/perception_10000.pt",
     "_NOTE": "These optimizers own only graph_encoder and orientation_module parameters. DDQN has no access to them."
   },
 
   "curriculum_resume":{
-    "stage": null,
-    "mean_radius": null,
-    "angle_error": null,
-    "generated_transitions": null
+    "stage": 1,
+    "mean_radius": 2.0,
+    "angle_error": 0.0,
+    "generated_transitions": 50000
   }
 }

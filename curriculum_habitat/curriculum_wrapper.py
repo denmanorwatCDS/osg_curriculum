@@ -449,6 +449,66 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
             else:
                 self.success_rates[key] = 0.0
 
+    def set_curriculum_state(
+        self,
+        stage: int,
+        mean_radius: float,
+        angle_error: float,
+        *,
+        generated_transitions = None,
+    ) -> None:
+        stage = int(stage)
+        mean_radius = float(mean_radius)
+        angle_error = float(angle_error)
+
+        if stage not in {0, 1, 2}:
+            raise ValueError(f"Curriculum stage must be 0, 1, or 2; got {stage}")
+
+        if not self.start_mean_radius <= mean_radius <= self.max_mean_radius:
+            raise ValueError(
+                f"mean_radius must be in "
+                f"[{self.start_mean_radius}, {self.max_mean_radius}]"
+            )
+
+        if not 0.0 <= angle_error <= self.max_angle_error:
+            raise ValueError(
+                f"angle_error must be in [0, {self.max_angle_error}]"
+            )
+
+        if generated_transitions is None:
+            generated_transitions = (
+                0 if stage == 0 else self.stage_zero_experience_threshold
+            )
+
+        generated_transitions = int(generated_transitions)
+        if stage > 0 and (
+            generated_transitions < self.stage_zero_experience_threshold
+        ):
+            raise ValueError(
+                "Stages 1 and 2 require generated_transitions to be at least "
+                "stage_zero_experience_threshold"
+            )
+
+        self.stage = stage
+        self.cur_mean_radius = mean_radius
+        self.cur_angle_error = angle_error
+        self.generated_transitions = generated_transitions
+
+        # Start a fresh success-rate evidence window.
+        self.success_ep_num = 0
+        self.failed_ep_num = 0
+        self._update_sr_stack()
+        self.has_difficulty_changed = False
+
+        print(
+            "[CURRICULUM] restored "
+            f"stage={self.stage} "
+            f"transitions={self.generated_transitions} "
+            f"radius={self.cur_mean_radius:.2f} "
+            f"angle={self.cur_angle_error:.3f}",
+            flush=True,
+        )
+
     def get_logging_stats(self, rewards=None):
         reset_per_env = {'Resets per env{}'.format(i): self.ammount_of_resets[i] for i in range(self.num_envs)}
         return {
@@ -588,10 +648,19 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         return obs, rewards, dones, infos
     
     def reset(self):
-        result = super().reset()
-        obs = {key: np.stack([result[i][key] for i in range(self.num_envs)], axis=0) \
-                    for key in result[0].keys()}
-        return obs
+        kwargs = {}
+
+        if self.stage == 1:
+            kwargs = {
+                "mean_distance": self.cur_mean_radius,
+                "max_angle_error": self.cur_angle_error,
+            }
+
+        result = super().reset(**kwargs)
+        return {
+            key: np.stack([item[key] for item in result], axis=0)
+            for key in result[0]
+        }
 
 
 class EvalVectorEnv(ModifiedVectorEnv):

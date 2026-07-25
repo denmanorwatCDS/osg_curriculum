@@ -118,15 +118,11 @@ class ModifiedVectorEnv(VectorEnv):
         results = [self._connection_read_fns[index_env]()]
         return results
     
-    def reset(self):
-        r"""Reset all the vectorized environments
-
-        :return: list of outputs from the reset method of envs.
-        """
+    def reset(self, **kwargs):
         for write_fn in self._connection_write_fns:
-            # CHANGE FROM VectorEnv
-            write_fn((RESET_COMMAND, {}))
-        results = []
-        for read_fn in self._connection_read_fns:
-            results.append(read_fn())
-        return results
+            write_fn((RESET_COMMAND, kwargs))
+    
+        return [
+            read_fn()
+            for read_fn in self._connection_read_fns
+        ]
