@@ -46,10 +46,10 @@ def get_settings_by_mode(mode):
         stage_zero_experience = num_of_parallel_envs * 200
         fixated_object = True
     elif mode == 'debug_ddqn':
+        num_of_parallel_envs = 5
         data_path = DEBUG_DATA_PATH
         stage_zero_experience = num_of_parallel_envs * 50
         random_timesteps, learning_starts = 200, 200
-        num_of_parallel_envs = 5
     elif mode == 'train':
         data_path = TRAIN_DATA_PATH
         stage_zero_experience = num_of_parallel_envs * 1000 
@@ -275,8 +275,8 @@ def run_training(cfg: dict[str, Any]) -> None:
         num_envs = settings['num_of_parallel_envs'],
         stage_zero_experience = settings['stage_zero_experience'],
     )
-    cfg.agent.random_timesteps = settings['random_timesteps']
-    cfg.agent.learning_starts = settings['learning_starts']
+    cfg["agent"]["random_timesteps"] = settings["random_timesteps"]
+    cfg["agent"]["learning_starts"] = settings["learning_starts"]
 
     agent = None
     aux_trainer = None
