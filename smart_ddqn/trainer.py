@@ -17,6 +17,7 @@ from perception import AuxPerceptionModules
 
 from utils.habitat_utils import setup_env_config
 from habitat.config import read_write
+from habitat.datasets import make_dataset
 from skrl.envs.wrappers.torch import wrap_env
 from curriculum_habitat.helper_wrappers import (
     CLIPWrapper,
@@ -65,15 +66,17 @@ def create_homerobot_env(
     task_config_path,
     fixated_object = False
 ):
-    dataset = None
-    if fixated_object:
-        dataset = dataset.filter_episodes(
-            lambda episode: episode.object_category == "chair"
-        )
     config = setup_env_config(
         params_path=data_path,
         default_config_path=task_config_path,
     )
+    dataset = None
+    if fixated_object:
+        dataset = make_dataset(
+            config.habitat.dataset.type, config=config.habitat.dataset
+        )
+        target = max(dataset.episodes, key=lambda e: len(e.goals)).object_category
+        dataset = dataset.filter_episodes(lambda e: e.object_category == target)
     with read_write(config):
         config.habitat.seed = int(config.habitat.seed) + index
     env = ObjRLNav(config=config, dataset=dataset)
