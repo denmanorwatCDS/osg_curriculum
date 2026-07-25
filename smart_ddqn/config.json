@@ -62,7 +62,7 @@
     "_TODO": "GraphEmbeddingModule and OrientationModule are external to DDQN. Use 'gt' for angle_to_goal or 'pred' for the detached orientation-module output."
   },
   "agent": {
-    "memory_size": 80000,
+    "memory_size": 64000,
     "batch_size": 256,
     "gradient_steps": 1,
     "gamma": 0.99,
