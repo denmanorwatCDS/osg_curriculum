@@ -13,13 +13,13 @@ habitat_data:
   metadata_path: "data/scene_datasets/hm3d/val/val.json.gz"
   content_scenes:
 #    - oPj9qMxrDEa
-#    - RaYrxWt5pR1
+    - RaYrxWt5pR1
 #    - 741Fdj7NLF9
 #    - DoSbsoo4EAg
 #    - H8rQCnvBgo6
 #    - nGhNxKrgBPb
 #    - QVAA6zecMHu
 #    - GsQBY83r3hb
-    - DNWbUAJYsPy
-    - YHmAkqgwe2p
+#    - DNWbUAJYsPy
+#    - YHmAkqgwe2p
   scenes_dir: "data/scene_datasets/"

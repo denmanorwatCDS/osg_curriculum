@@ -29,18 +29,38 @@ from curriculum_habitat.curriculum_wrapper import (
 )
 
 DEFAULT_TASK_CONFIG_PATH = "configs/objectnav_hm3d_v2_with_semantic.yaml"
-DEFAULT_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
+TRAIN_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
+DEBUG_DATA_PATH = "configs/homerobot_hm3d_objectnav_debug.yaml"
 EVAL_DATA_PATH = "configs/homerobot_hm3d_objectnav_val.yaml"
 
-NUM_OF_PARALLEL_ENVS = 5
-EVAL_ROUNDS = 5
+def get_settings_by_mode(mode):
+    task_config_path = DEFAULT_TASK_CONFIG_PATH
+    random_timesteps = 1_000
+    learning_starts = 1_000
+    num_of_parallel_envs = 20
 
-EVAL_INTERVAL = 500
+    if mode == 'debug_full':
+        data_path = DEBUG_DATA_PATH
+        stage_zero_experience = num_of_parallel_envs * 200
+    elif mode == 'debug_ddqn':
+        data_path = DEBUG_DATA_PATH
+        stage_zero_experience = num_of_parallel_envs * 50
+        random_timesteps, learning_starts = 200, 200
+        num_of_parallel_envs = 5
+    elif mode == 'train':
+        data_path = TRAIN_DATA_PATH
+        stage_zero_experience = num_of_parallel_envs * 1000 
+    elif mode == 'eval':
+        data_path = EVAL_DATA_PATH
+    return {'task_config_path': task_config_path, 'data_path': data_path, 
+            'random_timesteps': random_timesteps, 'learning_starts': learning_starts, 
+            'num_of_parallel_envs': num_of_parallel_envs, 
+            'stage_zero_experience': stage_zero_experience}
 
 def create_homerobot_env(
-    task_config_path=DEFAULT_TASK_CONFIG_PATH,
-    data_path=DEFAULT_DATA_PATH,
-    index=0,
+    data_path,
+    index,
+    task_config_path,
 ):
     config = setup_env_config(
         params_path=data_path,
@@ -51,12 +71,13 @@ def create_homerobot_env(
     env = ObjRLNav(config=config)
     return env
 
-def make_env_vectorised(create_env_fn, task_config_path, data_path, num_envs):
+def make_env_vectorised(create_env_fn, task_config_path, data_path, 
+                        stage_zero_experience, num_envs):
     vec_env = CurriculumVectorEnv(
             make_env_fn=create_env_fn,
-            stage_zero_experience=NUM_OF_PARALLEL_ENVS*50,
+            stage_zero_experience=stage_zero_experience,
             env_fn_args=[
-                (task_config_path, data_path, index)
+                (data_path, index, task_config_path)
                 for index in range(num_envs)
             ],
         )
@@ -233,12 +254,16 @@ def run_training(cfg: dict[str, Any]) -> None:
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
     # env = wrap_env(raw_env, wrapper="gymnasium")
     # NEW
+    settings = get_settings_by_mode('debug_ddqn')
     env = make_env_vectorised(
         create_homerobot_env,
-        DEFAULT_TASK_CONFIG_PATH,
-        DEFAULT_DATA_PATH,
-        NUM_OF_PARALLEL_ENVS,
+        settings['task_config_path'],
+        settings['data_path'],
+        settings['num_of_parallel_envs'],
+        settings['stage_zero_experience'],
     )
+    cfg.agent.random_timesteps = settings['random_timesteps']
+    cfg.agent.learning_starts = settings['learning_starts']
 
     agent = None
     aux_trainer = None
