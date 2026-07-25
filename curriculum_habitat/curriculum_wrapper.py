@@ -130,9 +130,9 @@ class ObjRLNav(RLEnv):
         obs = self.calculate_full_observation(obs)
 
         self.relevant_observation = deepcopy(obs)
-        print(f"position: {self.habitat_env.sim.get_agent_state().position}")
-        print(f"closest viewpoint: {self.viewpoint_goal}")
-        print(f"goal position: {goal.position}")
+        #print(f"position: {self.habitat_env.sim.get_agent_state().position}")
+        #print(f"closest viewpoint: {self.viewpoint_goal}")
+        #print(f"goal position: {goal.position}")
               
         return obs
 

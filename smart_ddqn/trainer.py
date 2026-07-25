@@ -265,7 +265,7 @@ def run_training(cfg: dict[str, Any]) -> None:
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
     # env = wrap_env(raw_env, wrapper="gymnasium")
     # NEW
-    settings = get_settings_by_mode('debug_ddqn')
+    settings = get_settings_by_mode('debug_full')
 
     env = make_env_vectorised(
         create_env_fn = create_homerobot_env,
