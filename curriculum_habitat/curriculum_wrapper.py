@@ -1,7 +1,6 @@
 import math
 import os
 import gym
-import string
 import habitat_sim
 import numpy as np
 
@@ -9,6 +8,7 @@ from copy import deepcopy
 from collections import deque
 from habitat.core.env import RLEnv
 from curriculum_habitat.modified_vector_env import ModifiedVectorEnv
+from curriculum_habitat.text_encoding import MAX_GOAL_DESCRIPTION_BYTES, encode_goal_description
 from curriculum_habitat.perception.graph_builder import MetricGraphBuilder, NUM_NODES
 from typing import (
     TYPE_CHECKING,
@@ -59,11 +59,7 @@ class ObjRLNav(RLEnv):
         self.observation_space = gym.spaces.Dict({
             "observation": self.habitat_env.observation_space["forward_rgb"],
             "absolute_goal_position": gym.spaces.Box(-np.inf, np.inf, (2,), np.float32),
-            "goal_description": gym.spaces.Text(
-                min_length=0,
-                max_length=256,
-                charset=string.ascii_letters + string.digits + string.punctuation + " ",
-            ),
+            "goal_description": gym.spaces.Box(0, 255, (MAX_GOAL_DESCRIPTION_BYTES,), np.uint8),
             "angle_to_goal": gym.spaces.Box(-np.pi, np.pi, (), np.float32),
             "knowledge_graph": gym.spaces.Box(
                 -np.inf,
@@ -172,7 +168,7 @@ class ObjRLNav(RLEnv):
         obs_dict = {
             "observation": observations['forward_rgb'],
             "absolute_goal_position": goal_position_2d,
-            "goal_description": self.habitat_env.current_episode.object_category,
+            "goal_description": encode_goal_description(self.habitat_env.current_episode.object_category),
             "angle_to_goal": self.calculate_angle_to_goal(goal_position),
             "knowledge_graph": self.calculate_knowledge_graph(
                 observations,

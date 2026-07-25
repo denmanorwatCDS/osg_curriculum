@@ -13,6 +13,9 @@ from gymnasium.vector.utils import batch_space
 from gymnasium.vector import VectorEnv
 from skrl.utils.spaces.torch import convert_gym_space
 
+from curriculum_habitat.text_encoding import decode_goal_description
+
+
 class CLIPWrapper:
     def __init__(self, env, device = "cuda"):
         self.env, self.device = env, device
@@ -66,9 +69,16 @@ class CLIPWrapper:
             .astype(np.float32, copy=False)
         )
 
+    def _encode_goal_descriptions(self, encoded_descriptions):
+        return self._encode_text(
+            map(decode_goal_description, np.atleast_2d(encoded_descriptions))
+        )
+
     def _encode_observation(self, obs):
         obs["observation"] = self._encode(self._extract_images_from_obs(obs))
-        obs["goal_description"] = self._encode_text(obs["goal_description"])
+        obs["goal_description"] = self._encode_goal_descriptions(
+            obs["goal_description"]
+        )
         return obs
 
     def reset(self, **kwargs):
@@ -80,16 +90,18 @@ class CLIPWrapper:
 
         if np.any(done):
             done_images = []
-            done_descriptions = []
+            done_goal_descriptions = []
             for idx, d in enumerate(done):
                 if d:
                     done_observation = info[idx]["done_observation"]
                     done_images.append(done_observation["observation"])
-                    done_descriptions.append(
+                    done_goal_descriptions.append(
                         done_observation["goal_description"]
                     )
             done_image_embeddings = self._encode(done_images)
-            done_goal_embeddings = self._encode_text(done_descriptions)
+            done_goal_embeddings = self._encode_goal_descriptions(
+                done_goal_descriptions
+            )
 
             next_done_obs_idx = 0
             for idx, d in enumerate(done):
