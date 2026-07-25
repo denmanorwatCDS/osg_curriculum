@@ -11,6 +11,7 @@ Habitat observation
 External perception               DDQN network
 - GraphEmbeddingModule            - DDQN image encoder
 - OrientationModule               - goal encoder
+                                   - target-object encoder
         |                          - Q head
         | detached features             |
         +------------------------------> Q-values
@@ -50,6 +51,7 @@ Only:
 
 - `DDQNQNetwork.img_encoder`;
 - `DDQNQNetwork.goal_encoder`;
+- `DDQNQNetwork.emb_obj_encoder`;
 - `DDQNQNetwork.q_head`.
 
 The online and target DDQN networks are separate instances of this one class.
@@ -104,6 +106,7 @@ After Habitat wrappers, every worker must expose equivalents of:
 {
     "observation": float_array[512],          # CLIP image embedding
     "absolute_goal_position": float_array[2], # Habitat X-Z goal position
+    "goal_description": float_array[512],     # CLIP target-object embedding
     "knowledge_graph": float_array[186],      # 31 nodes x 6 fields
     "angle_to_goal": float_or_array[1],       # relative angle in radians
 }

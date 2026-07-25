@@ -382,8 +382,8 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         stage_zero_experience: int = 100_000,
         maximal_expert_fraction: float = 0.6,
         min_coef_of_controlled_episodes: float = 1.8,
-        radius_stages: int = 3,
-        angle_stages: int = 7,
+        radius_stages: int = 5,
+        angle_stages: int = 3,
         difficulty_increase_sr: float = 0.85,
         difficulty_decrease_sr: float = 0.7,
         success_episode_threshold: int = 512,
@@ -399,7 +399,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         self.observation_space = gym.vector.utils.batch_space(self.observation_spaces[0], self.num_envs)
         self.action_space = gym.vector.utils.batch_space(self.action_spaces[0], self.num_envs)
         self.stage = 0  # Phase (0=warm, 1=main, 2=final)
-        self.start_mean_radius, self.start_angle_error = 3, 0
+        self.start_mean_radius, self.start_angle_error = 1, 0
         self.max_mean_radius, self.max_angle_error = 6., math.pi
         self.radius_increment = (self.max_mean_radius - self.start_mean_radius) / radius_stages
         self.angle_increment = self.max_angle_error / angle_stages

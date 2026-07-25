@@ -46,9 +46,10 @@ class GraphEmbeddingModule(nn.Module):
 class OrientationModule(nn.Module):
     """Standalone orientation predictor.
 
-    The module consumes the current image representation from Habitat and the
-    graph embedding produced by ``GraphEmbeddingModule``. It predicts one of
-    ``num_bins`` yaw bins and exposes a continuous circular feature [sin, cos].
+    The module consumes the current image representation from Habitat, the
+    absolute goal position, the target-object embedding, and the graph embedding
+    produced by ``GraphEmbeddingModule``. It predicts one of ``num_bins`` yaw
+    bins and exposes a continuous circular feature [sin, cos].
 
     This module is also NOT a child of a DDQN Q-network. It is trained only by
     the auxiliary supervised loss.
@@ -58,15 +59,23 @@ class OrientationModule(nn.Module):
         self,
         *,
         img_dim: int,
+        goal_dim: int,
+        emb_obj_dim: int,
         graph_embedding_dim: int,
         img_hidden: int,
+        goal_hidden: int,
+        emb_obj_hidden: int,
         hidden_dim: int,
         num_bins: int,
     ):
         super().__init__()
         self.img_dim = int(img_dim)
+        self.goal_dim = int(goal_dim)
+        self.emb_obj_dim = int(emb_obj_dim)
         self.graph_embedding_dim = int(graph_embedding_dim)
         self.img_hidden = int(img_hidden)
+        self.goal_hidden = int(goal_hidden)
+        self.emb_obj_hidden = int(emb_obj_hidden)
         self.hidden_dim = int(hidden_dim)
         self.num_bins = int(num_bins)
 
@@ -75,8 +84,23 @@ class OrientationModule(nn.Module):
             [self.img_hidden],
             self.img_hidden,
         )
+        self.goal_encoder = make_mlp(
+            self.goal_dim,
+            [self.goal_hidden],
+            self.goal_hidden,
+        )
+        self.emb_obj_encoder = make_mlp(
+            self.emb_obj_dim,
+            [self.emb_obj_hidden],
+            self.emb_obj_hidden,
+        )
         self.head = make_mlp(
-            self.img_hidden + self.graph_embedding_dim,
+            (
+                self.img_hidden
+                + self.goal_hidden
+                + self.emb_obj_hidden
+                + self.graph_embedding_dim
+            ),
             [self.hidden_dim],
             self.num_bins,
         )
@@ -91,9 +115,27 @@ class OrientationModule(nn.Module):
         self.register_buffer("bin_sin", torch.sin(centers))
         self.register_buffer("bin_cos", torch.cos(centers))
 
-    def logits(self, img: torch.Tensor, graph_embedding: torch.Tensor) -> torch.Tensor:
+    def logits(
+        self,
+        img: torch.Tensor,
+        goal: torch.Tensor,
+        emb_obj: torch.Tensor,
+        graph_embedding: torch.Tensor,
+    ) -> torch.Tensor:
         img_feature = self.img_encoder(img.float())
-        return self.head(torch.cat((img_feature, graph_embedding.float()), dim=-1))
+        goal_feature = self.goal_encoder(goal.float())
+        emb_obj_feature = self.emb_obj_encoder(emb_obj.float())
+        return self.head(
+            torch.cat(
+                (
+                    img_feature,
+                    goal_feature,
+                    emb_obj_feature,
+                    graph_embedding.float(),
+                ),
+                dim=-1,
+            )
+        )
 
     def circular_feature_from_logits(self, logits: torch.Tensor) -> torch.Tensor:
         probabilities = F.softmax(logits, dim=-1)
@@ -104,19 +146,23 @@ class OrientationModule(nn.Module):
     def predict_feature(
         self,
         img: torch.Tensor,
+        goal: torch.Tensor,
+        emb_obj: torch.Tensor,
         graph_embedding: torch.Tensor,
     ) -> torch.Tensor:
         return self.circular_feature_from_logits(
-            self.logits(img, graph_embedding)
+            self.logits(img, goal, emb_obj, graph_embedding)
         )
 
     def supervised_loss(
         self,
         img: torch.Tensor,
+        goal: torch.Tensor,
+        emb_obj: torch.Tensor,
         graph_embedding: torch.Tensor,
         teacher_yaw: torch.Tensor,
     ) -> tuple[torch.Tensor, dict[str, float]]:
-        logits = self.logits(img, graph_embedding)
+        logits = self.logits(img, goal, emb_obj, graph_embedding)
         teacher_yaw = teacher_yaw.float().reshape(-1)
         wrapped = torch.atan2(torch.sin(teacher_yaw), torch.cos(teacher_yaw))
 
@@ -173,8 +219,12 @@ class AuxPerceptionModules(nn.Module):
         )
         self.orientation_module = OrientationModule(
             img_dim=int(dims["img"]),
+            goal_dim=int(dims["goal"]),
+            emb_obj_dim=int(dims["emb_obj"]),
             graph_embedding_dim=int(model["graph_embedding_dim"]),
             img_hidden=int(model["orientation_img_hidden"]),
+            goal_hidden=int(model["goal_hidden"]),
+            emb_obj_hidden=int(model["emb_obj_hidden"]),
             hidden_dim=int(model["orientation_hidden"]),
             num_bins=int(model["orientation_bins"]),
         )
@@ -193,6 +243,8 @@ class AuxPerceptionModules(nn.Module):
         self,
         *,
         img: torch.Tensor,
+        goal: torch.Tensor,
+        emb_obj: torch.Tensor,
         graph: torch.Tensor,
         teacher_yaw: torch.Tensor | None,
     ) -> tuple[torch.Tensor, torch.Tensor]:
@@ -210,6 +262,8 @@ class AuxPerceptionModules(nn.Module):
             else:
                 orientation_feature = self.orientation_module.predict_feature(
                     img,
+                    goal,
+                    emb_obj,
                     graph_embedding,
                 )
 
@@ -221,6 +275,8 @@ class AuxPerceptionModules(nn.Module):
         self,
         *,
         img: torch.Tensor,
+        goal: torch.Tensor,
+        emb_obj: torch.Tensor,
         graph: torch.Tensor,
         teacher_yaw: torch.Tensor,
     ) -> tuple[torch.Tensor, dict[str, float]]:
@@ -228,6 +284,8 @@ class AuxPerceptionModules(nn.Module):
         graph_embedding = self.graph_encoder(graph)
         return self.orientation_module.supervised_loss(
             img,
+            goal,
+            emb_obj,
             graph_embedding,
             teacher_yaw,
         )

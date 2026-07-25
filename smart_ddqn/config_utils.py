@@ -41,7 +41,7 @@ def _validate(cfg: dict[str, Any]) -> None:
         raise ValueError("action.num_actions must be greater than 1 for DDQN")
 
     dims = cfg["observation"]["dims"]
-    for key in ("img", "goal", "graph", "teacher_orientation"):
+    for key in ("img", "goal", "emb_obj", "graph", "teacher_orientation"):
         _require_positive(dims, key, "observation.dims")
 
     if int(dims["teacher_orientation"]) != 1:
@@ -53,6 +53,7 @@ def _validate(cfg: dict[str, Any]) -> None:
     for key in (
         "dqn_img_hidden",
         "goal_hidden",
+        "emb_obj_hidden",
         "graph_embedding_dim",
         "orientation_img_hidden",
         "orientation_hidden",

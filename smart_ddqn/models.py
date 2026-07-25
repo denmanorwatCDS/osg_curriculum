@@ -19,6 +19,7 @@ class DDQNQNetwork(DeterministicMixin, Model):
 
     - a DDQN-specific image encoder;
     - a goal encoder;
+    - a target-object embedding encoder;
     - the Q-value head.
 
     Graph embedding and orientation prediction are supplied by an external
@@ -53,6 +54,7 @@ class DDQNQNetwork(DeterministicMixin, Model):
 
         dqn_img_hidden = int(model["dqn_img_hidden"])
         goal_hidden = int(model["goal_hidden"])
+        emb_obj_hidden = int(model["emb_obj_hidden"])
 
         self.img_encoder = make_mlp(
             int(dims["img"]),
@@ -64,10 +66,16 @@ class DDQNQNetwork(DeterministicMixin, Model):
             [goal_hidden],
             goal_hidden,
         )
+        self.emb_obj_encoder = make_mlp(
+            int(dims["emb_obj"]),
+            [emb_obj_hidden],
+            emb_obj_hidden,
+        )
 
         q_input_dim = (
             dqn_img_hidden
             + goal_hidden
+            + emb_obj_hidden
             + int(perception.graph_output_dim)
             + 2  # orientation represented as [sin(yaw), cos(yaw)]
         )
@@ -90,24 +98,29 @@ class DDQNQNetwork(DeterministicMixin, Model):
         img = observation["observation"]
         goal = observation["absolute_goal_position"]
         graph = observation["knowledge_graph"]
+        emb_obj = observation["goal_description"]
         teacher_orientation = observation.get("angle_to_goal")
 
         graph_embedding, orientation_feature = (
             self._perception().detached_policy_features(
                 img=img,
+                goal=goal,
+                emb_obj=emb_obj,
                 graph=graph,
                 teacher_yaw=teacher_orientation,
             )
         )
 
-        # These two encoders and q_head are the only trainable DDQN path.
+        # These encoders and q_head are the only trainable DDQN path.
         img_feature = self.img_encoder(img.float())
         goal_feature = self.goal_encoder(goal.float())
+        emb_obj_feature = self.emb_obj_encoder(emb_obj.float())
 
         q_input = torch.cat(
             (
                 img_feature,
                 goal_feature,
+                emb_obj_feature,
                 graph_embedding,
                 orientation_feature,
             ),

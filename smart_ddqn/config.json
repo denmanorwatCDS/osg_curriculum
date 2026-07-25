@@ -28,12 +28,14 @@
     "source_keys": {
       "img": "observation",
       "goal": "absolute_goal_position",
+      "emb_obj": "goal_description",
       "graph": "knowledge_graph",
       "teacher_orientation": "angle_to_goal"
     },
     "dims": {
       "img": 512,
       "goal": 2,
+      "emb_obj": 512,
       "graph": 186,
       "teacher_orientation": 1
     },
@@ -47,6 +49,7 @@
   "model": {
     "dqn_img_hidden": 256,
     "goal_hidden": 64,
+    "emb_obj_hidden": 128,
     "graph_embedding_dim": 128,
     "orientation_img_hidden": 256,
     "orientation_hidden": 256,
@@ -65,13 +68,13 @@
     "gamma": 0.99,
     "polyak": 0.005,
     "learning_rate": 0.0003,
-    "random_timesteps": 1000,
-    "learning_starts": 1000,
+    "random_timesteps": 100,
+    "learning_starts": 100,
     "update_interval": 1,
     "target_update_interval": 10,
     "initial_epsilon": 1.0,
     "final_epsilon": 0.05,
-    "exploration_timesteps": 50000
+    "exploration_timesteps": 1000
   },
   "aux": {
     "enabled": true,

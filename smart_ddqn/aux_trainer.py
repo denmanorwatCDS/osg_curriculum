@@ -90,6 +90,8 @@ class ReplayOrientationAuxTrainer:
             states = self._sample_states()
             loss, metrics = self.perception.orientation_loss(
                 img=states["observation"],
+                goal=states["absolute_goal_position"],
+                emb_obj=states["goal_description"],
                 graph=states["knowledge_graph"],
                 teacher_yaw=states["angle_to_goal"],
             )
