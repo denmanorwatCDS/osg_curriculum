@@ -18,8 +18,20 @@ class CLIPWrapper:
         self.env, self.device = env, device
         self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device).eval()
         self.processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        self.embedding_dim = int(self.model.config.projection_dim)
         spaces = dict(env.observation_space.spaces)
-        spaces["observation"] = gym.spaces.Box(-1, 1, (env.num_envs, 512), np.float32)
+        spaces["observation"] = gym.spaces.Box(
+            -1,
+            1,
+            (env.num_envs, self.embedding_dim),
+            np.float32,
+        )
+        spaces["goal_description"] = gym.spaces.Box(
+            -1,
+            1,
+            (env.num_envs, self.embedding_dim),
+            np.float32,
+        )
         self.observation_space, self.action_space = gym.spaces.Dict(spaces), env.action_space
 
     def _extract_images_from_obs(self, obs):
@@ -30,32 +42,67 @@ class CLIPWrapper:
         inputs = self.processor(images=images, return_tensors="pt").to(self.device)
         with torch.no_grad():
             embeddings = self.model.get_image_features(**inputs)
-        embeddings = torch.nn.functional.normalize(embeddings).cpu().numpy()
-        return embeddings
+        return (
+            torch.nn.functional.normalize(embeddings, dim=-1)
+            .cpu()
+            .numpy()
+            .astype(np.float32, copy=False)
+        )
+
+    def _encode_text(self, descriptions):
+        descriptions = [str(description) for description in descriptions]
+        inputs = self.processor(
+            text=descriptions,
+            padding=True,
+            truncation=True,
+            return_tensors="pt",
+        ).to(self.device)
+        with torch.no_grad():
+            embeddings = self.model.get_text_features(**inputs)
+        return (
+            torch.nn.functional.normalize(embeddings, dim=-1)
+            .cpu()
+            .numpy()
+            .astype(np.float32, copy=False)
+        )
+
+    def _encode_observation(self, obs):
+        obs["observation"] = self._encode(self._extract_images_from_obs(obs))
+        obs["goal_description"] = self._encode_text(obs["goal_description"])
+        return obs
 
     def reset(self, **kwargs):
         obs = self.env.reset(**kwargs)
-        obs['observation'] = self._encode(self._extract_images_from_obs(obs))
-        return obs
+        return self._encode_observation(obs)
     
     def step(self, actions):
         obs, reward, done, info = self.env.step(actions)
 
         if np.any(done):
-            done_obs = []
+            done_images = []
+            done_descriptions = []
             for idx, d in enumerate(done):
                 if d:
-                    done_obs.append(info[idx]["done_observation"]['observation'])
-            done_obs = self._encode(done_obs)
+                    done_observation = info[idx]["done_observation"]
+                    done_images.append(done_observation["observation"])
+                    done_descriptions.append(
+                        done_observation["goal_description"]
+                    )
+            done_image_embeddings = self._encode(done_images)
+            done_goal_embeddings = self._encode_text(done_descriptions)
 
             next_done_obs_idx = 0
             for idx, d in enumerate(done):
                 if d:
-                    info[idx]["done_observation"]['observation'] = done_obs[next_done_obs_idx]
+                    info[idx]["done_observation"]["observation"] = (
+                        done_image_embeddings[next_done_obs_idx]
+                    )
+                    info[idx]["done_observation"]["goal_description"] = (
+                        done_goal_embeddings[next_done_obs_idx]
+                    )
                     next_done_obs_idx += 1
 
-        obs['observation'] = self._encode(self._extract_images_from_obs(obs))
-        return (obs, reward, done, info)
+        return (self._encode_observation(obs), reward, done, info)
     
     def __getattr__(self, name): 
         return getattr(self.env, name)

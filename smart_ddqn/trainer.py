@@ -32,7 +32,7 @@ DEFAULT_TASK_CONFIG_PATH = "configs/objectnav_hm3d_v2_with_semantic.yaml"
 DEFAULT_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
 EVAL_DATA_PATH = "configs/homerobot_hm3d_objectnav_val.yaml"
 
-NUM_OF_PARALLEL_ENVS = 20
+NUM_OF_PARALLEL_ENVS = 5
 EVAL_ROUNDS = 5
 
 EVAL_INTERVAL = 500
