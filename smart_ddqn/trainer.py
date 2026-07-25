@@ -38,7 +38,7 @@ def get_settings_by_mode(mode):
     task_config_path = DEFAULT_TASK_CONFIG_PATH
     random_timesteps = 1_000
     learning_starts = 1_000
-    num_of_parallel_envs = 16
+    num_of_parallel_envs = 32
     fixated_object = False
 
     if mode == 'debug_full':
