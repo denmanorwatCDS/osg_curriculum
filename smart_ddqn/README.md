@@ -121,6 +121,32 @@ python path/to/simple_habitat_ddqn/main.py \
   --config path/to/simple_habitat_ddqn/config.json
 ```
 
+## Time policy inference on 100 episodes
+
+`time_policy_inference.py` evaluates the deterministic policy on exactly 100
+completed episodes. It separately reports policy forward-pass time and
+end-to-end rollout time; environment/model startup, checkpoint loading, and the
+initial reset are excluded. Flushed stage messages show startup progress, and
+episode progress is printed from `0/100` through `100/100`; a heartbeat is
+printed every 10 seconds when no episode completes. The final console and JSON
+summaries include Habitat's mean SPL (Success weighted by Path Length) over all
+100 episodes.
+
+From the repository root:
+
+```bash
+python smart_ddqn/time_policy_inference.py \
+  --config smart_ddqn/config_chpt.json \
+  --json-out policy_timing.json
+```
+
+The default number of parallel environments comes from `run.num_envs`. Override
+it with `--num-envs`; per-worker episode quotas still sum to exactly 100. The
+script uses `configs/homerobot_hm3d_objectnav_val.yaml` by default; use
+`--data-path` to select another split. Both the DDQN checkpoint
+(`run.agent_checkpoint`) and perception checkpoint (`aux.resume_from`) must be
+present.
+
 ## Remaining Habitat TODOs
 
 Search for `# TODO:`. The unresolved integration points are:

@@ -1,0 +1,29 @@
+{
+  "episodes": 100,
+  "num_envs": 5,
+  "episode_targets": [
+    20,
+    20,
+    20,
+    20,
+    20
+  ],
+  "policy_calls": 9501,
+  "policy_decisions": 47505,
+  "policy_seconds": 5.575490110993385,
+  "policy_ms_per_call": 0.586831924112555,
+  "policy_ms_per_decision": 0.11736638482251101,
+  "policy_seconds_per_episode": 0.055754901109933856,
+  "rollout_seconds": 507.4437211280019,
+  "rollout_seconds_per_episode": 5.074437211280019,
+  "episodes_per_rollout_second": 0.1970661884981234,
+  "mean_episode_steps": 475.05,
+  "success_rate": 0.0,
+  "mean_reward": -23.807862794399263,
+  "config": "/mnt/ssd/osg_eval/smart_ddqn/config_chpt.json",
+  "agent_checkpoint": "/mnt/ssd/osg_eval/logs/skrl/ddqn_aux_orientation/checkpoints/agent_10000.pt",
+  "perception_checkpoint": "/mnt/ssd/osg_eval/logs/skrl/habitat_ddqn_simple/perception/perception_10000.pt",
+  "task_config": "/mnt/ssd/osg_eval/configs/objectnav_hm3d_v2_with_semantic.yaml",
+  "data_path": "/mnt/ssd/osg_eval/configs/homerobot_hm3d_objectnav_val.yaml",
+  "max_episode_steps": 500
+}

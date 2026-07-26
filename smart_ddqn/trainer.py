@@ -270,7 +270,7 @@ def run_training(cfg: dict[str, Any]) -> None:
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
     # env = wrap_env(raw_env, wrapper="gymnasium")
     # NEW
-    settings = get_settings_by_mode('debug_ddqn')
+    settings = get_settings_by_mode('debug_full')
 
     cfg["agent"]["random_timesteps"] = settings["random_timesteps"]
     cfg["agent"]["learning_starts"] = settings["learning_starts"]
