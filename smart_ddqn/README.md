@@ -132,6 +132,13 @@ printed every 10 seconds when no episode completes. The final console and JSON
 summaries include Habitat's mean SPL (Success weighted by Path Length) over all
 100 episodes.
 
+SPL is also calculated independently from the simulator trajectory. At reset,
+the environment records the geodesic distance to the closest reachable goal
+viewpoint. It then sums actual translation between consecutive simulator poses
+and computes manual SPL from those two path lengths. The report shows manual
+and Habitat SPL, their maximum difference, mismatch count, and successful-path
+efficiency. `--spl-tolerance` controls mismatch reporting.
+
 From the repository root:
 
 ```bash

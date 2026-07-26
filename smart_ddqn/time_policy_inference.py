@@ -53,7 +53,11 @@ def _print_progress(
     policy_calls: int | None = None,
     active_envs: int | None = None,
     latest_spl: float | None = None,
+    latest_habitat_spl: float | None = None,
     mean_spl: float | None = None,
+    latest_success: bool | None = None,
+    optimal_distance: float | None = None,
+    traveled_distance: float | None = None,
 ) -> None:
     details = []
     if policy_calls is not None:
@@ -61,9 +65,17 @@ def _print_progress(
     if active_envs is not None:
         details.append(f"active envs: {active_envs}")
     if latest_spl is not None:
-        details.append(f"latest SPL: {latest_spl:.3f}")
+        details.append(f"manual SPL: {latest_spl:.3f}")
+    if latest_habitat_spl is not None:
+        details.append(f"Habitat SPL: {latest_habitat_spl:.3f}")
     if mean_spl is not None:
         details.append(f"mean SPL: {mean_spl:.3f}")
+    if latest_success is not None:
+        details.append(f"success: {int(latest_success)}")
+    if optimal_distance is not None:
+        details.append(f"optimal path: {optimal_distance:.3f}m")
+    if traveled_distance is not None:
+        details.append(f"traveled path: {traveled_distance:.3f}m")
     suffix = f" | {' | '.join(details)}" if details else ""
     print(
         f"[progress] episodes processed: {processed}/{TOTAL_EPISODES}{suffix}",
@@ -149,6 +161,15 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=500,
         help="Habitat episode step limit (default: 500).",
+    )
+    parser.add_argument(
+        "--spl-tolerance",
+        type=float,
+        default=1e-4,
+        help=(
+            "Maximum manual-vs-Habitat SPL difference before an episode is "
+            "reported as a mismatch (default: 1e-4)."
+        ),
     )
     parser.add_argument(
         "--json-out",
@@ -382,6 +403,7 @@ def _collect_episodes(
     targets: list[int],
     *,
     epsilon: float,
+    spl_tolerance: float,
 ) -> dict[str, Any]:
     """Collect the per-worker quotas while timing active policy decisions.
 
@@ -404,6 +426,12 @@ def _collect_episodes(
     returns: list[float] = []
     steps: list[int] = []
     episode_spls: list[float] = []
+    habitat_spls: list[float] = []
+    optimal_distances: list[float] = []
+    traveled_distances: list[float] = []
+    successful_path_efficiencies: list[float] = []
+    spl_errors: list[float] = []
+    start_distance_errors: list[float] = []
     successes = 0
     policy_calls = 0
     policy_decisions = 0
@@ -513,25 +541,78 @@ def _collect_episodes(
             episode_returns[index] += rewards[index].reshape(-1)[0]
             episode_steps[index] += 1
             if bool(done[index].item()):
-                if "spl" not in infos[index]:
+                required_spl_keys = (
+                    "spl",
+                    "manual_spl",
+                    "spl_optimal_distance",
+                    "spl_traveled_distance",
+                    "spl_habitat_start_distance",
+                    "spl_start_distance_error",
+                    "spl_error",
+                )
+                missing_spl_keys = [
+                    key
+                    for key in required_spl_keys
+                    if key not in infos[index]
+                ]
+                if missing_spl_keys:
                     raise RuntimeError(
-                        "Habitat did not return the 'spl' episode metric. "
-                        "Ensure habitat.task.measurements includes SPL."
+                        "Environment did not return SPL audit fields: "
+                        f"{missing_spl_keys}"
                     )
-                episode_spl = float(infos[index]["spl"])
-                if not math.isfinite(episode_spl):
+                habitat_spl = float(infos[index]["spl"])
+                episode_spl = float(infos[index]["manual_spl"])
+                optimal_distance = float(
+                    infos[index]["spl_optimal_distance"]
+                )
+                traveled_distance = float(
+                    infos[index]["spl_traveled_distance"]
+                )
+                habitat_start_distance = float(
+                    infos[index]["spl_habitat_start_distance"]
+                )
+                start_distance_error = float(
+                    infos[index]["spl_start_distance_error"]
+                )
+                spl_error = float(infos[index]["spl_error"])
+                numeric_spl_values = {
+                    "manual SPL": episode_spl,
+                    "Habitat SPL": habitat_spl,
+                    "optimal distance": optimal_distance,
+                    "traveled distance": traveled_distance,
+                    "Habitat start distance": habitat_start_distance,
+                    "start distance error": start_distance_error,
+                    "SPL error": spl_error,
+                }
+                non_finite = {
+                    name: value
+                    for name, value in numeric_spl_values.items()
+                    if not math.isfinite(value)
+                }
+                if non_finite:
                     raise RuntimeError(
-                        f"Habitat returned a non-finite SPL: {episode_spl}"
+                        f"Non-finite SPL audit values: {non_finite}"
                     )
-                if not 0.0 <= episode_spl <= 1.0 + 1e-6:
+                if (
+                    not 0.0 <= episode_spl <= 1.0 + 1e-6
+                    or not 0.0 <= habitat_spl <= 1.0 + 1e-6
+                ):
                     raise RuntimeError(
-                        "Habitat returned SPL outside the expected [0, 1] "
-                        f"range: {episode_spl}"
+                        "SPL outside the expected [0, 1] range: "
+                        f"manual={episode_spl}, Habitat={habitat_spl}"
                     )
+                success = bool(infos[index].get("success", False))
                 returns.append(float(episode_returns[index].item()))
                 steps.append(episode_steps[index])
                 episode_spls.append(episode_spl)
-                successes += int(bool(infos[index].get("success", False)))
+                habitat_spls.append(habitat_spl)
+                optimal_distances.append(optimal_distance)
+                traveled_distances.append(traveled_distance)
+                spl_errors.append(spl_error)
+                start_distance_errors.append(start_distance_error)
+                if success:
+                    successful_path_efficiencies.append(episode_spl)
+                successes += int(success)
                 completed[index] += 1
                 episode_returns[index] = 0
                 episode_steps[index] = 0
@@ -542,8 +623,20 @@ def _collect_episodes(
                         completed[i] < targets[i] for i in range(num_envs)
                     ),
                     latest_spl=episode_spl,
+                    latest_habitat_spl=habitat_spl,
                     mean_spl=sum(episode_spls) / len(episode_spls),
+                    latest_success=success,
+                    optimal_distance=optimal_distance,
+                    traveled_distance=traveled_distance,
                 )
+                if abs(spl_error) > spl_tolerance:
+                    print(
+                        "[SPL mismatch] "
+                        f"episode={len(returns)} manual={episode_spl:.8f} "
+                        f"Habitat={habitat_spl:.8f} "
+                        f"error={spl_error:+.8f}",
+                        flush=True,
+                    )
                 last_heartbeat = time.perf_counter()
 
         now = time.perf_counter()
@@ -599,6 +692,15 @@ def _collect_episodes(
             "SPL count does not match completed episodes: "
             f"{len(episode_spls)} != {len(returns)}"
         )
+    if len(habitat_spls) != len(returns):
+        raise RuntimeError(
+            "Habitat SPL count does not match completed episodes: "
+            f"{len(habitat_spls)} != {len(returns)}"
+        )
+
+    spl_mismatch_episodes = sum(
+        abs(error) > spl_tolerance for error in spl_errors
+    )
 
     return {
         "episodes": len(returns),
@@ -623,6 +725,31 @@ def _collect_episodes(
         "mean_episode_steps": sum(steps) / len(steps),
         "success_rate": successes / len(returns),
         "spl": sum(episode_spls) / len(episode_spls),
+        "manual_spl": sum(episode_spls) / len(episode_spls),
+        "habitat_spl": sum(habitat_spls) / len(habitat_spls),
+        "spl_tolerance": spl_tolerance,
+        "spl_mismatch_episodes": spl_mismatch_episodes,
+        "spl_max_abs_error": max(map(abs, spl_errors)),
+        "spl_start_distance_max_abs_error": max(
+            map(abs, start_distance_errors)
+        ),
+        "mean_optimal_path_length": (
+            sum(optimal_distances) / len(optimal_distances)
+        ),
+        "mean_traveled_path_length": (
+            sum(traveled_distances) / len(traveled_distances)
+        ),
+        "mean_successful_path_efficiency": (
+            sum(successful_path_efficiencies)
+            / len(successful_path_efficiencies)
+            if successful_path_efficiencies
+            else 0.0
+        ),
+        "min_successful_path_efficiency": (
+            min(successful_path_efficiencies)
+            if successful_path_efficiencies
+            else 0.0
+        ),
         "mean_reward": sum(returns) / len(returns),
     }
 
@@ -663,7 +790,33 @@ def _print_result(result: dict[str, Any]) -> None:
     )
     print(f"  Mean episode length:         {result['mean_episode_steps']:.1f}")
     print(f"  Success rate:                {result['success_rate']:.3f}")
-    print(f"  SPL:                         {result['spl']:.3f}")
+    print(f"  Manual SPL:                  {result['manual_spl']:.6f}")
+    print(f"  Habitat SPL:                 {result['habitat_spl']:.6f}")
+    print(
+        "  SPL mismatch episodes:       "
+        f"{result['spl_mismatch_episodes']}"
+    )
+    print(
+        "  Maximum SPL difference:      "
+        f"{result['spl_max_abs_error']:.8f}"
+    )
+    print(
+        "  Start-distance difference:   "
+        f"{result['spl_start_distance_max_abs_error']:.8f} m"
+    )
+    print(
+        "  Mean optimal path length:    "
+        f"{result['mean_optimal_path_length']:.3f} m"
+    )
+    print(
+        "  Mean traveled path length:   "
+        f"{result['mean_traveled_path_length']:.3f} m"
+    )
+    print(
+        "  Successful path efficiency:  "
+        f"{result['mean_successful_path_efficiency']:.6f} mean, "
+        f"{result['min_successful_path_efficiency']:.6f} minimum"
+    )
     print(f"  Mean reward:                 {result['mean_reward']:.3f}")
 
 
@@ -676,6 +829,8 @@ def main() -> None:
         )
     if args.max_episode_steps < 1:
         raise ValueError("--max-episode-steps must be positive")
+    if args.spl_tolerance < 0:
+        raise ValueError("--spl-tolerance must be non-negative")
     if args.epsilon is not None and not 0.0 <= args.epsilon < 1.0:
         raise ValueError("--epsilon must be in [0, 1)")
 
@@ -801,6 +956,7 @@ def main() -> None:
             agent,
             _episode_targets(TOTAL_EPISODES, num_envs),
             epsilon=epsilon,
+            spl_tolerance=args.spl_tolerance,
         )
         result["profile"] = args.profile
         result["fixated_object"] = fixated_object

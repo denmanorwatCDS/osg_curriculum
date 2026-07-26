@@ -47,6 +47,10 @@ class ObjRLNav(RLEnv):
         self.action_memory = []
         self.debug_video_enabled = False
         self._metric_graph_builders = {}
+        self._spl_previous_position = None
+        self._spl_traveled_distance = 0.0
+        self._spl_optimal_distance = None
+        self._spl_habitat_start_distance = None
 
         # IMPORTANT
         # Due to environment specifics, we don't add it. Episode is done only when agent said so
@@ -126,7 +130,9 @@ class ObjRLNav(RLEnv):
         viewpoint = self.get_closest_viewpoint()
         self.viewpoint_goal = np.asarray(viewpoint.agent_state.position)
 
-        self.previous_distance_to_goal = self.habitat_env.get_metrics()['distance_to_goal']
+        reset_metrics = self.habitat_env.get_metrics()
+        self.previous_distance_to_goal = reset_metrics['distance_to_goal']
+        self._reset_spl_audit(reset_metrics)
         obs = self.calculate_full_observation(obs)
 
         self.relevant_observation = deepcopy(obs)
@@ -144,6 +150,7 @@ class ObjRLNav(RLEnv):
         action_name = self.convert_action(action_value)
 
         obs, reward, done, info = super().step(action_name)
+        self._update_spl_audit(info)
         obs = self.calculate_full_observation(obs)
         info['executed_action'] = {'value': action_value, 'name': action_name['action']}
         self.relevant_observation = deepcopy(obs)
@@ -152,6 +159,69 @@ class ObjRLNav(RLEnv):
                 include_map=False
             )
         return obs, reward, done, info
+
+    def _reset_spl_audit(self, reset_metrics):
+        """Initialize an SPL calculation independent of Habitat's SPL measure."""
+        position = np.asarray(
+            self.habitat_env.sim.get_agent_state().position,
+            dtype=np.float64,
+        )
+        optimal_distance = self.habitat_env.sim.geodesic_distance(
+            position,
+            np.asarray(self.viewpoint_goal, dtype=np.float64),
+        )
+        if not np.isfinite(optimal_distance):
+            raise RuntimeError(
+                "Closest ObjectNav viewpoint has non-finite geodesic distance"
+            )
+
+        self._spl_previous_position = position.copy()
+        self._spl_traveled_distance = 0.0
+        self._spl_optimal_distance = float(optimal_distance)
+        self._spl_habitat_start_distance = float(
+            reset_metrics["distance_to_goal"]
+        )
+
+    def _update_spl_audit(self, info):
+        """Attach independently calculated SPL and its inputs to step info."""
+        if (
+            self._spl_previous_position is None
+            or self._spl_optimal_distance is None
+            or self._spl_habitat_start_distance is None
+        ):
+            raise RuntimeError("SPL audit was not initialized by reset()")
+
+        current_position = np.asarray(
+            self.habitat_env.sim.get_agent_state().position,
+            dtype=np.float64,
+        )
+        self._spl_traveled_distance += float(
+            np.linalg.norm(current_position - self._spl_previous_position)
+        )
+        self._spl_previous_position = current_position.copy()
+
+        success = float(bool(info.get("success", False)))
+        denominator = max(
+            self._spl_optimal_distance,
+            self._spl_traveled_distance,
+        )
+        if denominator > 0:
+            manual_spl = success * self._spl_optimal_distance / denominator
+        else:
+            manual_spl = success
+
+        habitat_spl = float(info.get("spl", 0.0))
+        info["manual_spl"] = float(manual_spl)
+        info["spl_optimal_distance"] = self._spl_optimal_distance
+        info["spl_traveled_distance"] = self._spl_traveled_distance
+        info["spl_habitat_start_distance"] = (
+            self._spl_habitat_start_distance
+        )
+        info["spl_start_distance_error"] = (
+            self._spl_optimal_distance
+            - self._spl_habitat_start_distance
+        )
+        info["spl_error"] = float(manual_spl - habitat_spl)
 
     def convert_action(self, action):
         """Convert policy actions 0/1/2/3 to Habitat's explicit action format."""
