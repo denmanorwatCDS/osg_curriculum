@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 import time
 from pathlib import Path
@@ -32,9 +33,14 @@ DEFAULT_CONFIG_PATH = SCRIPT_DIR / "config_chpt.json"
 DEFAULT_TASK_CONFIG_PATH = (
     REPO_ROOT / "configs/objectnav_hm3d_v2_with_semantic.yaml"
 )
-DEFAULT_DATA_PATH = (
+DEFAULT_STAGE2_DATA_PATH = (
+    REPO_ROOT / "configs/homerobot_hm3d_objectnav_debug.yaml"
+)
+DEFAULT_HELDOUT_DATA_PATH = (
     REPO_ROOT / "configs/homerobot_hm3d_objectnav_val.yaml"
 )
+DEFAULT_STAGE2_NUM_ENVS = 32
+ACTION_NAMES = ("turn_left", "turn_right", "move_forward", "stop")
 
 
 def _print_stage(message: str) -> None:
@@ -68,9 +74,19 @@ def _print_progress(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Run the deterministic DDQN policy for exactly 100 completed "
-            "Habitat episodes and measure its inference time."
+            "Run the DDQN policy for exactly 100 completed Habitat episodes "
+            "and measure its inference time."
         )
+    )
+    parser.add_argument(
+        "--profile",
+        choices=("stage2", "heldout"),
+        default="stage2",
+        help=(
+            "Evaluation setup. 'stage2' matches smart_ddqn/main.py: debug "
+            "split, fixated target, 32 workers, and final epsilon. 'heldout' "
+            "uses the unfiltered validation split with greedy actions."
+        ),
     )
     parser.add_argument(
         "--config",
@@ -83,8 +99,8 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=None,
         help=(
-            "Number of parallel Habitat workers (default: run.num_envs from "
-            "the config). Must be between 1 and 100."
+            "Number of parallel Habitat workers. Defaults to 32 for the "
+            "stage2 profile and run.num_envs for heldout. Must be 1-100."
         ),
     )
     parser.add_argument(
@@ -96,8 +112,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--data-path",
         type=Path,
-        default=DEFAULT_DATA_PATH,
-        help="Evaluation split configuration.",
+        default=None,
+        help="Override the evaluation profile's dataset configuration.",
     )
     parser.add_argument(
         "--agent-checkpoint",
@@ -110,6 +126,23 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=None,
         help="Override aux.resume_from from the config.",
+    )
+    parser.add_argument(
+        "--checkpoint-step",
+        default="latest",
+        help=(
+            "Matching DDQN/perception checkpoint step, or 'latest' "
+            "(default). Ignored when both checkpoint override paths are given."
+        ),
+    )
+    parser.add_argument(
+        "--epsilon",
+        type=float,
+        default=None,
+        help=(
+            "Epsilon-greedy action probability. Defaults to agent.final_epsilon "
+            "for stage2 and 0 for heldout."
+        ),
     )
     parser.add_argument(
         "--max-episode-steps",
@@ -141,6 +174,105 @@ def _resolve_checkpoint(value: str | Path | None, name: str) -> str:
     return str(path)
 
 
+def _numbered_checkpoint_steps(directory: Path, prefix: str) -> set[int]:
+    pattern = re.compile(rf"^{re.escape(prefix)}_(\d+)\.pt$")
+    steps = set()
+    for path in directory.glob(f"{prefix}_*.pt"):
+        match = pattern.match(path.name)
+        if match:
+            steps.add(int(match.group(1)))
+    return steps
+
+
+def _select_checkpoints(
+    cfg: dict[str, Any],
+    *,
+    agent_override: Path | None,
+    perception_override: Path | None,
+    requested_step: str,
+) -> tuple[str, str, int | None]:
+    if (agent_override is None) != (perception_override is None):
+        raise ValueError(
+            "--agent-checkpoint and --perception-checkpoint must be provided "
+            "together so mismatched model components cannot be evaluated."
+        )
+
+    if agent_override is not None and perception_override is not None:
+        agent_path = _resolve_checkpoint(agent_override, "DDQN checkpoint")
+        perception_path = _resolve_checkpoint(
+            perception_override, "perception checkpoint"
+        )
+        agent_match = re.search(r"agent_(\d+)\.pt$", agent_path)
+        perception_match = re.search(
+            r"perception_(\d+)\.pt$", perception_path
+        )
+        if bool(agent_match) != bool(perception_match):
+            raise ValueError(
+                "Checkpoint overrides must both have numbered filenames or "
+                "both use non-numbered filenames."
+            )
+        step = None
+        if agent_match and perception_match:
+            agent_step = int(agent_match.group(1))
+            perception_step = int(perception_match.group(1))
+            if agent_step != perception_step:
+                raise ValueError(
+                    "DDQN and perception checkpoint steps differ: "
+                    f"{agent_step} != {perception_step}"
+                )
+            step = agent_step
+        return agent_path, perception_path, step
+
+    configured_agent = cfg["run"].get("agent_checkpoint")
+    configured_perception = cfg["aux"].get("resume_from")
+    if configured_agent is None or configured_perception is None:
+        raise ValueError(
+            "The config must identify the DDQN and perception checkpoint "
+            "directories when explicit overrides are not supplied."
+        )
+    configured_agent_path = Path(configured_agent).expanduser()
+    configured_perception_path = Path(configured_perception).expanduser()
+    if not configured_agent_path.is_absolute():
+        configured_agent_path = REPO_ROOT / configured_agent_path
+    if not configured_perception_path.is_absolute():
+        configured_perception_path = REPO_ROOT / configured_perception_path
+    agent_directory = configured_agent_path.resolve().parent
+    perception_directory = configured_perception_path.resolve().parent
+    common_steps = (
+        _numbered_checkpoint_steps(agent_directory, "agent")
+        & _numbered_checkpoint_steps(perception_directory, "perception")
+    )
+    if not common_steps:
+        raise FileNotFoundError(
+            "No matching numbered DDQN/perception checkpoint pairs found in "
+            f"{agent_directory} and {perception_directory}"
+        )
+
+    if requested_step == "latest":
+        step = max(common_steps)
+    else:
+        try:
+            step = int(requested_step)
+        except ValueError as error:
+            raise ValueError(
+                "--checkpoint-step must be a positive integer or 'latest'"
+            ) from error
+        if step < 1:
+            raise ValueError("--checkpoint-step must be positive")
+        if step not in common_steps:
+            available = f"{min(common_steps)}..{max(common_steps)}"
+            raise FileNotFoundError(
+                f"No matching checkpoint pair at step {step}. Available "
+                f"matching steps span {available}."
+            )
+
+    return (
+        str((agent_directory / f"agent_{step}.pt").resolve()),
+        str((perception_directory / f"perception_{step}.pt").resolve()),
+        step,
+    )
+
+
 def _episode_targets(total: int, num_envs: int) -> list[int]:
     quotient, remainder = divmod(total, num_envs)
     return [
@@ -154,9 +286,12 @@ def _create_eval_env(
     data_path: str,
     index: int,
     max_episode_steps: int,
+    fixated_object: bool,
+    shuffle_episodes: bool,
 ):
     _print_stage(f"Worker {index}: importing Habitat modules...")
     from habitat.config import read_write
+    from habitat.datasets import make_dataset
 
     from curriculum_habitat.curriculum_wrapper import ObjRLNav
     from utils.habitat_utils import setup_env_config
@@ -169,10 +304,29 @@ def _create_eval_env(
     with read_write(config):
         config.habitat.seed = int(config.habitat.seed) + index
         config.habitat.environment.max_episode_steps = max_episode_steps
-        config.habitat.environment.iterator_options.shuffle = False
+        config.habitat.environment.iterator_options.shuffle = shuffle_episodes
         config.habitat.environment.iterator_options.cycle = True
+    dataset = None
+    if fixated_object:
+        dataset = make_dataset(
+            config.habitat.dataset.type, config=config.habitat.dataset
+        )
+        if not dataset.episodes:
+            raise RuntimeError(
+                "Cannot select a fixated target from an empty dataset"
+            )
+        target = max(
+            dataset.episodes, key=lambda episode: len(episode.goals)
+        ).object_category
+        dataset = dataset.filter_episodes(
+            lambda episode: episode.object_category == target
+        )
+        _print_stage(
+            f"Worker {index}: fixated target={target!r}, "
+            f"episodes={len(dataset.episodes)}."
+        )
     _print_stage(f"Worker {index}: creating Habitat environment...")
-    env = ObjRLNav(config=config)
+    env = ObjRLNav(config=config, dataset=dataset)
     _print_stage(f"Worker {index}: Habitat environment ready.")
     return env
 
@@ -183,6 +337,8 @@ def _build_eval_env(
     max_episode_steps: int,
     task_config_path: Path,
     data_path: Path,
+    fixated_object: bool,
+    shuffle_episodes: bool,
 ):
     _print_stage("Importing vector-environment and wrapper modules...")
     from skrl.envs.wrappers.torch import wrap_env
@@ -203,6 +359,8 @@ def _build_eval_env(
                 str(data_path),
                 index,
                 max_episode_steps,
+                fixated_object,
+                shuffle_episodes,
             )
             for index in range(num_envs)
         ],
@@ -218,7 +376,13 @@ def _build_eval_env(
     return env
 
 
-def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
+def _collect_episodes(
+    env,
+    agent,
+    targets: list[int],
+    *,
+    epsilon: float,
+) -> dict[str, Any]:
     """Collect the per-worker quotas while timing active policy decisions.
 
     A vector worker that reaches its quota still has to be stepped until all
@@ -243,6 +407,9 @@ def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
     successes = 0
     policy_calls = 0
     policy_decisions = 0
+    action_decisions = 0
+    exploration_decisions = 0
+    action_counts = [0] * len(ACTION_NAMES)
     cuda_events: list[tuple[torch.cuda.Event, torch.cuda.Event]] = []
     cpu_policy_seconds = 0.0
 
@@ -267,23 +434,61 @@ def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
         active_states = states.index_select(0, active_index_tensor)
 
         with torch.inference_mode():
-            if states.device.type == "cuda":
-                start_event = torch.cuda.Event(enable_timing=True)
-                end_event = torch.cuda.Event(enable_timing=True)
-                start_event.record()
-                q_values = agent.q_network.act(
+            if epsilon > 0:
+                active_actions = agent.q_network.random_act(
                     {"states": active_states}, role="q_network"
                 )[0]
-                active_actions = torch.argmax(q_values, dim=1, keepdim=True)
-                end_event.record()
-                cuda_events.append((start_event, end_event))
+                greedy_local_indices = torch.nonzero(
+                    torch.rand(
+                        len(active_indices), device=states.device
+                    ) >= epsilon,
+                    as_tuple=False,
+                ).reshape(-1)
             else:
-                policy_started = time.perf_counter()
-                q_values = agent.q_network.act(
-                    {"states": active_states}, role="q_network"
-                )[0]
-                active_actions = torch.argmax(q_values, dim=1, keepdim=True)
-                cpu_policy_seconds += time.perf_counter() - policy_started
+                active_actions = torch.empty(
+                    (len(active_indices), 1),
+                    dtype=torch.long,
+                    device=states.device,
+                )
+                greedy_local_indices = torch.arange(
+                    len(active_indices), device=states.device
+                )
+
+            greedy_count = int(greedy_local_indices.numel())
+            if greedy_count:
+                greedy_states = active_states.index_select(
+                    0, greedy_local_indices
+                )
+                if states.device.type == "cuda":
+                    start_event = torch.cuda.Event(enable_timing=True)
+                    end_event = torch.cuda.Event(enable_timing=True)
+                    start_event.record()
+                    q_values = agent.q_network.act(
+                        {"states": greedy_states}, role="q_network"
+                    )[0]
+                    greedy_actions = torch.argmax(
+                        q_values, dim=1, keepdim=True
+                    )
+                    end_event.record()
+                    cuda_events.append((start_event, end_event))
+                else:
+                    policy_started = time.perf_counter()
+                    q_values = agent.q_network.act(
+                        {"states": greedy_states}, role="q_network"
+                    )[0]
+                    greedy_actions = torch.argmax(
+                        q_values, dim=1, keepdim=True
+                    )
+                    cpu_policy_seconds += (
+                        time.perf_counter() - policy_started
+                    )
+                active_actions.index_copy_(
+                    0, greedy_local_indices, greedy_actions
+                )
+                policy_calls += 1
+                policy_decisions += greedy_count
+
+            exploration_decisions += len(active_indices) - greedy_count
 
         # Inactive vector slots must still be stepped. STOP is Habitat action 3.
         actions = torch.full(
@@ -295,11 +500,16 @@ def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
         actions.index_copy_(0, active_index_tensor, active_actions)
         states, rewards, terminated, truncated, infos = env.step(actions)
 
-        policy_calls += 1
-        policy_decisions += len(active_indices)
+        action_decisions += len(active_indices)
         done = (terminated | truncated).reshape(-1)
 
         for index in active_indices:
+            action_value = int(infos[index]["executed_action"]["value"])
+            if not 0 <= action_value < len(action_counts):
+                raise RuntimeError(
+                    f"Environment executed invalid action {action_value}"
+                )
+            action_counts[action_value] += 1
             episode_returns[index] += rewards[index].reshape(-1)[0]
             episode_steps[index] += 1
             if bool(done[index].item()):
@@ -368,10 +578,21 @@ def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
         raise RuntimeError(
             f"Expected {TOTAL_EPISODES} completed episodes, got {len(returns)}"
         )
-    if policy_decisions != sum(steps):
+    if action_decisions != sum(steps):
         raise RuntimeError(
-            "Policy decision count does not match completed-episode steps: "
-            f"{policy_decisions} != {sum(steps)}"
+            "Action decision count does not match completed-episode steps: "
+            f"{action_decisions} != {sum(steps)}"
+        )
+    if policy_decisions + exploration_decisions != action_decisions:
+        raise RuntimeError(
+            "Greedy and exploration decisions do not sum to all actions: "
+            f"{policy_decisions} + {exploration_decisions} != "
+            f"{action_decisions}"
+        )
+    if sum(action_counts) != action_decisions:
+        raise RuntimeError(
+            "Executed action counts do not sum to all actions: "
+            f"{sum(action_counts)} != {action_decisions}"
         )
     if len(episode_spls) != len(returns):
         raise RuntimeError(
@@ -383,8 +604,15 @@ def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
         "episodes": len(returns),
         "num_envs": num_envs,
         "episode_targets": targets,
+        "epsilon": epsilon,
         "policy_calls": policy_calls,
         "policy_decisions": policy_decisions,
+        "action_decisions": action_decisions,
+        "exploration_decisions": exploration_decisions,
+        "action_counts": {
+            name: action_counts[index]
+            for index, name in enumerate(ACTION_NAMES)
+        },
         "policy_seconds": policy_seconds,
         "policy_ms_per_call": 1_000.0 * policy_seconds / policy_calls,
         "policy_ms_per_decision": 1_000.0 * policy_seconds / policy_decisions,
@@ -401,8 +629,15 @@ def _collect_episodes(env, agent, targets: list[int]) -> dict[str, Any]:
 
 def _print_result(result: dict[str, Any]) -> None:
     print("\nPolicy inference timing (exactly 100 completed episodes)")
+    print(f"  Evaluation profile:          {result['profile']}")
+    print(f"  Checkpoint step:             {result['checkpoint_step']}")
+    print(f"  Fixated target filtering:    {result['fixated_object']}")
     print(f"  Parallel environments:       {result['num_envs']}")
+    print(f"  Epsilon:                     {result['epsilon']:.3f}")
+    print(f"  Total action decisions:      {result['action_decisions']}")
     print(f"  Policy decisions:            {result['policy_decisions']}")
+    print(f"  Exploration decisions:       {result['exploration_decisions']}")
+    print(f"  Executed action counts:      {result['action_counts']}")
     print(f"  Batched policy calls:        {result['policy_calls']}")
     print(f"  Policy time:                 {result['policy_seconds']:.3f} s")
     print(
@@ -441,8 +676,19 @@ def main() -> None:
         )
     if args.max_episode_steps < 1:
         raise ValueError("--max-episode-steps must be positive")
+    if args.epsilon is not None and not 0.0 <= args.epsilon < 1.0:
+        raise ValueError("--epsilon must be in [0, 1)")
+
+    if args.data_path is None:
+        data_path = (
+            DEFAULT_STAGE2_DATA_PATH
+            if args.profile == "stage2"
+            else DEFAULT_HELDOUT_DATA_PATH
+        )
+    else:
+        data_path = args.data_path
     task_config_path = args.task_config.expanduser().resolve()
-    data_path = args.data_path.expanduser().resolve()
+    data_path = data_path.expanduser().resolve()
     if not task_config_path.is_file():
         raise FileNotFoundError(
             f"Habitat task config does not exist: {task_config_path}"
@@ -471,26 +717,67 @@ def main() -> None:
             sys.path.insert(0, path)
     _print_stage("Configuration loaded and random seed set.")
 
-    num_envs = args.num_envs or int(cfg["run"]["num_envs"])
+    if args.num_envs is not None:
+        num_envs = args.num_envs
+    elif args.profile == "stage2":
+        num_envs = DEFAULT_STAGE2_NUM_ENVS
+    else:
+        num_envs = int(cfg["run"]["num_envs"])
     if not 1 <= num_envs <= TOTAL_EPISODES:
         raise ValueError(
             f"run.num_envs must be between 1 and {TOTAL_EPISODES}; got "
             f"{num_envs}"
         )
 
-    if args.agent_checkpoint is not None:
-        cfg["run"]["agent_checkpoint"] = str(args.agent_checkpoint)
-    if args.perception_checkpoint is not None:
-        cfg["aux"]["resume_from"] = str(args.perception_checkpoint)
-    cfg["run"]["agent_checkpoint"] = _resolve_checkpoint(
-        cfg["run"].get("agent_checkpoint"), "DDQN checkpoint"
+    epsilon = (
+        args.epsilon
+        if args.epsilon is not None
+        else (
+            float(cfg["agent"]["final_epsilon"])
+            if args.profile == "stage2"
+            else 0.0
+        )
     )
-    cfg["aux"]["resume_from"] = _resolve_checkpoint(
-        cfg["aux"].get("resume_from"), "perception checkpoint"
+    if not 0.0 <= epsilon < 1.0:
+        raise ValueError(f"Resolved epsilon must be in [0, 1); got {epsilon}")
+
+    (
+        cfg["run"]["agent_checkpoint"],
+        cfg["aux"]["resume_from"],
+        checkpoint_step,
+    ) = _select_checkpoints(
+        cfg,
+        agent_override=args.agent_checkpoint,
+        perception_override=args.perception_checkpoint,
+        requested_step=args.checkpoint_step,
     )
     cfg["run"]["eval"] = True
     cfg["run"]["num_envs"] = num_envs
-    _print_stage("DDQN and perception checkpoint paths verified.")
+    fixated_object = args.profile == "stage2"
+    shuffle_episodes = args.profile == "stage2"
+    _print_stage(
+        "Evaluation profile resolved: "
+        f"profile={args.profile}, num_envs={num_envs}, "
+        f"fixated_object={fixated_object}, "
+        f"shuffle_episodes={shuffle_episodes}, epsilon={epsilon:.3f}, "
+        f"checkpoint_step={checkpoint_step or 'custom'}."
+    )
+    if args.profile == "stage2":
+        _print_stage(
+            "Stage2 comparison uses policy actions only; curriculum "
+            "expert/controller action substitution is intentionally disabled."
+        )
+        _print_stage(
+            f"Episode safety cap: {args.max_episode_steps} steps. "
+            "This prevents a non-stopping policy from hanging the timing run; "
+            "override it explicitly if a longer horizon is required."
+        )
+    _print_stage(
+        f"DDQN checkpoint: {cfg['run']['agent_checkpoint']}"
+    )
+    _print_stage(
+        f"Perception checkpoint: {cfg['aux']['resume_from']}"
+    )
 
     _print_stage("Building evaluation environment...")
     env = _build_eval_env(
@@ -499,6 +786,8 @@ def main() -> None:
         args.max_episode_steps,
         task_config_path,
         data_path,
+        fixated_object,
+        shuffle_episodes,
     )
     _print_stage("Evaluation environment build complete.")
     agent = aux_trainer = perception = None
@@ -511,7 +800,12 @@ def main() -> None:
             env,
             agent,
             _episode_targets(TOTAL_EPISODES, num_envs),
+            epsilon=epsilon,
         )
+        result["profile"] = args.profile
+        result["fixated_object"] = fixated_object
+        result["shuffle_episodes"] = shuffle_episodes
+        result["checkpoint_step"] = checkpoint_step
         result["config"] = str(Path(args.config).expanduser().resolve())
         result["agent_checkpoint"] = cfg["run"]["agent_checkpoint"]
         result["perception_checkpoint"] = cfg["aux"]["resume_from"]

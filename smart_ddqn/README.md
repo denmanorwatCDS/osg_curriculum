@@ -123,8 +123,8 @@ python path/to/simple_habitat_ddqn/main.py \
 
 ## Time policy inference on 100 episodes
 
-`time_policy_inference.py` evaluates the deterministic policy on exactly 100
-completed episodes. It separately reports policy forward-pass time and
+`time_policy_inference.py` evaluates the policy on exactly 100 completed
+episodes. It separately reports policy forward-pass time and
 end-to-end rollout time; environment/model startup, checkpoint loading, and the
 initial reset are excluded. Flushed stage messages show startup progress, and
 episode progress is printed from `0/100` through `100/100`; a heartbeat is
@@ -140,12 +140,30 @@ python smart_ddqn/time_policy_inference.py \
   --json-out policy_timing.json
 ```
 
-The default number of parallel environments comes from `run.num_envs`. Override
-it with `--num-envs`; per-worker episode quotas still sum to exactly 100. The
-script uses `configs/homerobot_hm3d_objectnav_val.yaml` by default; use
-`--data-path` to select another split. Both the DDQN checkpoint
-(`run.agent_checkpoint`) and perception checkpoint (`aux.resume_from`) must be
-present.
+The default `stage2` profile matches `smart_ddqn/main.py`: it uses the debug
+split, the same fixated-target filter, 32 shuffled workers, and the configured
+final epsilon. It automatically selects the latest step for which both a DDQN
+and perception checkpoint exist. Use `--checkpoint-step 10000` to evaluate an
+older matching pair.
+
+The timing run is policy-only: it does not substitute curriculum
+expert/controller actions. Also note that the training
+`policy_success_rate` is a rolling window, while this script reports a fresh
+100-episode sample. Executed action counts are included to expose policies that
+rarely or never issue `stop`.
+
+For a deterministic evaluation on the unfiltered held-out split, use:
+
+```bash
+python smart_ddqn/time_policy_inference.py \
+  --profile heldout \
+  --epsilon 0
+```
+
+Override worker count with `--num-envs`; per-worker episode quotas always sum to
+exactly 100. Explicit checkpoint overrides must provide both
+`--agent-checkpoint` and `--perception-checkpoint`, and their numbered steps
+must match.
 
 ## Remaining Habitat TODOs
 
