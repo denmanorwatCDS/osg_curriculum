@@ -142,7 +142,7 @@ class LoggableDDQN(DDQN):
         self.fetch_latest_videos = fetch_latest_videos
         super().__init__(*args, **kwargs)
         self.writer = CometWriter()
-        self.video_write_frequency = 1_000
+        self.video_write_frequency = self.cfg['experiment']['video_interval']
 
     def init(self, trainer_cfg = None):
         super().init(trainer_cfg)
@@ -246,5 +246,8 @@ class LoggableDDQN(DDQN):
         for k, v in self.calculate_env_statistics().items():
             self.writer.add_scalar(k, v, timestep)
 
-        for idx, video in enumerate(self.fetch_latest_videos()):
-            self.writer.add_video(idx, video, timestep)
+    def post_interaction(self, timestep: int, timesteps: int):
+        super().post_interaction(timestep, timesteps)
+        if (timestep % self.video_write_frequency == 0) and timestep > 0:
+            for idx, video in enumerate(self.fetch_latest_videos()):
+                self.writer.add_video(idx, video, timestep)
