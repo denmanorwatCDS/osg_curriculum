@@ -185,6 +185,9 @@ def build_agent(env, cfg: dict[str, Any]):
     agent_cfg["experiment"]["write_interval"] = int(
         cfg["run"]["write_interval"]
     )
+    agent_cfg["experiment"]["video_interval"] = int(
+        cfg["run"]["video_interval"]
+    )
     agent_cfg["experiment"]["checkpoint_interval"] = int(
         cfg["run"]["checkpoint_interval"]
     )
