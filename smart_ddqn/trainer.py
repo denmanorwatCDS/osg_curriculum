@@ -6,6 +6,7 @@ from typing import Any
 
 import torch
 from skrl.agents.torch.dqn.ddqn import DDQN, DDQN_DEFAULT_CONFIG
+from smart_ddqn.custom_DDQN import LoggableDDQN
 from skrl.envs.wrappers.torch import wrap_env
 from skrl.memories.torch import RandomMemory
 from skrl.trainers.torch.sequential import SequentialTrainer
@@ -33,34 +34,6 @@ DEFAULT_TASK_CONFIG_PATH = "configs/objectnav_hm3d_v2_with_semantic.yaml"
 TRAIN_DATA_PATH = "configs/homerobot_hm3d_objectnav_train.yaml"
 DEBUG_DATA_PATH = "configs/homerobot_hm3d_objectnav_debug.yaml"
 EVAL_DATA_PATH = "configs/homerobot_hm3d_objectnav_val.yaml"
-
-def get_settings_by_mode(mode):
-    task_config_path = DEFAULT_TASK_CONFIG_PATH
-    random_timesteps = 1_000
-    learning_starts = 1_000
-    num_of_parallel_envs = 32
-    fixated_object = False
-    save_interval = 500
-
-    if mode == 'debug_full':
-        data_path = DEBUG_DATA_PATH
-        stage_zero_experience = num_of_parallel_envs * 200
-        fixated_object = True
-    elif mode == 'debug_ddqn':
-        num_of_parallel_envs = 5
-        data_path = DEBUG_DATA_PATH
-        stage_zero_experience = num_of_parallel_envs * 50
-        random_timesteps, learning_starts = 200, 200
-        save_interval = 50
-    elif mode == 'train':
-        data_path = TRAIN_DATA_PATH
-        stage_zero_experience = num_of_parallel_envs * 1000 
-    elif mode == 'eval':
-        data_path = EVAL_DATA_PATH
-    return {'task_config_path': task_config_path, 'data_path': data_path, 
-            'random_timesteps': random_timesteps, 'learning_starts': learning_starts, 
-            'num_of_parallel_envs': num_of_parallel_envs, 'fixated_object': fixated_object,
-            'stage_zero_experience': stage_zero_experience, 'save_interval': save_interval}
 
 def create_homerobot_env(
     data_path,
@@ -222,7 +195,9 @@ def build_agent(env, cfg: dict[str, Any]):
         agent_cfg["exploration"]["final_epsilon"] = 0.0
         agent_cfg["exploration"]["timesteps"] = 0
 
-    agent = DDQN(
+    agent = LoggableDDQN(
+        calculate_env_statistics = env.get_logging_stats,
+        fetch_latest_videos = env.get_videos,
         models=models,
         memory=memory,
         observation_space=env.observation_space,
@@ -270,12 +245,6 @@ def run_training(cfg: dict[str, Any]) -> None:
     # Explicit wrapper selection prevents skrl from misidentifying the custom adapter.
     # env = wrap_env(raw_env, wrapper="gymnasium")
     # NEW
-    settings = get_settings_by_mode('debug_full')
-
-    cfg["agent"]["random_timesteps"] = settings["random_timesteps"]
-    cfg["agent"]["learning_starts"] = settings["learning_starts"]
-    cfg["aux"]["save_interval"] = settings["save_interval"]
-    cfg['run']['checkpoint_interval'] = settings["save_interval"]
     curriculum_state = None
 
     if (cfg["run"]["agent_checkpoint"] is not None) or (cfg['aux']['resume_from'] is not None):
@@ -288,15 +257,15 @@ def run_training(cfg: dict[str, Any]) -> None:
         if not is_curriculum_config_correct:
             raise ValueError("All keys in curriculum_resume must be provided together for resuming training.")
 
-        curriculum_state = cfg["curriculum_resume"]
+        curriculum_state = cfg["curriculum"]['checkpoint']
 
     env = make_env_vectorised(
         create_env_fn = create_homerobot_env,
-        task_config_path = settings['task_config_path'],
-        data_path = settings['data_path'],
-        fixated_object = settings['fixated_object'],
-        num_envs = settings['num_of_parallel_envs'],
-        stage_zero_experience = settings['stage_zero_experience'],
+        task_config_path = cfg['habitat']['task_config_path'],
+        data_path = cfg['habitat']['data_path'],
+        fixated_object = cfg['habitat']['fixated_object'],
+        num_envs = cfg['run']['num_envs'],
+        stage_zero_experience = cfg['curriculum']['stage_zero_experience'],
         curriculum_state = curriculum_state
     )
     

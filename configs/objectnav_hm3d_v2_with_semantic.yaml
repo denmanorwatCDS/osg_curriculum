@@ -3,7 +3,8 @@
 defaults:
   - /habitat: habitat_config_base
   - /habitat/task: objectnav
-  - /habitat/simulator/agents@habitat.simulator.agents.main_agent: semantic_agent
+  - /habitat/simulator/agents@habitat.simulator.agents.main_agent: agent_base
+  - /habitat/simulator/sim_sensors@habitat.simulator.agents.main_agent.sim_sensors.forward_rgb: third_rgb_sensor
   - /habitat/dataset/objectnav: hm3d_v2
   - _self_
 
@@ -24,12 +25,13 @@ habitat:
     agents:
       main_agent:
         sim_sensors:
-          semantic_sensor:
+          forward_rgb:
             width: 224
             height: 224
             hfov: 90
             position: [0, 0.88, 0]
             orientation: [0, 0, 0]
+            uuid: forward_rgb
         height: 0.88
         radius: 0.05
     habitat_sim_v0:

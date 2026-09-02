@@ -1,0 +1,105 @@
+{
+  "run": {
+    "seed": 42,
+    "device": "cuda",
+    "num_envs": 8,
+    "timesteps": 800000,
+    "eval": false,
+    "python_paths": [
+      "."
+    ],
+    "log_dir": "logs/skrl/habitat_ddqn_simple",
+    "experiment_name": "ddqn_aux_orientation",
+    "write_interval": 100,
+    "video_interval": 1000,
+    "checkpoint_interval": 10000,
+    "agent_checkpoint": null
+  },
+  "habitat": {
+    "task_config_path": "configs/objectnav_hm3d_v2_with_semantic.yaml",
+    "data_path": "configs/homerobot_hm3d_objectnav.yaml",
+    "use_clip_wrapper": true,
+    "clip_device": "cuda",
+    "actions_as_list": true,
+    "action_id_map": null,
+    "truncation_info_key": "TimeLimit.truncated",
+    "_TODO": "Check imports and constructors in habitat_factory.py against your project. The adapter assumes Habitat auto-resets completed sub-environments."
+  },
+  "observation": {
+    "source_keys": {
+      "img": "observation",
+      "goal": "absolute_goal_position",
+      "emb_obj": "goal_description",
+      "graph": "knowledge_graph",
+      "teacher_orientation": "angle_to_goal"
+    },
+    "dims": {
+      "img": 512,
+      "goal": 2,
+      "emb_obj": 512,
+      "graph": 186,
+      "teacher_orientation": 1
+    },
+    "teacher_required": true,
+    "_NOTE": "The names and dimensions match the active CLIPWrapper / ObjRLNav observation contract."
+  },
+  "action": {
+    "num_actions": 4,
+    "_TODO": "Set the exact number and order of discrete Habitat actions. Use habitat.action_id_map if policy IDs and Habitat IDs differ."
+  },
+  "model": {
+    "dqn_img_hidden": 256,
+    "goal_hidden": 64,
+    "emb_obj_hidden": 128,
+    "graph_embedding_dim": 128,
+    "orientation_img_hidden": 256,
+    "orientation_hidden": 256,
+    "orientation_bins": 36,
+    "q_hidden": [
+      256,
+      256
+    ],
+    "orientation_source": "gt",
+    "_TODO": "GraphEmbeddingModule and OrientationModule are external to DDQN. Use 'gt' for angle_to_goal or 'pred' for the detached orientation-module output."
+  },
+  "agent": {
+    "memory_size": 5000,
+    "batch_size": 256,
+    "gradient_steps": 1,
+    "gamma": 0.99,
+    "polyak": 0.005,
+    "learning_rate": 0.0003,
+    "random_timesteps": 100,
+    "learning_starts": 100,
+    "update_interval": 1,
+    "target_update_interval": 10,
+    "initial_epsilon": 1.0,
+    "final_epsilon": 0.05,
+    "exploration_timesteps": 1000
+  },
+  "aux": {
+    "enabled": true,
+    "learning_rate_graph": 0.00003,
+    "learning_rate_orientation": 0.0001,
+    "weight_decay": 0.0001,
+    "batch_size": 256,
+    "updates_per_step": 1,
+    "start_after_samples": 1000,
+    "grad_norm_clip": 1.0,
+    "log_interval": 500,
+    "save_interval": 10000,
+    "checkpoint_dir": "logs/skrl/habitat_ddqn_simple/perception",
+    "resume_from": null,
+    "_NOTE": "These optimizers own only graph_encoder and orientation_module parameters. DDQN has no access to them."
+  },
+
+  "curriculum":{
+    "stage_zero_experience": 160,
+    "checkpoint": {
+      "stage": null,
+      "mean_radius": null,
+      "angle_error": null,
+      "generated_transitions": null
+    }
+    }
+}

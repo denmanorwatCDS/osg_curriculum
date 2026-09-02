@@ -233,6 +233,14 @@ class ToSKRLWrapper(VectorEnv):
     def render(self, *args, **kwargs):
         return self.env.render(*args, **kwargs)
 
+    def get_logging_stats(self):
+        """Return logging metrics exposed by the wrapped environment."""
+        return self.env.get_logging_stats()
+
+    def get_videos(self):
+        """Return completed-episode videos exposed by the wrapped environment."""
+        return self.env.get_videos()
+
     def close(self):
         return self.env.close()
 

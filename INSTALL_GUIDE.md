@@ -253,21 +253,6 @@ MAGNUM_LOG=quiet GLOG_minloglevel=2 \
 python -u navigate_homerobot.py > logs/osg_gt.log 2>&1
 ```
 
-## Step 20 - Install skrl
-```
-pip install skrl==1.4.3
-```
-
-## Step 21 - Downgrade protobuf
-```
-python -m pip install --force-reinstall "protobuf==3.20.1"
-```
-
-## Step 22 - install comet_ml
-```
-python -m pip install comet_ml
-```
-
 ---
 
 ## Known issues / workarounds summary

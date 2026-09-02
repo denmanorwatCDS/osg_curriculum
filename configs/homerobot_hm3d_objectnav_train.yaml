@@ -1,4 +1,4 @@
-sensor_setup: ['forward_rgb']
+sensor_setup: []
 # habitat_data:
 #   metadata_path: '/data/home/joel/storage/objectnav/objectnav_hm3d_v1/val/val.json.gz'
 #   content_scenes: ["6s7QHgap2fW"]

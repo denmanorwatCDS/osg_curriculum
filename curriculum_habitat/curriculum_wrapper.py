@@ -10,26 +10,17 @@ from habitat.core.env import RLEnv
 from curriculum_habitat.modified_vector_env import ModifiedVectorEnv
 from curriculum_habitat.text_encoding import MAX_GOAL_DESCRIPTION_BYTES, encode_goal_description
 from curriculum_habitat.perception.graph_builder import MetricGraphBuilder, NUM_NODES
+from curriculum_habitat.logger_helper import fetch_videos
 from typing import (
-    TYPE_CHECKING,
-    Any,
     Callable,
-    Dict,
-    Iterator,
-    List,
     Optional,
-    OrderedDict,
     Sequence,
-    Set,
     Tuple,
-    Union,
-    cast,
 )
 
 from habitat.core.simulator import Observations
 from habitat.tasks.nav.shortest_path_follower import ShortestPathFollower
 from habitat.utils.geometry_utils import quaternion_rotate_vector
-from habitat.utils.visualizations import maps
 from omegaconf import DictConfig
 from habitat.core.dataset import Dataset
 
@@ -38,6 +29,8 @@ GRAPH_NODE_FIELDS = 6
 
 class ObjRLNav(RLEnv):
     def __init__(self, config: "DictConfig", dataset: Optional[Dataset] = None):
+        habitat_config = config.habitat if "habitat" in config else config
+        self._rng = np.random.default_rng(int(habitat_config.seed))
         self.previous_distance_to_goal = None
         self.relevant_observation = None
         self.potential_coef = 0.5
@@ -79,21 +72,75 @@ class ObjRLNav(RLEnv):
             return_one_hot=False,
         )
 
-    def _sample_position_and_direction(self, mean_distance, max_angle_error, goal):
-        sim, height = self.habitat_env.sim, self.habitat_env.sim.get_agent_state().position[1]
-        goal_position = np.asarray(goal.position)
-        goal_islands = {sim.pathfinder.get_island(v.agent_state.position) for v in goal.view_points}
-        for _ in range(100):
-            distance, bearing = max(np.random.normal(mean_distance, 0.1), 1.2), np.random.uniform(-np.pi, np.pi)
-            position = np.array([goal_position[0] + distance * np.cos(bearing), height, goal_position[2] + distance * np.sin(bearing)])
-            if sim.is_navigable(position) and sim.pathfinder.get_island(position) in goal_islands:
-                angle = np.arctan2(goal_position[0] - position[0], position[2] - goal_position[2]) + np.random.uniform(-max_angle_error, max_angle_error)
-                self.sampled_position, self.sampled_angle = position[[0, 2]], float((angle + np.pi) % (2 * np.pi) - np.pi)
-                return self.sampled_position, self.sampled_angle
-        self.sampled_position = self.sampled_angle = None
-        print(f"""Failed to sample a valid position and direction after 100 attempts. 
-                  Mean distance: {mean_distance}, Max angle error: {max_angle_error}""")
-        return None, None
+    def _sample_position_and_direction(
+        self,
+        mean_distance,
+        max_angle_error,
+        goals,
+    ):
+        """Sample on one goal's radius without being closer to another goal."""
+        sim = self.habitat_env.sim
+        # Must match the `view_points` target used by the distance_to_goal measure.
+        view_point_positions = [
+            view_point.agent_state.position
+            for goal in goals
+            for view_point in goal.view_points
+        ]
+
+        for _ in range(1000):
+            target_distance = max(float(self._rng.normal(mean_distance, 0.3)), 1.2)
+            target_goal = goals[int(self._rng.integers(len(goals)))]
+            target_goal_position = np.asarray(
+                target_goal.position, dtype=np.float32
+            )
+            if not target_goal.view_points:
+                continue
+
+            viewpoint = target_goal.view_points[
+                int(self._rng.integers(len(target_goal.view_points)))
+            ]
+            viewpoint_position = np.asarray(
+                viewpoint.agent_state.position, dtype=np.float32
+            )
+            goal_islands = {
+                sim.pathfinder.get_island(item.agent_state.position)
+                for item in target_goal.view_points
+            }
+
+            bearing = self._rng.uniform(-np.pi, np.pi)
+            position = np.array(
+                [
+                    target_goal_position[0]
+                    + target_distance * np.cos(bearing),
+                    viewpoint_position[1],
+                    target_goal_position[2]
+                    + target_distance * np.sin(bearing),
+                ],
+                dtype=np.float32,
+            )
+
+            if not sim.is_navigable(position):
+                continue
+            if sim.pathfinder.get_island(position) not in goal_islands:
+                continue
+            # Two-sided: a lower bound alone would only keep candidates detoured around walls.
+            geodesic_distance = sim.geodesic_distance(position, view_point_positions)
+            if abs(geodesic_distance - target_distance) > 0.5:
+                continue
+
+            direction = target_goal_position - position
+            angle = np.arctan2(direction[0], -direction[2])
+            angle += self._rng.uniform(
+                -max_angle_error,
+                max_angle_error,
+            )
+            sampled_angle = float((angle + np.pi) % (2 * np.pi) - np.pi)
+            return position, sampled_angle
+
+        raise RuntimeError(
+            "Failed to sample a navigable curriculum start at least "
+            f"{target_distance:.2f} m from every goal after 1000 attempts"
+        )
 
     
     def reset(self, mean_distance = None, max_angle_error = None):
@@ -106,12 +153,14 @@ class ObjRLNav(RLEnv):
             if (mean_distance is None) != (max_angle_error is None):
                 raise ValueError("Both mean_distance and max_angle_error must be provided together.")
 
-            goal = np.random.choice(self.habitat_env.current_episode.goals)
-            position, angle = self._sample_position_and_direction(mean_distance, max_angle_error, goal)
+            position, angle = self._sample_position_and_direction(
+                mean_distance,
+                max_angle_error,
+                self.habitat_env.current_episode.goals,
+            )
 
             if position is not None and angle is not None:
-                state = self.habitat_env.sim.get_agent_state()
-                position = [float(position[0]), float(state.position[1]), float(position[1])]
+                position = [float(coordinate) for coordinate in position]
                 rotation = [0.0, float(-np.sin(angle / 2)), 0.0, float(np.cos(angle / 2))]
                 obs = self.habitat_env.sim.get_observations_at(position, rotation, True)
                 if obs is None:
@@ -127,19 +176,15 @@ class ObjRLNav(RLEnv):
                     observations=obs,
                 )
 
-        viewpoint = self.get_closest_viewpoint()
-        self.viewpoint_goal = np.asarray(viewpoint.agent_state.position)
+        follower_endpoint = self.get_closest_viewpoint()
+        self.follower_endpoint = np.asarray(follower_endpoint.agent_state.position)
 
         reset_metrics = self.habitat_env.get_metrics()
         self.previous_distance_to_goal = reset_metrics['distance_to_goal']
-        self._reset_spl_audit(reset_metrics)
-        obs = self.calculate_full_observation(obs)
+        goal = self.get_closest_goal()
+        obs = self.calculate_full_observation(obs, goal)
 
         self.relevant_observation = deepcopy(obs)
-        #print(f"position: {self.habitat_env.sim.get_agent_state().position}")
-        #print(f"closest viewpoint: {self.viewpoint_goal}")
-        #print(f"goal position: {goal.position}")
-              
         return obs
 
     def step(self, action):
@@ -150,78 +195,14 @@ class ObjRLNav(RLEnv):
         action_name = self.convert_action(action_value)
 
         obs, reward, done, info = super().step(action_name)
-        self._update_spl_audit(info)
-        obs = self.calculate_full_observation(obs)
+        goal = self.get_closest_goal()
+        obs = self.calculate_full_observation(obs, goal)
         info['executed_action'] = {'value': action_value, 'name': action_name['action']}
+        info['angle_to_goal'] = deepcopy(obs['angle_to_goal'])
+        info['absolute_goal_position'] = deepcopy(obs['absolute_goal_position'])
+        info['goal_id'] = goal.object_id
         self.relevant_observation = deepcopy(obs)
-        if self.debug_video_enabled:
-            info["_debug_video_state"] = self.get_debug_video_state(
-                include_map=False
-            )
         return obs, reward, done, info
-
-    def _reset_spl_audit(self, reset_metrics):
-        """Initialize an SPL calculation independent of Habitat's SPL measure."""
-        position = np.asarray(
-            self.habitat_env.sim.get_agent_state().position,
-            dtype=np.float64,
-        )
-        optimal_distance = self.habitat_env.sim.geodesic_distance(
-            position,
-            np.asarray(self.viewpoint_goal, dtype=np.float64),
-        )
-        if not np.isfinite(optimal_distance):
-            raise RuntimeError(
-                "Closest ObjectNav viewpoint has non-finite geodesic distance"
-            )
-
-        self._spl_previous_position = position.copy()
-        self._spl_traveled_distance = 0.0
-        self._spl_optimal_distance = float(optimal_distance)
-        self._spl_habitat_start_distance = float(
-            reset_metrics["distance_to_goal"]
-        )
-
-    def _update_spl_audit(self, info):
-        """Attach independently calculated SPL and its inputs to step info."""
-        if (
-            self._spl_previous_position is None
-            or self._spl_optimal_distance is None
-            or self._spl_habitat_start_distance is None
-        ):
-            raise RuntimeError("SPL audit was not initialized by reset()")
-
-        current_position = np.asarray(
-            self.habitat_env.sim.get_agent_state().position,
-            dtype=np.float64,
-        )
-        self._spl_traveled_distance += float(
-            np.linalg.norm(current_position - self._spl_previous_position)
-        )
-        self._spl_previous_position = current_position.copy()
-
-        success = float(bool(info.get("success", False)))
-        denominator = max(
-            self._spl_optimal_distance,
-            self._spl_traveled_distance,
-        )
-        if denominator > 0:
-            manual_spl = success * self._spl_optimal_distance / denominator
-        else:
-            manual_spl = success
-
-        habitat_spl = float(info.get("spl", 0.0))
-        info["manual_spl"] = float(manual_spl)
-        info["spl_optimal_distance"] = self._spl_optimal_distance
-        info["spl_traveled_distance"] = self._spl_traveled_distance
-        info["spl_habitat_start_distance"] = (
-            self._spl_habitat_start_distance
-        )
-        info["spl_start_distance_error"] = (
-            self._spl_optimal_distance
-            - self._spl_habitat_start_distance
-        )
-        info["spl_error"] = float(manual_spl - habitat_spl)
 
     def convert_action(self, action):
         """Convert policy actions 0/1/2/3 to Habitat's explicit action format."""
@@ -229,10 +210,9 @@ class ObjRLNav(RLEnv):
             raise ValueError(f"Expected action 0, 1, 2, or 3, got {action!r}") from None
         return {"action": ("turn_left", "turn_right", "move_forward", "stop")[action]}
 
-    def calculate_full_observation(self, observations: Observations):
+    def calculate_full_observation(self, observations: Observations, goal):
         # Recompute this on every observation because the closest goal can
         # change as the agent moves.
-        goal = self.get_closest_goal()
         goal_position = np.asarray(goal.position, dtype=np.float32)
         if goal_position.shape != (3,):
             raise ValueError("Goal position must be a 3D Habitat coordinate")
@@ -281,10 +261,8 @@ class ObjRLNav(RLEnv):
     def calculate_knowledge_graph(
         self,
         observations: Observations,
-        goal=None,
+        goal,
     ):
-        if goal is None:
-            goal = self.get_closest_goal()
 
         target_category = getattr(
             self.habitat_env.current_episode,
@@ -331,58 +309,10 @@ class ObjRLNav(RLEnv):
         info = dict(self.habitat_env.get_metrics())
         info['truncated'] = self.habitat_env._past_limit()
         info['terminated'] = self.habitat_env.task.is_stop_called
+        info['goal_object_name'] = (
+            self.habitat_env.current_episode.object_category
+        )
         return info
-
-    def get_debug_video_state(
-        self, include_map=True, map_resolution=512
-    ):
-        """Return serializable state needed to render a debug-video frame."""
-        # Calling this method from DebugVideoWrapper opts the worker into
-        # returning exact post-action poses in subsequent step infos.
-        self.debug_video_enabled = True
-        sim = self.habitat_env.sim
-        agent_position_3d = np.asarray(
-            sim.get_agent_state().position, dtype=np.float32
-        )
-        if self.relevant_observation is None:
-            goal_position_3d = np.asarray(
-                self.get_closest_goal().position, dtype=np.float32
-            )
-            goal_position = goal_position_3d[[0, 2]]
-            angle_error = self.calculate_angle_to_goal(goal_position_3d)
-        else:
-            goal_position = np.asarray(
-                self.relevant_observation["absolute_goal_position"],
-                dtype=np.float32,
-            )
-            angle_error = np.float32(
-                self.relevant_observation["angle_to_goal"]
-            )
-
-        if include_map:
-            top_down_map = maps.get_topdown_map_from_sim(
-                sim, map_resolution=int(map_resolution), draw_border=True
-            )
-            top_down_map = maps.colorize_topdown_map(top_down_map)
-        else:
-            top_down_map = None
-        lower_bound, upper_bound = sim.pathfinder.get_bounds()
-        target_object = getattr(
-            self.habitat_env.current_episode,
-            "object_category",
-            None,
-        )
-        return {
-            "top_down_map": top_down_map,
-            "map_lower_bound": np.asarray(lower_bound, dtype=np.float32),
-            "map_upper_bound": np.asarray(upper_bound, dtype=np.float32),
-            "agent_position": agent_position_3d[[0, 2]],
-            "goal_position": goal_position,
-            "angle_error": angle_error,
-            "target_object": (
-                target_object if target_object is not None else "unknown"
-            ),
-        }
     
     def get_closest_viewpoint(self):
         episode = self.habitat_env.current_episode
@@ -440,7 +370,7 @@ class ObjRLNav(RLEnv):
         self.shortest_path_follower._build_follower()
         try:
             action = self.shortest_path_follower._follower.next_action_along(
-                self.viewpoint_goal
+                self.follower_endpoint
             )
         except habitat_sim.errors.GreedyFollowerError:
             return 3
@@ -456,7 +386,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         stage_zero_experience: int = 100_000,
         maximal_expert_fraction: float = 0.6,
         min_coef_of_controlled_episodes: float = 1.8,
-        radius_stages: int = 5,
+        radius_stages: int = 4,
         angle_stages: int = 3,
         difficulty_increase_sr: float = 0.85,
         difficulty_decrease_sr: float = 0.7,
@@ -473,7 +403,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         self.observation_space = gym.vector.utils.batch_space(self.observation_spaces[0], self.num_envs)
         self.action_space = gym.vector.utils.batch_space(self.action_spaces[0], self.num_envs)
         self.stage = 0  # Phase (0=warm, 1=main, 2=final)
-        self.start_mean_radius, self.start_angle_error = 1, 0
+        self.start_mean_radius, self.start_angle_error = 2., 0
         self.max_mean_radius, self.max_angle_error = 6., math.pi
         self.radius_increment = (self.max_mean_radius - self.start_mean_radius) / radius_stages
         self.angle_increment = self.max_angle_error / angle_stages
@@ -501,10 +431,19 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         self.success_rates = {'agent': 0., 'controller': 0.}
         self.expert_envs = set([i for i in range(int(self.num_envs * self.maximal_expert_fraction))])
 
+        self.log_video = {i: {'current_episode': {'frames': [], 'reward': [], 'distance_to_goal': [], 
+                                                  'angle_to_goal': [], 'goal_position': [],
+                                                  'controlled_by_expert': None, 'is_success': None, 
+                                                  'return': None, 'goal_object': None},
+                              'previous_episode': None} for i in range(self.num_envs)}
+        self.intraepisode_switches = deque(maxlen = 1000)
+        self.episode_returns = deque(maxlen = 100)
+        self.previous_goal_ids = np.full_like(np.arange(self.num_envs), fill_value = -1, dtype = np.int32)
+
         # Variables for testing
         self.has_difficulty_changed = False
 
-    def _update_success_queues(self, dones, infos):
+    def _update_success_queues(self, infos, dones):
         for idx, done in enumerate(dones):
             if done:
                 if idx in self.expert_envs:
@@ -579,17 +518,50 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
             flush=True,
         )
 
-    def get_logging_stats(self, rewards=None):
-        reset_per_env = {'Resets per env{}'.format(i): self.ammount_of_resets[i] for i in range(self.num_envs)}
+    def get_logging_stats(self):
+        reset_per_env = {'Details/Resets per env{}'.format(i): self.ammount_of_resets[i] for i in range(self.num_envs)}
         return {
-            'controller_success_rate': self.success_rates['controller'],
-            'policy_success_rate': self.success_rates['agent'],
-            'stage': self.stage,
-            'current_mean_radius': self.cur_mean_radius,
-            'current_angle_error': self.cur_angle_error,
-            'fraction_of_controlled_environments': len(self.expert_envs) / self.num_envs,
+            'Curriculum/controller_success_rate': self.success_rates['controller'],
+            'Curriculum/policy_success_rate': self.success_rates['agent'],
+            'Curriculum/stage': self.stage,
+            'Curriculum/current_mean_radius': self.cur_mean_radius,
+            'Curriculum/current_angle_error': self.cur_angle_error,
+            'Curriculum/fraction_of_controlled_environments': len(self.expert_envs) / self.num_envs,
+            'Habitat/Goal_switches': sum(self.intraepisode_switches) / (self.num_envs * len(self.intraepisode_switches)),
+            'Habitat/Policy_episodic_return': sum(self.episode_returns) / len(self.episode_returns),
             **reset_per_env,
         }
+
+    def _update_goal_switches(self, infos, dones):
+        current_goal_ids = np.array([info['goal_id'] for info in infos], dtype = np.int32)
+        switches = np.sum(np.logical_and(current_goal_ids != self.previous_goal_ids, self.previous_goal_ids != -1))
+        self.intraepisode_switches.append(switches)
+        self.previous_goal_ids = np.where(~dones, current_goal_ids, -1)
+
+
+    def _store_video_frame(self, obs_batch, reward_batch, action_batch, done_batch, info_batch):
+        for i in range(self.num_envs):
+            self.log_video[i]['current_episode']['frames'].append(obs_batch['observation'][i])
+            self.log_video[i]['current_episode']['reward'].append(reward_batch[i])
+            self.log_video[i]['current_episode']['distance_to_goal'].append(info_batch[i]['distance_to_goal'])
+            self.log_video[i]['current_episode']['angle_to_goal'].append(info_batch[i]['angle_to_goal'])
+            self.log_video[i]['current_episode']['goal_position'].append(info_batch[i]['absolute_goal_position'])
+
+            if done_batch[i]:
+                self.log_video[i]['current_episode']['controlled_by_expert'] = (i in self.expert_envs)
+                self.log_video[i]['current_episode']['is_success'] = info_batch[i]['success']
+                episode_return = sum(self.log_video[i]['current_episode']['reward'])
+                self.log_video[i]['current_episode']['return'] = episode_return
+                if not (i in self.expert_envs):
+                    self.episode_returns.append(episode_return)
+                self.log_video[i]['current_episode']['goal_object'] = info_batch[i]['goal_object_name']
+                self.log_video[i]['previous_episode'] = deepcopy(self.log_video[i]['current_episode'])
+                self.log_video[i]['current_episode'] = {'frames': [], 'reward': [], 'distance_to_goal': [], 'angle_to_goal': [], 
+                                                        'goal_position': [], 'controlled_by_expert': None, 'is_success': None, 'return': None, 
+                                                        'goal_object': None, 'stage': None, 'mean_radius': None, 'angle_error': None}
+
+    def get_videos(self):
+        return fetch_videos([self.log_video[i]['previous_episode'] for i in range(self.num_envs)])
 
     def _update_controller_envs(self, dones):
         if len(self.success_queues['agent']) >= self.minimal_number_of_agent_episodes:
@@ -651,8 +623,6 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         if self.cur_angle_error > self.max_angle_error:
             self.cur_angle_error = 0
             self.cur_mean_radius = min(8.0, self.cur_mean_radius + self.radius_increment)
-        print(f"""[UP ↑] SR={100 * self.success_rates['agent']:.0f}% → r={self.cur_mean_radius:.1f}m, 
-              a={self.cur_angle_error:.2f}rad""")
         self._update_sr_stack()
 
     def _decrease_difficulty(self):
@@ -664,8 +634,6 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
                 self.cur_mean_radius -= 0.5
             self.cur_mean_radius = max(self.start_mean_radius, self.cur_mean_radius)
         self.cur_angle_error = 0
-        print(f"""[DOWN ↓] SR={100 * self.success_rates['agent']:.0f}% → r={self.cur_mean_radius:.1f}m, 
-              a={self.cur_angle_error:.2f}rad""")
         self._update_sr_stack()
 
     def _update_sr_stack(self):
@@ -689,15 +657,15 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         result = super().step(actions)
 
         self.generated_transitions += self.num_envs
-        if (self.generated_transitions // self.num_envs) % 25 == 0:
-            print(f"[LOG] env stat: {self.get_logging_stats()}")
         obs = {key: np.stack([result[i][0][key] for i in range(self.num_envs)], axis=0) \
                     for key in result[0][0].keys()}
         rewards = np.stack([result[i][1] for i in range(self.num_envs)], axis=0)
         dones = np.stack([result[i][2] for i in range(self.num_envs)], axis=0)
         infos = [result[i][3] for i in range(self.num_envs)]
 
-        self._update_success_queues(dones, infos)
+        self._store_video_frame(obs, rewards, actions, dones, infos)
+        self._update_goal_switches(infos, dones)
+        self._update_success_queues(infos, dones)
         self._calculate_success_rates()
         self._update_controller_envs(dones)
         if np.any(dones):
