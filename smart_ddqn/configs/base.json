@@ -2,7 +2,7 @@
   "run": {
     "seed": 42,
     "device": "cuda",
-    "num_envs": 8,
+    "num_envs": 10,
     "timesteps": 800000,
     "eval": false,
     "python_paths": [

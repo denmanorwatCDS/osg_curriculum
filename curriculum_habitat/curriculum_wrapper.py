@@ -128,7 +128,11 @@ class ObjRLNav(RLEnv):
             if abs(geodesic_distance - target_distance) > 0.5:
                 continue
 
-            direction = target_goal_position - position
+            # angle_to_goal is measured against get_closest_goal(), which may be a
+            # different instance of the category than the one we sampled around.
+            direction = np.asarray(
+                self.get_closest_goal(position).position, dtype=np.float32
+            ) - position
             angle = np.arctan2(direction[0], -direction[2])
             angle += self._rng.uniform(
                 -max_angle_error,
@@ -342,16 +346,18 @@ class ObjRLNav(RLEnv):
 
         return viewpoint
 
-    def get_closest_goal(self):
+    def get_closest_goal(self, start_position=None):
         """Return the goal owning the nearest reachable viewpoint."""
         sim = self.habitat_env.sim
+        if start_position is None:
+            start_position = sim.get_agent_state().position
         goals, positions = zip(*(
             (goal, viewpoint.agent_state.position)
             for goal in self.habitat_env.current_episode.goals
             for viewpoint in goal.view_points
         ))
         path = habitat_sim.MultiGoalShortestPath()
-        path.requested_start = sim.get_agent_state().position
+        path.requested_start = np.asarray(start_position, dtype=np.float32)
         path.requested_ends = np.asarray(positions, dtype=np.float32)
         if not sim.pathfinder.find_path(path):
             raise RuntimeError(
@@ -403,7 +409,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         self.observation_space = gym.vector.utils.batch_space(self.observation_spaces[0], self.num_envs)
         self.action_space = gym.vector.utils.batch_space(self.action_spaces[0], self.num_envs)
         self.stage = 0  # Phase (0=warm, 1=main, 2=final)
-        self.start_mean_radius, self.start_angle_error = 2., 0
+        self.start_mean_radius, self.start_angle_error = 1.2, 0
         self.max_mean_radius, self.max_angle_error = 6., math.pi
         self.radius_increment = (self.max_mean_radius - self.start_mean_radius) / radius_stages
         self.angle_increment = self.max_angle_error / angle_stages
