@@ -113,15 +113,14 @@ class ReplayOrientationAuxTrainer:
             self.orientation_optimizer.step()
 
             metrics = dict(metrics)
-            metrics["graph_grad_norm"] = float(graph_grad_norm)
-            metrics["orientation_grad_norm"] = float(orientation_grad_norm)
-            self._accumulate(metrics)
+            self.agent.track_data("Aux/graph_grad_norm", float(graph_grad_norm))
+            self.agent.track_data("Aux/orientation_grad_norm", float(orientation_grad_norm))
+            for name, value in metrics.items():
+                self.agent.track_data(f"Aux/{name}", float(value))
 
         # Policy inference must use deterministic perception behavior.
         self.perception.eval()
 
-        if self.log_interval > 0 and timestep % self.log_interval == 0:
-            self._print_metrics(timestep)
         if self.save_interval > 0 and timestep % self.save_interval == 0:
             self.save(timestep)
 
@@ -151,25 +150,6 @@ class ReplayOrientationAuxTrainer:
         )
         raw_states = samples[0][0]
         return unflatten_tensorized_space(self.observation_space, raw_states)
-
-    def _accumulate(self, metrics: dict[str, float]) -> None:
-        for key, value in metrics.items():
-            self.metric_sum[key] = self.metric_sum.get(key, 0.0) + float(value)
-        self.metric_count += 1
-
-    def _print_metrics(self, timestep: int) -> None:
-        if self.metric_count == 0:
-            return
-        averaged = {
-            key: value / self.metric_count
-            for key, value in sorted(self.metric_sum.items())
-        }
-        line = " | ".join(
-            f"{key}={value:.4f}" for key, value in averaged.items()
-        )
-        print(f"[AUX {timestep}] {line}", flush=True)
-        self.metric_sum.clear()
-        self.metric_count = 0
 
     def save(self, timestep: int) -> None:
         if self.checkpoint_dir is None:

@@ -403,7 +403,7 @@ class CurriculumVectorEnv(ModifiedVectorEnv):
         self.observation_space = gym.vector.utils.batch_space(self.observation_spaces[0], self.num_envs)
         self.action_space = gym.vector.utils.batch_space(self.action_spaces[0], self.num_envs)
         self.stage = 0  # Phase (0=warm, 1=main, 2=final)
-        self.start_mean_radius, self.start_angle_error = 2., 0
+        self.start_mean_radius, self.start_angle_error = 1.2, 0
         self.max_mean_radius, self.max_angle_error = 6., math.pi
         self.radius_increment = (self.max_mean_radius - self.start_mean_radius) / radius_stages
         self.angle_increment = self.max_angle_error / angle_stages
