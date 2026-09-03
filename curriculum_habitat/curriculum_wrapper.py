@@ -128,7 +128,11 @@ class ObjRLNav(RLEnv):
             if abs(geodesic_distance - target_distance) > 0.5:
                 continue
 
-            direction = target_goal_position - position
+            # angle_to_goal is measured against get_closest_goal(), which may be a
+            # different instance of the category than the one we sampled around.
+            direction = np.asarray(
+                self.get_closest_goal(position).position, dtype=np.float32
+            ) - position
             angle = np.arctan2(direction[0], -direction[2])
             angle += self._rng.uniform(
                 -max_angle_error,
@@ -342,16 +346,18 @@ class ObjRLNav(RLEnv):
 
         return viewpoint
 
-    def get_closest_goal(self):
+    def get_closest_goal(self, start_position=None):
         """Return the goal owning the nearest reachable viewpoint."""
         sim = self.habitat_env.sim
+        if start_position is None:
+            start_position = sim.get_agent_state().position
         goals, positions = zip(*(
             (goal, viewpoint.agent_state.position)
             for goal in self.habitat_env.current_episode.goals
             for viewpoint in goal.view_points
         ))
         path = habitat_sim.MultiGoalShortestPath()
-        path.requested_start = sim.get_agent_state().position
+        path.requested_start = np.asarray(start_position, dtype=np.float32)
         path.requested_ends = np.asarray(positions, dtype=np.float32)
         if not sim.pathfinder.find_path(path):
             raise RuntimeError(
