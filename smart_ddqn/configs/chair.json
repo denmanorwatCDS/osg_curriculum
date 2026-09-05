@@ -1,7 +1,7 @@
 {
   "run": {
     "seed": 42,
-    "device": "cuda",
+    "device": "cuda:0",
     "num_envs": 10,
     "timesteps": 800000,
     "eval": false,
@@ -20,7 +20,8 @@
     "task_config_path": "configs/objectnav_hm3d_v2_with_semantic.yaml",
     "data_path": "configs/homerobot_hm3d_objectnav_debug.yaml",
     "use_clip_wrapper": true,
-    "clip_device": "cuda",
+    "clip_device": "cuda:0",
+    "simulator_gpu_device_id": 0,
     "actions_as_list": true,
     "action_id_map": null,
     "truncation_info_key": "TimeLimit.truncated",

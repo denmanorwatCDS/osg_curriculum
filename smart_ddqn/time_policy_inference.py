@@ -306,6 +306,7 @@ def _create_eval_env(
     task_config_path: str,
     data_path: str,
     index: int,
+    simulator_gpu_device_id: int,
     max_episode_steps: int,
     fixated_object: bool,
     shuffle_episodes: bool,
@@ -324,6 +325,9 @@ def _create_eval_env(
     )
     with read_write(config):
         config.habitat.seed = int(config.habitat.seed) + index
+        config.habitat.simulator.habitat_sim_v0.gpu_device_id = (
+            simulator_gpu_device_id
+        )
         config.habitat.environment.max_episode_steps = max_episode_steps
         config.habitat.environment.iterator_options.shuffle = shuffle_episodes
         config.habitat.environment.iterator_options.cycle = True
@@ -369,7 +373,12 @@ def _build_eval_env(
     _print_stage("Vector-environment and wrapper imports complete.")
 
     habitat_cfg = cfg["habitat"]
-    clip_device = str(habitat_cfg.get("clip_device", cfg["run"]["device"]))
+    clip_device = str(
+        habitat_cfg.get("clip_device") or cfg["run"]["device"]
+    )
+    simulator_gpu_device_id = int(
+        habitat_cfg.get("simulator_gpu_device_id", 0)
+    )
 
     _print_stage(f"Starting {num_envs} Habitat evaluation workers...")
     env = EvalVectorEnv(
@@ -379,6 +388,7 @@ def _build_eval_env(
                 str(task_config_path),
                 str(data_path),
                 index,
+                simulator_gpu_device_id,
                 max_episode_steps,
                 fixated_object,
                 shuffle_episodes,

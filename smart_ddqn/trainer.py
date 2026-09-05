@@ -40,7 +40,8 @@ def create_homerobot_env(
     data_path,
     index,
     task_config_path,
-    fixated_object = False
+    fixated_object = False,
+    simulator_gpu_device_id = 0,
 ):
     config = setup_env_config(
         params_path=data_path,
@@ -55,16 +56,21 @@ def create_homerobot_env(
         dataset = dataset.filter_episodes(lambda e: e.object_category == target)
     with read_write(config):
         config.habitat.seed = int(config.habitat.seed) + index
+        config.habitat.simulator.habitat_sim_v0.gpu_device_id = (
+            simulator_gpu_device_id
+        )
     env = ObjRLNav(config=config, dataset=dataset)
     return env
 
 def make_env_vectorised(create_env_fn, task_config_path, fixated_object, data_path, 
-                        stage_zero_experience, num_envs, curriculum_state = None):
+                        stage_zero_experience, num_envs, device, clip_device,
+                        simulator_gpu_device_id, curriculum_state = None):
     vec_env = CurriculumVectorEnv(
             make_env_fn=create_env_fn,
             stage_zero_experience=stage_zero_experience,
             env_fn_args=[
-                (data_path, index, task_config_path, fixated_object)
+                (data_path, index, task_config_path, fixated_object,
+                 simulator_gpu_device_id)
                 for index in range(num_envs)
             ],
         )
@@ -72,8 +78,8 @@ def make_env_vectorised(create_env_fn, task_config_path, fixated_object, data_pa
     if curriculum_state is not None:
         vec_env.set_curriculum_state(**curriculum_state)
 
-    vec_env = CLIPWrapper(vec_env, device="cuda")
-    vec_env = ToSKRLWrapper(vec_env, device="cuda")
+    vec_env = CLIPWrapper(vec_env, device=clip_device)
+    vec_env = ToSKRLWrapper(vec_env, device=device)
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
     vec_env = RelabelActionWrapper(vec_env)
     
@@ -271,6 +277,13 @@ def run_training(cfg: dict[str, Any]) -> None:
         fixated_object = cfg['habitat']['fixated_object'],
         num_envs = cfg['run']['num_envs'],
         stage_zero_experience = cfg['curriculum']['stage_zero_experience'],
+        device = str(cfg['run']['device']),
+        clip_device = str(
+            cfg['habitat'].get('clip_device') or cfg['run']['device']
+        ),
+        simulator_gpu_device_id = int(
+            cfg['habitat'].get('simulator_gpu_device_id', 0)
+        ),
         curriculum_state = curriculum_state
     )
     

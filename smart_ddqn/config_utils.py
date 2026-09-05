@@ -37,8 +37,19 @@ def _validate(cfg: dict[str, Any]) -> None:
 
     if int(cfg["run"]["num_envs"]) <= 0:
         raise ValueError("run.num_envs must be positive")
+    if not str(cfg["run"].get("device", "")).strip():
+        raise ValueError("run.device must be a non-empty device string")
     if int(cfg["action"]["num_actions"]) <= 1:
         raise ValueError("action.num_actions must be greater than 1 for DDQN")
+
+    clip_device = cfg["habitat"].get("clip_device")
+    if clip_device is not None and not str(clip_device).strip():
+        raise ValueError("habitat.clip_device must be a non-empty device string")
+    simulator_gpu_device_id = int(
+        cfg["habitat"].get("simulator_gpu_device_id", 0)
+    )
+    if simulator_gpu_device_id < 0:
+        raise ValueError("habitat.simulator_gpu_device_id must be non-negative")
 
     dims = cfg["observation"]["dims"]
     for key in ("img", "goal", "emb_obj", "graph", "teacher_orientation"):
