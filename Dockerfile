@@ -13,6 +13,14 @@ RUN apt-get update && \
       libgl1 libglx-mesa0 libosmesa6 libosmesa6-dev libglew-dev mesa-utils libglew-dev libc-dev \
       libgl1-mesa-glx libglfw3 python3-setuptools libxrandr-dev libxinerama-dev libxcursor-dev \
       libxi-dev
+    RUN printf '%s\n' \
+      '{' \
+      '    "file_format_version" : "1.0.0",' \
+      '    "ICD" : {' \
+      '        "library_path" : "libEGL_nvidia.so.0"' \
+      '    }' \
+      '}' \
+      > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
 ADD https://astral.sh/uv/install.sh /uv-installer.sh
 RUN sh /uv-installer.sh && rm /uv-installer.sh
 ENV PATH="/root/.local/bin:$PATH"
@@ -65,15 +73,16 @@ RUN wget -P checkpoints https://huggingface.co/spaces/xinyu1205/Tag2Text/resolve
 RUN wget -P checkpoints https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
 
 RUN uv tool install gdown
-WORKDIR ./data/scene_datasets
-RUN gdown --fuzzy "https://drive.google.com/file/d/1nnp15jI94yt1hCK_9D1FN9JaY4SFblr4/view?usp=sharing" -O archive.zip
-RUN unzip archive.zip
-RUN mv data/scene_datasets/hm3d  .
-RUN mv data/scene_datasets/hm3d_v0.2  .
-RUN rm -rf data/
-WORKDIR ../.. 
+RUN gdown --fuzzy "https://drive.google.com/file/d/1nnp15jI94yt1hCK_9D1FN9JaY4SFblr4/view?usp=sharing" -O /tmp/hm3d_bundle.zip && \
+  unzip -q /tmp/hm3d_bundle.zip data/osg_10scene_data.zip -d /tmp/hm3d_bundle && \
+  unzip -q /tmp/hm3d_bundle/data/osg_10scene_data.zip -d /osg_girol/data/scene_datasets && \
+  test -f /osg_girol/data/scene_datasets/hm3d/val/val.json.gz && \
+  test -f /osg_girol/data/scene_datasets/hm3d_v0.2/hm3d_annotated_basis.scene_dataset_config.json && \
+  rm -rf /tmp/hm3d_bundle /tmp/hm3d_bundle.zip
 
 ENV __NV_PRIME_RENDER_OFFLOAD=1
 ENV __GLX_VENDOR_LIBRARY_NAME=nvidia
 # habitat-sim needs the EGL/GL libs, which the toolkit only injects with the graphics capability
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
+
+CMD ["/bin/bash"]
