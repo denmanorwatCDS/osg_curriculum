@@ -73,7 +73,7 @@ RUN mv data/scene_datasets/hm3d_v0.2  .
 RUN rm -rf data/
 WORKDIR ../.. 
 
-ENV DISPLAY=1
 ENV __NV_PRIME_RENDER_OFFLOAD=1
 ENV __GLX_VENDOR_LIBRARY_NAME=nvidia
-ENV CUDA_VISIBLE_DEVICES=void
+# habitat-sim needs the EGL/GL libs, which the toolkit only injects with the graphics capability
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility,graphics
