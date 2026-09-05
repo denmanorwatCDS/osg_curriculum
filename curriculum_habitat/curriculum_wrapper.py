@@ -77,62 +77,57 @@ class ObjRLNav(RLEnv):
         mean_distance,
         max_angle_error,
         goals,
+        target_distance = None,
     ):
-        """Sample on one goal's radius without being closer to another goal."""
+        """Sample at a geodesic radius from the nearest goal viewpoint."""
         sim = self.habitat_env.sim
-        # Must match the `view_points` target used by the distance_to_goal measure.
-        view_point_positions = [
-            view_point.agent_state.position
+        pathfinder = sim.pathfinder
+        goal_viewpoints = [
+            (goal, np.asarray(viewpoint.agent_state.position, dtype=np.float32))
             for goal in goals
-            for view_point in goal.view_points
+            for viewpoint in goal.view_points
         ]
-
-        for _ in range(1000):
+        if not goal_viewpoints:
+            return None
+        viewpoint_goals, viewpoint_positions = zip(*goal_viewpoints)
+        viewpoint_positions = np.asarray(viewpoint_positions, dtype=np.float32)
+        islands = np.unique([
+            pathfinder.get_island(position)
+            for position in viewpoint_positions
+        ])
+        islands = islands[islands >= 0]
+        if not len(islands):
+            return None
+        if target_distance is None:
             target_distance = max(float(self._rng.normal(mean_distance, 0.3)), 1.2)
-            target_goal = goals[int(self._rng.integers(len(goals)))]
-            target_goal_position = np.asarray(
-                target_goal.position, dtype=np.float32
+
+        for _ in range(256):
+            island = int(islands[int(self._rng.integers(len(islands)))])
+            anchor = pathfinder.get_random_navigable_point(
+                max_tries=100,
+                island_index=island,
             )
-            if not target_goal.view_points:
+            path = habitat_sim.MultiGoalShortestPath()
+            path.requested_start = anchor
+            path.requested_ends = viewpoint_positions
+            if not pathfinder.find_path(path) or path.geodesic_distance < target_distance:
                 continue
 
-            viewpoint = target_goal.view_points[
-                int(self._rng.integers(len(target_goal.view_points)))
-            ]
-            viewpoint_position = np.asarray(
-                viewpoint.agent_state.position, dtype=np.float32
-            )
-            goal_islands = {
-                sim.pathfinder.get_island(item.agent_state.position)
-                for item in target_goal.view_points
-            }
-
-            bearing = self._rng.uniform(-np.pi, np.pi)
-            position = np.array(
-                [
-                    target_goal_position[0]
-                    + target_distance * np.cos(bearing),
-                    viewpoint_position[1],
-                    target_goal_position[2]
-                    + target_distance * np.sin(bearing),
-                ],
-                dtype=np.float32,
-            )
-
-            if not sim.is_navigable(position):
-                continue
-            if sim.pathfinder.get_island(position) not in goal_islands:
-                continue
-            # Two-sided: a lower bound alone would only keep candidates detoured around walls.
-            geodesic_distance = sim.geodesic_distance(position, view_point_positions)
-            if abs(geodesic_distance - target_distance) > 0.5:
+            remaining, position = target_distance, None
+            for index in range(len(path.points) - 1, 0, -1):
+                end = np.asarray(path.points[index])
+                segment = np.asarray(path.points[index - 1]) - end
+                length = np.linalg.norm(segment)
+                if remaining <= length and length > 0:
+                    position = (end + segment * remaining / length).astype(np.float32)
+                    break
+                remaining -= length
+            if position is None or not pathfinder.is_navigable(position):
                 continue
 
-            # angle_to_goal is measured against get_closest_goal(), which may be a
-            # different instance of the category than the one we sampled around.
-            direction = np.asarray(
-                self.get_closest_goal(position).position, dtype=np.float32
-            ) - position
+            # Viewpoints define distance; their owning object defines heading.
+            goal = viewpoint_goals[path.closest_end_point_index]
+            direction = np.asarray(goal.position, dtype=np.float32) - position
             angle = np.arctan2(direction[0], -direction[2])
             angle += self._rng.uniform(
                 -max_angle_error,
@@ -141,12 +136,9 @@ class ObjRLNav(RLEnv):
             sampled_angle = float((angle + np.pi) % (2 * np.pi) - np.pi)
             return position, sampled_angle
 
-        raise RuntimeError(
-            "Failed to sample a navigable curriculum start at least "
-            f"{target_distance:.2f} m from every goal after 1000 attempts"
-        )
+        return None
 
-    
+
     def reset(self, mean_distance = None, max_angle_error = None):
         """Optionally reset at map position [x, z] and absolute yaw angle."""
         obs = super().reset()
@@ -157,11 +149,34 @@ class ObjRLNav(RLEnv):
             if (mean_distance is None) != (max_angle_error is None):
                 raise ValueError("Both mean_distance and max_angle_error must be provided together.")
 
-            position, angle = self._sample_position_and_direction(
-                mean_distance,
-                max_angle_error,
-                self.habitat_env.current_episode.goals,
-            )
+            target_distance = max(float(self._rng.normal(mean_distance, 0.3)), 1.2)
+            failed_goal_sets = set()
+            for attempt in range(64):
+                if attempt:
+                    obs = super().reset()
+                    self.shortest_path_follower._follower = None
+                    self.shortest_path_follower._current_scene = None
+
+                episode = self.habitat_env.current_episode
+                goal_set_key = (episode.scene_id, episode.object_category)
+                if goal_set_key in failed_goal_sets:
+                    continue
+
+                sample = self._sample_position_and_direction(
+                    mean_distance,
+                    max_angle_error,
+                    episode.goals,
+                    target_distance,
+                )
+                if sample is not None:
+                    position, angle = sample
+                    break
+                failed_goal_sets.add(goal_set_key)
+            else:
+                raise RuntimeError(
+                    "No sampled ObjectNav episode could support curriculum radius "
+                    f"{target_distance:.2f} m after 64 episode attempts"
+                )
 
             if position is not None and angle is not None:
                 position = [float(coordinate) for coordinate in position]

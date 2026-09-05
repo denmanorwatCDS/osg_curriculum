@@ -14,6 +14,7 @@ from gymnasium.vector import VectorEnv
 from skrl.utils.spaces.torch import convert_gym_space
 
 from curriculum_habitat.text_encoding import decode_goal_description
+from habitat.tasks.rearrange.actions import actions
 
 
 class CLIPWrapper:
@@ -216,9 +217,6 @@ class ToSKRLWrapper(VectorEnv):
         obs, rewards, _, infos = self.env.step(
             np.asarray(actions).reshape(self.num_envs)
         )
-        # In-place substitution: environment may have modified the actions
-        actions[...] = np.expand_dims(np.stack([infos[i]['executed_action']['value'] \
-                                                for i in range(self.num_envs)], axis=0), axis=1)
         return (
             self._obs(obs),
             np.asarray(rewards, np.float32),
@@ -244,6 +242,24 @@ class ToSKRLWrapper(VectorEnv):
     def close(self):
         return self.env.close()
 
+class RelabelActionWrapper():
+    def __init__(self, env):
+        self.env = env
+
+    def step(self, actions):
+        obs, reward, terminated, truncated, info = self.env.step(actions)
+        executed_actions = torch.as_tensor([item["executed_action"]["value"] for item in info],
+                                            device=actions.device, dtype=actions.dtype).reshape_as(actions)
+        with torch.no_grad():
+            actions.copy_(executed_actions)
+
+        return obs, reward, terminated, truncated, info
+
+    def call(self, name, *args, **kwargs):
+        return getattr(self, name)(*args, **kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self.env, name)
 
 class DebugVideoWrapper:
     """Record one side-by-side debug video for every vector-env episode.

@@ -22,6 +22,7 @@ from habitat.datasets import make_dataset
 from skrl.envs.wrappers.torch import wrap_env
 from curriculum_habitat.helper_wrappers import (
     CLIPWrapper,
+    RelabelActionWrapper,
     ToSKRLWrapper,
     DebugVideoWrapper,
 )
@@ -74,6 +75,7 @@ def make_env_vectorised(create_env_fn, task_config_path, fixated_object, data_pa
     vec_env = CLIPWrapper(vec_env, device="cuda")
     vec_env = ToSKRLWrapper(vec_env, device="cuda")
     vec_env = wrap_env(vec_env, wrapper='gymnasium')
+    vec_env = RelabelActionWrapper(vec_env)
     
     return vec_env
 
